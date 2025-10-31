@@ -72,8 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             price: 10.00
         }
     ];
-
-    // Inicializar la página
+  
     init();
 
     function init() {
@@ -125,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupEventListeners() {
-        // Navegación entre pestañas
+        
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
