@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calzado del Pueblo - Estilo Urbano</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">Calzado del <span>Pueblo</span></a>
+            
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link" data-tab="home">Inicio</a></li>
+                    <li><a href="#" class="nav-link" data-tab="products">Productos</a></li>
+                    <li><a href="#" class="nav-link" data-tab="repair-service">Reparaciones</a></li>
+                    <li><a href="#" class="nav-link" data-tab="cart">Carrito</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-icons">
+                <a href="#"><i class="fas fa-search"></i></a>
+                <a href="#"><i class="fas fa-user"></i></a>
+                <a href="#" class="nav-link" data-tab="cart"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Tab -->
+    <section class="hero tab-content active" id="home-tab">
+        <div class="container hero-content">
+            <h1>Estilo Urbano para Jóvenes</h1>
+            <p>Descubre la nueva colección de calzado juvenil con actitud y autenticidad.</p>
+            <a href="#" class="btn nav-link" data-tab="products">Ver Colección</a>
+        </div>
+    </section>
+
+    <!-- Products Tab -->
+    <section class="featured tab-content" id="products-tab">
+        <div class="container">
+            <h2 class="section-title">Nuestra Colección</h2>
+            
+            <div class="products-grid">
+                <!-- Los productos se cargan aquí dinámicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Detail Tab -->
+    <section class="product-detail tab-content" id="product-detail-tab">
+        <div class="container">
+            <a href="#" class="back-btn nav-link" data-tab="products">
+                <i class="fas fa-arrow-left"></i> Volver a Productos
+            </a>
+            
+            <div class="product-detail-container" id="product-detail-container">
+                <!-- Los detalles del producto se cargan aquí dinámicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Repair Service Tab -->
+    <section class="repair-service tab-content" id="repair-service-tab">
+        <div class="container">
+            <div class="repair-hero">
+                <h2>¿Tus zapatos favoritos necesitan reparación?</h2>
+                <p>En Calzado del Pueblo nos encargamos de darle una segunda vida a tu calzado. Reparamos suelas, cambiamos cordones, arreglamos cremalleras y mucho más.</p>
+                
+                <div class="repair-steps">
+                    <div class="repair-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">Trae tus zapatos a nuestra tienda</div>
+                    </div>
+                    <div class="repair-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">Evaluamos el trabajo necesario</div>
+                    </div>
+                    <div class="repair-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">Te damos un presupuesto y plazo</div>
+                    </div>
+                    <div class="repair-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">Reparamos y quedan como nuevos</div>
+                    </div>
+                </div>
+                
+                <a href="#" class="btn nav-link" data-tab="repair-quote">Solicitar Reparación</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Repair Quote Tab -->
+    <section class="repair-quote tab-content" id="repair-quote-tab">
+        <div class="container">
+            <a href="#" class="back-btn nav-link" data-tab="repair-service">
+                <i class="fas fa-arrow-left"></i> Volver a Reparaciones
+            </a>
+            
+            <div class="repair-container">
+                <h2 class="section-title">Solicitar Cotización de Reparación</h2>
+                <p>Selecciona los servicios de reparación que necesitas para tus zapatos y solicita una cotización.</p>
+                
+                <table class="repair-table">
+                    <thead>
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="repair-services">
+                        <!-- Los servicios se cargan aquí dinámicamente -->
+                    </tbody>
+                </table>
+                
+                <div class="repair-form">
+                    <h3>Información de Contacto</h3>
+                    <div class="form-group">
+                        <label for="customer-name">Nombre completo *</label>
+                        <input type="text" id="customer-name" class="form-control" placeholder="Tu nombre completo">
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-email">Correo electrónico *</label>
+                        <input type="email" id="customer-email" class="form-control" placeholder="tu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-phone">Teléfono</label>
+                        <input type="tel" id="customer-phone" class="form-control" placeholder="Tu número de teléfono">
+                    </div>
+                    <div class="form-group">
+                        <label for="repair-description">Descripción adicional del problema</label>
+                        <textarea id="repair-description" class="form-control" placeholder="Describe el estado de tus zapatos y cualquier problema específico..."></textarea>
+                    </div>
+                    
+                    <div class="quote-summary" id="quote-summary">
+                        <h4>Resumen de Cotización</h4>
+                        <div class="summary-details" id="summary-details">
+                            <p>Selecciona servicios para ver el total</p>
+                        </div>
+                        <div class="summary-total" id="summary-total">
+                            Total: $0.00
+                        </div>
+                    </div>
+                    
+                    <button class="btn" id="request-quote">Solicitar Cotización</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Tab -->
+    <section class="cart tab-content" id="cart-tab">
+        <div class="container">
+            <h2 class="section-title">Tu Carrito de Compras</h2>
+            
+            <div class="cart-container">
+                <div class="cart-items" id="cart-items">
+                    <div class="empty-cart-message" id="empty-cart-message">
+                        <p>Tu carrito está vacío. <a href="#" class="nav-link" data-tab="products">¡Agrega algunos productos!</a></p>
+                    </div>
+                </div>
+                
+                <div class="cart-summary" id="cart-summary" style="display: none;">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Envío:</span>
+                        <span id="cart-shipping">$0.00</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Total:</span>
+                        <span id="cart-total">$0.00</span>
+                    </div>
+                    <a href="#" class="btn" style="width: 100%; text-align: center; margin-top: 20px;">Proceder al Pago</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Calzado del Pueblo</h3>
+                    <p>Calzado urbano de calidad con estilo único para jóvenes.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Productos</h3>
+                    <ul>
+                        <li><a href="#" class="nav-link" data-tab="products">Zapatillas Urbanas</a></li>
+                        <li><a href="#" class="nav-link" data-tab="products">Deportivas</a></li>
+                        <li><a href="#" class="nav-link" data-tab="products">Casuales</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Servicios</h3>
+                    <ul>
+                        <li><a href="#" class="nav-link" data-tab="repair-service">Reparación de Calzado</a></li>
+                        <li><a href="#">Personalización</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contacto</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> Av. Principal 123</li>
+                        <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@calzadodelpueblo.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Calzado del Pueblo. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

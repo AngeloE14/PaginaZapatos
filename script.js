@@ -1,0 +1,394 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Variables globales
+    let cart = [];
+    let currentProduct = null;
+    
+    // Datos de productos
+    const products = [
+        {
+            id: 1,
+            name: "Urban Classic Black",
+            price: 89.99,
+            image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
+            description: "Zapatillas urbanas clásicas en color negro, perfectas para el día a día. Fabricadas con materiales de alta calidad y diseño ergonómico para máximo confort.",
+            sizes: [7, 8, 9, 10, 11, 12]
+        },
+        {
+            id: 2,
+            name: "Sport White",
+            price: 94.99,
+            image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=812&q=80",
+            description: "Zapatillas deportivas en blanco con detalles en colores vibrantes. Ideales para actividades deportivas y uso casual.",
+            sizes: [6, 7, 8, 9, 10, 11]
+        },
+        {
+            id: 3,
+            name: "Black Pro",
+            price: 99.99,
+            image: "https://images.unsplash.com/photo-1605030753481-bb38b08c384a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=749&q=80",
+            description: "Edición profesional en negro con refuerzos estratégicos. Diseñadas para durabilidad y estilo urbano.",
+            sizes: [8, 9, 10, 11, 12, 13]
+        },
+        {
+            id: 4,
+            name: "Red Street",
+            price: 87.99,
+            image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+            description: "Zapatillas urbanas en rojo vibrante para destacar tu estilo. Combinación perfecta entre comodidad y diseño llamativo.",
+            sizes: [7, 8, 9, 10, 11]
+        }
+    ];
+
+    // Datos de servicios de reparación
+    const repairServices = [
+        {
+            service: "Cambio de suela",
+            description: "Reemplazo completo de la suela desgastada",
+            price: 25.00
+        },
+        {
+            service: "Reparación de costuras",
+            description: "Arreglo de costuras rotas o desgastadas",
+            price: 15.00
+        },
+        {
+            service: "Reemplazo de cordones",
+            description: "Cambio de cordones por unos nuevos",
+            price: 8.00
+        },
+        {
+            service: "Limpieza profunda",
+            description: "Limpieza completa y restauración de color",
+            price: 12.00
+        },
+        {
+            service: "Reparación de cremallera",
+            description: "Arreglo o reemplazo de cremallera dañada",
+            price: 18.00
+        },
+        {
+            service: "Refuerzo de talón",
+            description: "Refuerzo interno para mayor durabilidad",
+            price: 10.00
+        }
+    ];
+
+    // Inicializar la página
+    init();
+
+    function init() {
+        loadProducts();
+        loadRepairServices();
+        setupEventListeners();
+        showTab('home');
+    }
+
+    function loadProducts() {
+        const productsGrid = document.querySelector('.products-grid');
+        productsGrid.innerHTML = '';
+
+        products.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.innerHTML = `
+                <div class="product-img">
+                    <img src="${product.image}" alt="${product.name}">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">${product.name}</h3>
+                    <p class="product-price">$${product.price.toFixed(2)}</p>
+                    <a href="#" class="btn view-product" data-id="${product.id}">Ver Detalles</a>
+                </div>
+            `;
+            productsGrid.appendChild(productCard);
+        });
+    }
+
+    function loadRepairServices() {
+        const repairServicesContainer = document.getElementById('repair-services');
+        repairServicesContainer.innerHTML = '';
+
+        repairServices.forEach((service, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${service.service}</td>
+                <td>${service.description}</td>
+                <td class="repair-price">$${service.price.toFixed(2)}</td>
+                <td>
+                    <div class="repair-option">
+                        <input type="checkbox" class="repair-checkbox" data-index="${index}" data-service="${service.service}" data-price="${service.price}">
+                    </div>
+                </td>
+            `;
+            repairServicesContainer.appendChild(row);
+        });
+    }
+
+    function setupEventListeners() {
+        // Navegación entre pestañas
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tabId = this.getAttribute('data-tab');
+                showTab(tabId);
+            });
+        });
+
+        // Ver detalles del producto
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('view-product')) {
+                e.preventDefault();
+                const productId = parseInt(e.target.getAttribute('data-id'));
+                showProductDetail(productId);
+            }
+        });
+
+        // Selección de talla
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('size-option')) {
+                const sizeOptions = document.querySelectorAll('.size-option');
+                sizeOptions.forEach(option => option.classList.remove('selected'));
+                e.target.classList.add('selected');
+            }
+        });
+
+        // Controles de cantidad
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('quantity-btn')) {
+                const input = e.target.parentElement.querySelector('.quantity-input');
+                let value = parseInt(input.value);
+
+                if (e.target.classList.contains('decrease')) {
+                    if (value > 1) value--;
+                } else if (e.target.classList.contains('increase')) {
+                    value++;
+                }
+
+                input.value = value;
+            }
+        });
+
+        // Añadir al carrito desde vista detallada
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('add-to-cart-detail')) {
+                e.preventDefault();
+                addToCartFromDetail();
+            }
+        });
+
+        // Servicios de reparación
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('repair-checkbox')) {
+                updateRepairQuote();
+            }
+        });
+
+        // Solicitar cotización
+        document.getElementById('request-quote').addEventListener('click', function(e) {
+            e.preventDefault();
+            submitRepairQuote();
+        });
+
+        // Carrito
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-item')) {
+                const productId = e.target.getAttribute('data-id');
+                removeFromCart(productId);
+            }
+        });
+    }
+
+    function showTab(tabId) {
+        // Ocultar todas las pestañas
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Mostrar la pestaña seleccionada
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+
+        // Actualizar vista del carrito si es necesario
+        if (tabId === 'cart') {
+            updateCartView();
+        }
+    }
+
+    function showProductDetail(productId) {
+        currentProduct = products.find(p => p.id === productId);
+        
+        const detailContainer = document.getElementById('product-detail-container');
+        detailContainer.innerHTML = `
+            <div class="product-detail-image">
+                <img src="${currentProduct.image}" alt="${currentProduct.name}">
+            </div>
+            <div class="product-detail-info">
+                <h2>${currentProduct.name}</h2>
+                <p class="product-detail-price">$${currentProduct.price.toFixed(2)}</p>
+                <p class="product-detail-description">${currentProduct.description}</p>
+                
+                <div class="size-selector">
+                    <h3>Selecciona tu talla:</h3>
+                    <div class="size-options">
+                        ${currentProduct.sizes.map(size => `
+                            <div class="size-option" data-size="${size}">${size}</div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="quantity-selector">
+                    <h3>Cantidad:</h3>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn decrease">-</button>
+                        <input type="number" class="quantity-input" value="1" min="1">
+                        <button class="quantity-btn increase">+</button>
+                    </div>
+                </div>
+                
+                <button class="btn add-to-cart-detail">Añadir al Carrito</button>
+            </div>
+        `;
+
+        showTab('product-detail');
+    }
+
+    function addToCartFromDetail() {
+        const selectedSize = document.querySelector('.size-option.selected');
+        const quantity = parseInt(document.querySelector('.quantity-input').value);
+
+        if (!selectedSize) {
+            alert('Por favor, selecciona una talla.');
+            return;
+        }
+
+        const size = selectedSize.getAttribute('data-size');
+        
+        cart.push({
+            id: currentProduct.id,
+            name: currentProduct.name,
+            price: currentProduct.price,
+            quantity: quantity,
+            size: size,
+            image: currentProduct.image
+        });
+
+        alert(`${currentProduct.name} (Talla: ${size}) añadido al carrito!`);
+        showTab('cart');
+    }
+
+    function updateRepairQuote() {
+        const selectedServices = document.querySelectorAll('.repair-checkbox:checked');
+        let total = 0;
+        let servicesList = '';
+
+        selectedServices.forEach(checkbox => {
+            const service = checkbox.getAttribute('data-service');
+            const price = parseFloat(checkbox.getAttribute('data-price'));
+            total += price;
+            servicesList += `<p>• ${service}: $${price.toFixed(2)}</p>`;
+        });
+
+        const summaryDetails = document.getElementById('summary-details');
+        const summaryTotal = document.getElementById('summary-total');
+
+        if (selectedServices.length > 0) {
+            summaryDetails.innerHTML = servicesList;
+            summaryTotal.textContent = `Total: $${total.toFixed(2)}`;
+        } else {
+            summaryDetails.innerHTML = '<p>Selecciona servicios para ver el total</p>';
+            summaryTotal.textContent = 'Total: $0.00';
+        }
+    }
+
+    function submitRepairQuote() {
+        const selectedServices = document.querySelectorAll('.repair-checkbox:checked');
+        const customerName = document.getElementById('customer-name').value;
+        const customerEmail = document.getElementById('customer-email').value;
+
+        if (selectedServices.length === 0) {
+            alert('Por favor, selecciona al menos un servicio de reparación.');
+            return;
+        }
+
+        if (!customerName || !customerEmail) {
+            alert('Por favor, completa tu nombre y correo electrónico.');
+            return;
+        }
+
+        let total = 0;
+        let servicesList = '';
+
+        selectedServices.forEach(checkbox => {
+            const service = checkbox.getAttribute('data-service');
+            const price = parseFloat(checkbox.getAttribute('data-price'));
+            total += price;
+            servicesList += `- ${service}: $${price.toFixed(2)}\n`;
+        });
+
+        alert(`✅ Cotización solicitada exitosamente!\n\n📋 Servicios seleccionados:\n${servicesList}\n💰 Total estimado: $${total.toFixed(2)}\n\n📧 Te contactaremos pronto a ${customerEmail} para confirmar los detalles.`);
+
+        // Limpiar formulario
+        document.querySelectorAll('.repair-checkbox').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        document.getElementById('customer-name').value = '';
+        document.getElementById('customer-email').value = '';
+        document.getElementById('customer-phone').value = '';
+        document.getElementById('repair-description').value = '';
+        updateRepairQuote();
+    }
+
+    function updateCartView() {
+        const cartItemsContainer = document.getElementById('cart-items');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const cartSummary = document.getElementById('cart-summary');
+
+        cartItemsContainer.innerHTML = '';
+
+        if (cart.length === 0) {
+            emptyCartMessage.style.display = 'block';
+            cartSummary.style.display = 'none';
+            return;
+        }
+
+        emptyCartMessage.style.display = 'none';
+        cartSummary.style.display = 'block';
+
+        let subtotal = 0;
+
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+
+            const cartItemElement = document.createElement('div');
+            cartItemElement.className = 'cart-item';
+            cartItemElement.innerHTML = `
+                <div class="cart-item-img">
+                    <img src="${item.image}" alt="${item.name}">
+                </div>
+                <div class="cart-item-details">
+                    <div class="cart-item-title">${item.name}</div>
+                    <div class="cart-item-price">Talla: ${item.size} | $${item.price.toFixed(2)} c/u</div>
+                    <div class="cart-item-quantity">
+                        <span>Cantidad: ${item.quantity}</span>
+                        <span class="cart-item-remove remove-item" data-id="${item.id}">Eliminar</span>
+                    </div>
+                </div>
+                <div class="cart-item-total">$${itemTotal.toFixed(2)}</div>
+            `;
+            cartItemsContainer.appendChild(cartItemElement);
+        });
+
+        const shipping = subtotal > 0 ? 5.00 : 0;
+        const total = subtotal + shipping;
+
+        document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('cart-shipping').textContent = `$${shipping.toFixed(2)}`;
+        document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
+    }
+
+    function removeFromCart(productId) {
+        cart = cart.filter(item => item.id !== parseInt(productId));
+        updateCartView();
+    }
+});
