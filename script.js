@@ -79,6 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
         loadProducts();
         loadRepairServices();
         setupEventListeners();
+        // cargar carrito desde localStorage para persistencia
+        if (typeof loadCart === 'function') loadCart();
         showTab('home');
     }
 
@@ -271,6 +273,9 @@ document.addEventListener('DOMContentLoaded', function() {
             image: currentProduct.image
         });
 
+        // Persistir carrito y actualizar la vista
+        if (typeof saveCart === 'function') saveCart();
+
         alert(`${currentProduct.name} (Talla: ${size}) añadido al carrito!`);
         showTab('cart');
     }
@@ -339,19 +344,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateCartView() {
         const cartItemsContainer = document.getElementById('cart-items');
-        const emptyCartMessage = document.getElementById('empty-cart-message');
         const cartSummary = document.getElementById('cart-summary');
 
-        cartItemsContainer.innerHTML = '';
-
-        if (cart.length === 0) {
-            emptyCartMessage.style.display = 'block';
-            cartSummary.style.display = 'none';
+        // Si el carrito está vacío, mostrar mensaje predeterminado (reconstruir si fue removido)
+        if (!cart || cart.length === 0) {
+            cartItemsContainer.innerHTML = `
+                <div class="empty-cart-message" id="empty-cart-message">
+                    <p>Tu carrito está vacío. <a href="#" class="nav-link" data-tab="products">¡Agrega algunos productos!</a></p>
+                </div>
+            `;
+            if (cartSummary) cartSummary.style.display = 'none';
             return;
         }
 
-        emptyCartMessage.style.display = 'none';
-        cartSummary.style.display = 'block';
+        // Hay items: limpiar y renderizar
+        cartItemsContainer.innerHTML = '';
+        if (cartSummary) cartSummary.style.display = 'block';
 
         let subtotal = 0;
 
@@ -388,11 +396,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function removeFromCart(productId) {
         cart = cart.filter(item => item.id !== parseInt(productId));
+        if (typeof saveCart === 'function') saveCart();
         updateCartView();
     }
 
     /* ---------------------- Authentication (client-side) ---------------------- */
     const USERS_KEY = 'mz_users_v1';
+    const CART_KEY = 'mz_cart_v1';
     const CURRENT_USER_KEY = 'mz_current_user_v1';
 
     function getUsers() {
@@ -413,6 +423,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function clearCurrentUser() {
         localStorage.removeItem(CURRENT_USER_KEY);
+    }
+
+    // Cart persistence helpers
+    function saveCart() {
+        try { localStorage.setItem(CART_KEY, JSON.stringify(cart || [])); } catch(e) { console.warn('No se pudo guardar el carrito', e); }
+    }
+
+    function loadCart() {
+        try { cart = JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch(e) { cart = []; }
     }
 
     function openAuthModal(mode = 'login') {
@@ -510,23 +529,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Login: carga todos los datos del usuario registrado
     function handleLogin(e) {
         e.preventDefault();
-        const u = document.getElementById('auth-username').value.trim();
+        // Ahora el login se realiza con correo electrónico + contraseña
+        const email = document.getElementById('auth-email').value.trim();
         const p = document.getElementById('auth-password').value;
         const err = document.getElementById('auth-error');
 
-        if (!u || !p) {
-            err.textContent = 'Completa usuario y contraseña.';
+        if (!email || !p) {
+            err.textContent = 'Completa correo y contraseña.';
             return;
         }
         const users = getUsers();
-        const found = users.find(x => x.username === u && x.password === p);
+        // Buscar por email en lugar de por username
+        const found = users.find(x => x.email === email && x.password === p);
         if (found) {
             // Guardar todos los datos del usuario en sesión
             setCurrentUser({ username: found.username, name: found.name, email: found.email, phone: found.phone, birth: found.birth, country: found.country, curp: found.curp });
             closeAuthModal();
             showUserState();
         } else {
-            err.textContent = 'Usuario o contraseña incorrectos.';
+            err.textContent = 'Correo o contraseña incorrectos.';
         }
     }
 
