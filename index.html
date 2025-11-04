@@ -232,6 +232,7 @@
         </div>
     </footer>
 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="script.js"></script>
     <!-- Auth Modal -->
     <div id="auth-modal" class="auth-modal" aria-hidden="true">
@@ -252,6 +253,8 @@
                         <label for="auth-password">Contraseña</label>
                         <input id="auth-password" class="form-control" type="password" required>
                     </div>
+                    <div style="text-align:center; margin:12px 0; color:#666; font-size:0.9rem;">o iniciar sesión con</div>
+                    <div id="google-signin-button" style="display:flex; justify-content:center; margin-bottom:8px;"></div>
                     <div class="form-actions">
                         <button class="btn" id="login-btn" type="submit">Entrar</button>
                     </div>

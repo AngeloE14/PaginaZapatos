@@ -421,12 +421,18 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
         // switch tab
-        document.getElementById('tab-login').classList.toggle('active', mode === 'login');
-        document.getElementById('tab-register').classList.toggle('active', mode === 'register');
-        document.getElementById('login-form').classList.toggle('active', mode === 'login');
-        document.getElementById('register-form').classList.toggle('active', mode === 'register');
-        document.getElementById('auth-error').textContent = '';
-        document.getElementById('reg-error').textContent = '';
+        const tabLogin = document.getElementById('tab-login');
+        const tabRegister = document.getElementById('tab-register');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const authError = document.getElementById('auth-error');
+        const regError = document.getElementById('reg-error');
+        if (tabLogin) tabLogin.classList.toggle('active', mode === 'login');
+        if (tabRegister) tabRegister.classList.toggle('active', mode === 'register');
+        if (loginForm) loginForm.classList.toggle('active', mode === 'login');
+        if (registerForm) registerForm.classList.toggle('active', mode === 'register');
+        if (authError) authError.textContent = '';
+        if (regError) regError.textContent = '';
     }
 
     function closeAuthModal() {
@@ -441,11 +447,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const current = getCurrentUser();
         if (!userBtn) return;
 
-        if (current && current.username) {
-            userBtn.innerHTML = `<span class="user-badge">${escapeHtml(current.username)} <span class="logout" id="logout-btn">Salir</span></span>`;
-            // attach logout handler
-            const logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) logoutBtn.addEventListener('click', function(e){ e.preventDefault(); logout(); });
+        if (current && (current.username || current.name || current.email)) {
+            const displayName = current.name || current.username || current.email || 'Usuario';
+            const picture = current.picture ? `<img src="${escapeHtml(current.picture)}" alt="${escapeHtml(displayName)}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : '';
+            userBtn.innerHTML = `<button class="user-badge" id="user-badge-button" style="border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:20px;">${picture}<span style="font-weight:600;color:var(--primary);">${escapeHtml(displayName)}</span></button>`;
+            // clicking the badge opens profile modal
+            const badge = document.getElementById('user-badge-button');
+            if (badge) badge.addEventListener('click', function(e){ e.preventDefault(); openProfileModal(); });
         } else {
             userBtn.innerHTML = '<i class="fas fa-user"></i>';
         }
@@ -503,6 +511,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Wire auth listeners into existing setupEventListeners flow
     // Add auth-specific listeners
     (function attachAuthListeners(){
+        // keep original auth-forms markup to restore after showing profile
+        const authFormsContainer = document.querySelector('.auth-forms');
+        const ORIGINAL_AUTH_FORMS = authFormsContainer ? authFormsContainer.innerHTML : '';
+
         // user button opens modal
         const userBtn = document.getElementById('user-button');
         if (userBtn) userBtn.addEventListener('click', function(e){ e.preventDefault(); const cur = getCurrentUser(); if (cur && cur.username) { /* no modal when logged, allow logout via badge */ } else openAuthModal('login'); });
@@ -529,5 +541,93 @@ document.addEventListener('DOMContentLoaded', function() {
         // click outside modal to close
         const modal = document.getElementById('auth-modal');
         if (modal) modal.addEventListener('click', function(e){ if (e.target === modal) closeAuthModal(); });
+
+        // expose a function to open profile inside the same modal
+        window.openProfileModal = function(){
+            const cur = getCurrentUser();
+            if (!authFormsContainer) return;
+            // build profile view
+            const profileHtml = `
+                <div style="text-align:center; padding:10px 6px;">
+                    ${cur && cur.picture ? `<img src="${escapeHtml(cur.picture)}" alt="avatar" style="width:96px;height:96px;border-radius:50%;object-fit:cover;margin-bottom:12px;">` : ''}
+                    <h3 style="margin-bottom:6px;">${escapeHtml(cur.name || cur.username || '')}</h3>
+                    <p style="color:#666;margin-bottom:6px;">${escapeHtml(cur.email || '')}</p>
+                    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
+                        <button class="btn" id="profile-logout">Cerrar sesión</button>
+                        <button class="btn btn-secondary" id="profile-close">Cerrar</button>
+                    </div>
+                </div>
+            `;
+            authFormsContainer.innerHTML = profileHtml;
+            openAuthModal('profile');
+            // attach handlers
+            const logoutBtn = document.getElementById('profile-logout');
+            const closeBtn = document.getElementById('profile-close');
+            if (logoutBtn) logoutBtn.addEventListener('click', function(e){ e.preventDefault(); logout(); closeAuthModal(); /* restore forms */ if (authFormsContainer) authFormsContainer.innerHTML = ORIGINAL_AUTH_FORMS; attachAuthListeners(); initGoogleSignIn(); });
+            if (closeBtn) closeBtn.addEventListener('click', function(e){ e.preventDefault(); closeAuthModal(); if (authFormsContainer) authFormsContainer.innerHTML = ORIGINAL_AUTH_FORMS; attachAuthListeners(); initGoogleSignIn(); });
+        };
     })();
+
+    /* ---------------- Google Sign-In Integration ---------------- */
+    const GOOGLE_CLIENT_ID = 'REPLACE_WITH_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+
+    function decodeJwtResponse(token) {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function handleGoogleCredential(response) {
+        const payload = decodeJwtResponse(response.credential);
+        if (!payload) { console.warn('No se pudo decodificar el token de Google.'); return; }
+        // payload contains: sub, name, given_name, family_name, picture, email, email_verified, locale
+        const user = {
+            username: payload.email || payload.sub,
+            name: payload.name,
+            email: payload.email,
+            picture: payload.picture
+        };
+        setCurrentUser(user);
+        closeAuthModal();
+        showUserState();
+    }
+
+    function initGoogleSignIn() {
+        if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.indexOf('REPLACE_WITH_GOOGLE_CLIENT_ID') !== -1) {
+            console.info('Google Client ID no configurado. Ignorando inicialización de Google Sign-In.');
+            return;
+        }
+
+        const tryInit = function() {
+            if (window.google && google.accounts && google.accounts.id) {
+                google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential });
+                const container = document.getElementById('google-signin-button');
+                if (container) {
+                    google.accounts.id.renderButton(container, { theme: 'outline', size: 'large' });
+                    // opcion: mostrar prompt
+                    // google.accounts.id.prompt();
+                }
+                return true;
+            }
+            return false;
+        };
+
+        // try immediately, otherwise poll until the SDK loads (max 5s)
+        if (!tryInit()) {
+            const start = Date.now();
+            const iv = setInterval(function() {
+                if (tryInit() || (Date.now() - start) > 5000) clearInterval(iv);
+            }, 200);
+        }
+    }
+
+    // start Google init (will no-op if client id not set)
+    initGoogleSignIn();
 });
