@@ -192,10 +192,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Carrito
+        // Carrito: delegación para eliminar y ajustar cantidades
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('remove-item')) {
-                const productId = e.target.getAttribute('data-id');
-                removeFromCart(productId);
+                const cartId = e.target.getAttribute('data-cart-id');
+                removeFromCart(cartId);
+            }
+            if (e.target.classList.contains('cart-decrease')) {
+                const cartId = e.target.getAttribute('data-cart-id');
+                changeCartQuantity(cartId, -1);
+            }
+            if (e.target.classList.contains('cart-increase')) {
+                const cartId = e.target.getAttribute('data-cart-id');
+                changeCartQuantity(cartId, 1);
+            }
+        });
+
+        // input para cambiar cantidad directamente
+        document.addEventListener('input', function(e) {
+            if (e.target.classList && e.target.classList.contains('cart-quantity-input')) {
+                const cartId = e.target.getAttribute('data-cart-id');
+                const val = parseInt(e.target.value) || 1;
+                setCartQuantity(cartId, val);
             }
         });
     }
@@ -264,14 +282,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const size = selectedSize.getAttribute('data-size');
         
-        cart.push({
-            id: currentProduct.id,
-            name: currentProduct.name,
-            price: currentProduct.price,
-            quantity: quantity,
-            size: size,
-            image: currentProduct.image
-        });
+        // Comprobar si ya existe el mismo producto+size en el carrito -> sumar cantidades
+        const existingIndex = cart.findIndex(ci => ci.id === currentProduct.id && String(ci.size) === String(size));
+        if (existingIndex !== -1) {
+            cart[existingIndex].quantity = (parseInt(cart[existingIndex].quantity) || 0) + quantity;
+        } else {
+            // Añadir item con id único de carrito (cartItemId)
+            const cartItemId = Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+            cart.push({
+                cartItemId,
+                id: currentProduct.id,
+                name: currentProduct.name,
+                price: currentProduct.price,
+                quantity: quantity,
+                size: size,
+                image: currentProduct.image
+            });
+        }
 
         // Persistir carrito y actualizar la vista
         if (typeof saveCart === 'function') saveCart();
@@ -377,8 +404,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="cart-item-title">${item.name}</div>
                     <div class="cart-item-price">Talla: ${item.size} | $${item.price.toFixed(2)} c/u</div>
                     <div class="cart-item-quantity">
-                        <span>Cantidad: ${item.quantity}</span>
-                        <span class="cart-item-remove remove-item" data-id="${item.id}">Eliminar</span>
+                        <button class="btn cart-decrease" data-cart-id="${item.cartItemId}">-</button>
+                        <input class="cart-quantity-input" data-cart-id="${item.cartItemId}" type="number" value="${item.quantity}" min="1" style="width:60px;text-align:center;margin:0 8px;" />
+                        <button class="btn cart-increase" data-cart-id="${item.cartItemId}">+</button>
+                        <span class="cart-item-remove remove-item" data-cart-id="${item.cartItemId}" style="margin-left:12px;cursor:pointer;color:var(--secondary);">Quitar del carrito</span>
                     </div>
                 </div>
                 <div class="cart-item-total">$${itemTotal.toFixed(2)}</div>
@@ -392,10 +421,45 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
         document.getElementById('cart-shipping').textContent = `$${shipping.toFixed(2)}`;
         document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
+
+        // Añadir botón para vaciar carrito si no existe
+        let emptyBtn = document.getElementById('empty-cart-btn');
+        if (!emptyBtn && cartSummary) {
+            emptyBtn = document.createElement('button');
+            emptyBtn.id = 'empty-cart-btn';
+            emptyBtn.className = 'btn btn-secondary';
+            emptyBtn.textContent = 'Vaciar carrito';
+            emptyBtn.style.marginLeft = '10px';
+            // Insert before the checkout link if present
+            cartSummary.appendChild(emptyBtn);
+            emptyBtn.addEventListener('click', function(){ cart = []; saveCart(); updateCartView(); });
+        }
     }
 
-    function removeFromCart(productId) {
-        cart = cart.filter(item => item.id !== parseInt(productId));
+    // Ahora removeFromCart recibe el cartItemId único y remueve el item correcto
+    function removeFromCart(cartItemId) {
+        if (!cartItemId) return;
+        cart = cart.filter(item => item.cartItemId !== cartItemId);
+        if (typeof saveCart === 'function') saveCart();
+        updateCartView();
+    }
+
+    // Cambiar cantidad por delta (+1 / -1)
+    function changeCartQuantity(cartItemId, delta) {
+        const idx = cart.findIndex(i => i.cartItemId === cartItemId);
+        if (idx === -1) return;
+        const newQty = (parseInt(cart[idx].quantity) || 0) + delta;
+        if (newQty < 1) return; // no permitir 0 aquí
+        cart[idx].quantity = newQty;
+        if (typeof saveCart === 'function') saveCart();
+        updateCartView();
+    }
+
+    function setCartQuantity(cartItemId, qty) {
+        const idx = cart.findIndex(i => i.cartItemId === cartItemId);
+        if (idx === -1) return;
+        const newQty = Math.max(1, parseInt(qty) || 1);
+        cart[idx].quantity = newQty;
         if (typeof saveCart === 'function') saveCart();
         updateCartView();
     }
