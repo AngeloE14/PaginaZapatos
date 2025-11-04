@@ -216,6 +216,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 setCartQuantity(cartId, val);
             }
         });
+
+            // Checkout button: requiere sesión
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (checkoutBtn) checkoutBtn.addEventListener('click', function(e){
+                e.preventDefault();
+                if (!getCurrentUser()) {
+                    openAuthModal('login');
+                    return;
+                }
+                // Simulación de proceder al pago
+                alert('Procediendo al pago... (demo)');
+            });
     }
 
     function showTab(tabId) {
@@ -272,6 +284,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function addToCartFromDetail() {
+        // Requerir sesión para añadir al carrito
+        const cur = getCurrentUser();
+        if (!cur) {
+            openAuthModal('login');
+            return;
+        }
+
         const selectedSize = document.querySelector('.size-option.selected');
         const quantity = parseInt(document.querySelector('.quantity-input').value);
 
@@ -483,19 +502,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function setCurrentUser(user) {
         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+        // Al iniciar sesión, cargar el carrito asociado a este usuario
+        try { loadCart(); } catch (e) { /* ignore */ }
     }
 
     function clearCurrentUser() {
         localStorage.removeItem(CURRENT_USER_KEY);
+        // Al cerrar sesión, cargar el carrito de invitado (o vacío)
+        try { loadCart(); } catch (e) { cart = []; }
     }
 
     // Cart persistence helpers
+    function getCartKey() {
+        const cur = getCurrentUser();
+        if (cur && (cur.username || cur.email)) {
+            const id = cur.username || cur.email;
+            return `${CART_KEY}_${id}`;
+        }
+        return `${CART_KEY}_guest`;
+    }
+
     function saveCart() {
-        try { localStorage.setItem(CART_KEY, JSON.stringify(cart || [])); } catch(e) { console.warn('No se pudo guardar el carrito', e); }
+        try {
+            const key = getCartKey();
+            localStorage.setItem(key, JSON.stringify(cart || []));
+        } catch(e) { console.warn('No se pudo guardar el carrito', e); }
     }
 
     function loadCart() {
-        try { cart = JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch(e) { cart = []; }
+        try {
+            const key = getCartKey();
+            cart = JSON.parse(localStorage.getItem(key)) || [];
+        } catch(e) { cart = []; }
+        try { updateCartView(); } catch(e) {}
     }
 
     function openAuthModal(mode = 'login') {
