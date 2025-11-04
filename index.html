@@ -24,7 +24,7 @@
             
             <div class="header-icons">
                 <a href="#"><i class="fas fa-search"></i></a>
-                <a href="#"><i class="fas fa-user"></i></a>
+                <a href="#" id="user-button"><i class="fas fa-user"></i></a>
                 <a href="#" class="nav-link" data-tab="cart"><i class="fas fa-shopping-cart"></i></a>
             </div>
         </div>
@@ -233,5 +233,47 @@
     </footer>
 
     <script src="script.js"></script>
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="auth-modal" aria-hidden="true">
+        <div class="auth-modal-content">
+            <button class="auth-close" id="auth-close" aria-label="Cerrar">&times;</button>
+            <div class="auth-forms">
+                <div class="auth-tabs">
+                    <button id="tab-login" class="auth-tab active">Iniciar Sesión</button>
+                    <button id="tab-register" class="auth-tab">Registrarse</button>
+                </div>
+
+                <form id="login-form" class="auth-form active">
+                    <div class="form-group">
+                        <label for="auth-username">Usuario</label>
+                        <input id="auth-username" class="form-control" type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-password">Contraseña</label>
+                        <input id="auth-password" class="form-control" type="password" required>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn" id="login-btn" type="submit">Entrar</button>
+                    </div>
+                    <div class="auth-error" id="auth-error" role="alert"></div>
+                </form>
+
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="reg-username">Usuario</label>
+                        <input id="reg-username" class="form-control" type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Contraseña</label>
+                        <input id="reg-password" class="form-control" type="password" required>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn" id="register-btn" type="submit">Crear cuenta</button>
+                    </div>
+                    <div class="auth-error" id="reg-error" role="alert"></div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

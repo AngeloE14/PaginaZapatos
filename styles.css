@@ -893,3 +893,86 @@ footer {
         padding: 25px;
     }
 }
+
+/* Auth modal styles (appended) */
+.auth-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,10,10,0.5);
+    z-index: 9999;
+    padding: 30px;
+}
+.auth-modal.active {
+    display: flex;
+}
+.auth-modal-content {
+    background: white;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    position: relative;
+}
+.auth-close {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--primary);
+}
+.auth-forms { padding-top: 6px; }
+.auth-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.auth-tab {
+    flex: 1;
+    padding: 8px 10px;
+    background: var(--light);
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.auth-tab.active {
+    background: linear-gradient(90deg, var(--secondary), var(--accent));
+    color: white;
+    border-color: transparent;
+}
+.auth-form { display: none; }
+.auth-form.active { display: block; }
+.form-group { margin-bottom: 12px; }
+.form-group label { display:block; margin-bottom:6px; font-size:0.9rem; color: #444; }
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid var(--gray);
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+.form-actions { margin-top: 10px; display:flex; justify-content:flex-end; }
+.auth-error { margin-top: 10px; color: var(--secondary); font-weight:600; min-height:1.25em; }
+.user-badge {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 10px;
+    background: white;
+    color: var(--primary);
+    border-radius: 20px;
+    font-weight:600;
+}
+.user-badge .logout {
+    margin-left: 8px;
+    color: var(--secondary);
+    cursor: pointer;
+    font-size: 0.9rem;
+}

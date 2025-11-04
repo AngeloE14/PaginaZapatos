@@ -390,4 +390,144 @@ document.addEventListener('DOMContentLoaded', function() {
         cart = cart.filter(item => item.id !== parseInt(productId));
         updateCartView();
     }
+
+    /* ---------------------- Authentication (client-side) ---------------------- */
+    const USERS_KEY = 'mz_users_v1';
+    const CURRENT_USER_KEY = 'mz_current_user_v1';
+
+    function getUsers() {
+        try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; } catch(e) { return []; }
+    }
+
+    function saveUsers(users) {
+        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    }
+
+    function getCurrentUser() {
+        return JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+    }
+
+    function setCurrentUser(user) {
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+    }
+
+    function clearCurrentUser() {
+        localStorage.removeItem(CURRENT_USER_KEY);
+    }
+
+    function openAuthModal(mode = 'login') {
+        const modal = document.getElementById('auth-modal');
+        if (!modal) return;
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        // switch tab
+        document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+        document.getElementById('tab-register').classList.toggle('active', mode === 'register');
+        document.getElementById('login-form').classList.toggle('active', mode === 'login');
+        document.getElementById('register-form').classList.toggle('active', mode === 'register');
+        document.getElementById('auth-error').textContent = '';
+        document.getElementById('reg-error').textContent = '';
+    }
+
+    function closeAuthModal() {
+        const modal = document.getElementById('auth-modal');
+        if (!modal) return;
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+    }
+
+    function showUserState() {
+        const userBtn = document.getElementById('user-button');
+        const current = getCurrentUser();
+        if (!userBtn) return;
+
+        if (current && current.username) {
+            userBtn.innerHTML = `<span class="user-badge">${escapeHtml(current.username)} <span class="logout" id="logout-btn">Salir</span></span>`;
+            // attach logout handler
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) logoutBtn.addEventListener('click', function(e){ e.preventDefault(); logout(); });
+        } else {
+            userBtn.innerHTML = '<i class="fas fa-user"></i>';
+        }
+    }
+
+    function escapeHtml(text){
+        return String(text).replace(/[&<>"]/g, function(s){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[s]; });
+    }
+
+    function handleLogin(e) {
+        e.preventDefault();
+        const u = document.getElementById('auth-username').value.trim();
+        const p = document.getElementById('auth-password').value;
+        const err = document.getElementById('auth-error');
+
+        if (!u || !p) {
+            err.textContent = 'Completa usuario y contraseña.';
+            return;
+        }
+
+        const users = getUsers();
+        const found = users.find(x => x.username === u && x.password === p);
+        if (found) {
+            setCurrentUser({ username: found.username });
+            closeAuthModal();
+            showUserState();
+        } else {
+            err.textContent = 'Usuario o contraseña incorrectos.';
+        }
+    }
+
+    function handleRegister(e) {
+        e.preventDefault();
+        const u = document.getElementById('reg-username').value.trim();
+        const p = document.getElementById('reg-password').value;
+        const err = document.getElementById('reg-error');
+
+        if (!u || !p) { err.textContent = 'Completa usuario y contraseña.'; return; }
+
+        let users = getUsers();
+        if (users.find(x => x.username === u)) { err.textContent = 'El usuario ya existe.'; return; }
+
+        users.push({ username: u, password: p });
+        saveUsers(users);
+        setCurrentUser({ username: u });
+        closeAuthModal();
+        showUserState();
+    }
+
+    function logout() {
+        clearCurrentUser();
+        showUserState();
+    }
+
+    // Wire auth listeners into existing setupEventListeners flow
+    // Add auth-specific listeners
+    (function attachAuthListeners(){
+        // user button opens modal
+        const userBtn = document.getElementById('user-button');
+        if (userBtn) userBtn.addEventListener('click', function(e){ e.preventDefault(); const cur = getCurrentUser(); if (cur && cur.username) { /* no modal when logged, allow logout via badge */ } else openAuthModal('login'); });
+
+        // close modal
+        const authClose = document.getElementById('auth-close');
+        if (authClose) authClose.addEventListener('click', function(e){ e.preventDefault(); closeAuthModal(); });
+
+        // tab switches
+        const tabLogin = document.getElementById('tab-login');
+        const tabRegister = document.getElementById('tab-register');
+        if (tabLogin) tabLogin.addEventListener('click', function(){ openAuthModal('login'); });
+        if (tabRegister) tabRegister.addEventListener('click', function(){ openAuthModal('register'); });
+
+        // forms
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        if (loginForm) loginForm.addEventListener('submit', handleLogin);
+        if (registerForm) registerForm.addEventListener('submit', handleRegister);
+
+        // initial display
+        showUserState();
+
+        // click outside modal to close
+        const modal = document.getElementById('auth-modal');
+        if (modal) modal.addEventListener('click', function(e){ if (e.target === modal) closeAuthModal(); });
+    })();
 });
