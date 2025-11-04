@@ -442,27 +442,72 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.setAttribute('aria-hidden', 'true');
     }
 
-    function showUserState() {
-        const userBtn = document.getElementById('user-button');
-        const current = getCurrentUser();
-        if (!userBtn) return;
+    // Registro con fecha de nacimiento, país y CURP
+    function handleRegister(e) {
+        e.preventDefault();
+        const u = document.getElementById('reg-username').value.trim();
+        const p = document.getElementById('reg-password').value;
+        const name = document.getElementById('reg-name').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const phone = document.getElementById('reg-phone').value.trim();
+        const birth = document.getElementById('reg-birth').value;
+        const country = document.getElementById('reg-country').value.trim();
+        const curp = document.getElementById('reg-curp').value.trim();
+        const err = document.getElementById('reg-error');
 
-        if (current && (current.username || current.name || current.email)) {
-            const displayName = current.name || current.username || current.email || 'Usuario';
-            const picture = current.picture ? `<img src="${escapeHtml(current.picture)}" alt="${escapeHtml(displayName)}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : '';
-            userBtn.innerHTML = `<button class="user-badge" id="user-badge-button" style="border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:20px;">${picture}<span style="font-weight:600;color:var(--primary);">${escapeHtml(displayName)}</span></button>`;
-            // clicking the badge opens profile modal
-            const badge = document.getElementById('user-badge-button');
-            if (badge) badge.addEventListener('click', function(e){ e.preventDefault(); openProfileModal(); });
-        } else {
-            userBtn.innerHTML = '<i class="fas fa-user"></i>';
+        // Validaciones específicas
+        // Usuario y contraseña obligatorios
+        if (!u || !p || !name || !email || !birth || !country || !curp) {
+            err.textContent = 'Completa todos los campos obligatorios.';
+            return;
         }
+        // Email válido
+        if (!/^\S+@\S+\.\S+$/.test(email)) {
+            err.textContent = 'Correo electrónico inválido.';
+            return;
+        }
+        // Teléfono: opcional, pero si se ingresa debe ser numérico y de 10 dígitos
+        if (phone && !/^\d{10}$/.test(phone)) {
+            err.textContent = 'El teléfono debe tener 10 dígitos.';
+            return;
+        }
+        // CURP: 18 caracteres, letras y números
+        if (!/^([A-Z]{4})(\d{6})([HM])([A-Z]{5})([A-Z\d]{2})$/.test(curp)) {
+            err.textContent = 'CURP inválido. Debe tener 18 caracteres y formato oficial.';
+            return;
+        }
+        // País: solo letras y espacios
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/.test(country)) {
+            err.textContent = 'El país solo debe contener letras y espacios.';
+            return;
+        }
+        // Fecha de nacimiento: debe ser pasada y mayor de 13 años
+        const birthDate = new Date(birth);
+        const today = new Date();
+        const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+        if (birthDate > today) {
+            err.textContent = 'La fecha de nacimiento debe ser en el pasado.';
+            return;
+        }
+        if (birthDate > minDate) {
+            err.textContent = 'Debes tener al menos 13 años.';
+            return;
+        }
+        let users = getUsers();
+        if (users.find(x => x.username === u)) {
+            err.textContent = 'El usuario ya existe.';
+            return;
+        }
+        // Guardar todos los datos del usuario
+        users.push({ username: u, password: p, name, email, phone, birth, country, curp });
+        saveUsers(users);
+        // Guardar usuario actual con todos los datos
+        setCurrentUser({ username: u, name, email, phone, birth, country, curp });
+        closeAuthModal();
+        showUserState();
     }
 
-    function escapeHtml(text){
-        return String(text).replace(/[&<>"]/g, function(s){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[s]; });
-    }
-
+    // Login: carga todos los datos del usuario registrado
     function handleLogin(e) {
         e.preventDefault();
         const u = document.getElementById('auth-username').value.trim();
@@ -473,11 +518,11 @@ document.addEventListener('DOMContentLoaded', function() {
             err.textContent = 'Completa usuario y contraseña.';
             return;
         }
-
         const users = getUsers();
         const found = users.find(x => x.username === u && x.password === p);
         if (found) {
-            setCurrentUser({ username: found.username });
+            // Guardar todos los datos del usuario en sesión
+            setCurrentUser({ username: found.username, name: found.name, email: found.email, phone: found.phone, birth: found.birth, country: found.country, curp: found.curp });
             closeAuthModal();
             showUserState();
         } else {
@@ -485,22 +530,59 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function handleRegister(e) {
-        e.preventDefault();
-        const u = document.getElementById('reg-username').value.trim();
-        const p = document.getElementById('reg-password').value;
-        const err = document.getElementById('reg-error');
+    // Mostrar todos los datos del usuario en el header y en el modal de perfil
+    function showUserState() {
+        const userBtn = document.getElementById('user-button');
+        const current = getCurrentUser();
+        if (!userBtn) return;
 
-        if (!u || !p) { err.textContent = 'Completa usuario y contraseña.'; return; }
+        if (current && (current.username || current.name || current.email)) {
+            // Mostrar nombre y usuario en el header
+            userBtn.innerHTML = `<button class="user-badge" id="user-badge-button" style="border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:20px;">
+                <span style="font-weight:600;color:var(--primary);">${escapeHtml(current.name || current.username)}</span>
+                <span style="font-size:0.9em;color:#666;">(${escapeHtml(current.username)})</span>
+            </button>`;
+            // clicking the badge abre el modal de perfil
+            const badge = document.getElementById('user-badge-button');
+            if (badge) badge.addEventListener('click', function(e){ e.preventDefault(); openProfileModal(); });
+        } else {
+            userBtn.innerHTML = '<i class="fas fa-user"></i>';
+        }
+    }
 
-        let users = getUsers();
-        if (users.find(x => x.username === u)) { err.textContent = 'El usuario ya existe.'; return; }
+    // Modal de perfil: muestra todos los datos del usuario
+    window.openProfileModal = function(){
+        const cur = getCurrentUser();
+        const authFormsContainer = document.querySelector('.auth-forms');
+        const ORIGINAL_AUTH_FORMS = authFormsContainer ? authFormsContainer.innerHTML : '';
+        if (!authFormsContainer) return;
+        // Construir vista de perfil con todos los datos
+        const profileHtml = `
+            <div style="text-align:center; padding:10px 6px;">
+                <h3 style="margin-bottom:6px;">${escapeHtml(cur.name || cur.username || '')}</h3>
+                <p style="color:#666;margin-bottom:6px;">Usuario: <b>${escapeHtml(cur.username || '')}</b></p>
+                <p style="color:#666;margin-bottom:6px;">Correo: <b>${escapeHtml(cur.email || '')}</b></p>
+                <p style="color:#666;margin-bottom:6px;">Teléfono: <b>${escapeHtml(cur.phone || '')}</b></p>
+                <p style="color:#666;margin-bottom:6px;">Fecha de nacimiento: <b>${escapeHtml(cur.birth || '')}</b></p>
+                <p style="color:#666;margin-bottom:6px;">País: <b>${escapeHtml(cur.country || '')}</b></p>
+                <p style="color:#666;margin-bottom:6px;">CURP: <b>${escapeHtml(cur.curp || '')}</b></p>
+                <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
+                    <button class="btn" id="profile-logout">Cerrar sesión</button>
+                    <button class="btn btn-secondary" id="profile-close">Cerrar</button>
+                </div>
+            </div>
+        `;
+        authFormsContainer.innerHTML = profileHtml;
+        openAuthModal('profile');
+        // attach handlers
+        const logoutBtn = document.getElementById('profile-logout');
+        const closeBtn = document.getElementById('profile-close');
+        if (logoutBtn) logoutBtn.addEventListener('click', function(e){ e.preventDefault(); logout(); closeAuthModal(); if (authFormsContainer) authFormsContainer.innerHTML = ORIGINAL_AUTH_FORMS; attachAuthListeners(); });
+        if (closeBtn) closeBtn.addEventListener('click', function(e){ e.preventDefault(); closeAuthModal(); if (authFormsContainer) authFormsContainer.innerHTML = ORIGINAL_AUTH_FORMS; attachAuthListeners(); });
+    }
 
-        users.push({ username: u, password: p });
-        saveUsers(users);
-        setCurrentUser({ username: u });
-        closeAuthModal();
-        showUserState();
+    function escapeHtml(text){
+        return String(text).replace(/[&<>"]/g, function(s){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[s]; });
     }
 
     function logout() {
