@@ -542,7 +542,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span style="font-weight:600;color:var(--primary);">${escapeHtml(current.name || current.username)}</span>
                 <span style="font-size:0.9em;color:#666;">(${escapeHtml(current.username)})</span>
             </button>`;
-            // clicking the badge abre el modal de perfil
+            // clicking the badge opens the profile modal
             const badge = document.getElementById('user-badge-button');
             if (badge) badge.addEventListener('click', function(e){ e.preventDefault(); openProfileModal(); });
         } else {
@@ -556,25 +556,48 @@ document.addEventListener('DOMContentLoaded', function() {
         const authFormsContainer = document.querySelector('.auth-forms');
         const ORIGINAL_AUTH_FORMS = authFormsContainer ? authFormsContainer.innerHTML : '';
         if (!authFormsContainer) return;
-        // Construir vista de perfil con todos los datos
+        // Construir vista de perfil con nombre, usuario y correo (correo editable)
         const profileHtml = `
             <div style="text-align:center; padding:10px 6px;">
                 <h3 style="margin-bottom:6px;">${escapeHtml(cur.name || cur.username || '')}</h3>
                 <p style="color:#666;margin-bottom:6px;">Usuario: <b>${escapeHtml(cur.username || '')}</b></p>
-                <p style="color:#666;margin-bottom:6px;">Correo: <b>${escapeHtml(cur.email || '')}</b></p>
-                <p style="color:#666;margin-bottom:6px;">Teléfono: <b>${escapeHtml(cur.phone || '')}</b></p>
-                <p style="color:#666;margin-bottom:6px;">Fecha de nacimiento: <b>${escapeHtml(cur.birth || '')}</b></p>
-                <p style="color:#666;margin-bottom:6px;">País: <b>${escapeHtml(cur.country || '')}</b></p>
-                <p style="color:#666;margin-bottom:6px;">CURP: <b>${escapeHtml(cur.curp || '')}</b></p>
-                <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
+                <div style='margin-bottom:6px;'>
+                    <label for='profile-email' style='font-weight:500;color:#666;'>Correo:</label><br>
+                    <input id='profile-email' type='email' class='form-control' style='width:80%;margin:6px auto;' value='${escapeHtml(cur.email || '')}' />
+                </div>
+                <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+                    <button class="btn" id="profile-save-email">Guardar correo</button>
                     <button class="btn" id="profile-logout">Cerrar sesión</button>
                     <button class="btn btn-secondary" id="profile-close">Cerrar</button>
                 </div>
+                <div id='profile-email-msg' style='margin-top:8px;color:var(--secondary);font-weight:600;'></div>
             </div>
         `;
         authFormsContainer.innerHTML = profileHtml;
         openAuthModal('profile');
-        // attach handlers
+        // Guardar correo editado
+        const saveBtn = document.getElementById('profile-save-email');
+        if (saveBtn) saveBtn.addEventListener('click', function(e){
+            e.preventDefault();
+            const emailInput = document.getElementById('profile-email');
+            const msg = document.getElementById('profile-email-msg');
+            const newEmail = emailInput.value.trim();
+            if (!/^\S+@\S+\.\S+$/.test(newEmail)) {
+                msg.textContent = 'Correo electrónico inválido.';
+                return;
+            }
+            // Actualizar en localStorage y sesión
+            let users = getUsers();
+            let idx = users.findIndex(x => x.username === cur.username);
+            if (idx !== -1) {
+                users[idx].email = newEmail;
+                saveUsers(users);
+            }
+            setCurrentUser({ ...cur, email: newEmail });
+            msg.textContent = 'Correo actualizado correctamente.';
+            showUserState();
+        });
+        // Cerrar sesión y cerrar modal
         const logoutBtn = document.getElementById('profile-logout');
         const closeBtn = document.getElementById('profile-close');
         if (logoutBtn) logoutBtn.addEventListener('click', function(e){ e.preventDefault(); logout(); closeAuthModal(); if (authFormsContainer) authFormsContainer.innerHTML = ORIGINAL_AUTH_FORMS; attachAuthListeners(); });
