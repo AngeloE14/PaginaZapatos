@@ -23,9 +23,17 @@
             </nav>
             
             <div class="header-icons">
-                <a href="#"><i class="fas fa-search"></i></a>
+                <a href="#" id="search-toggle"><i class="fas fa-search"></i></a>
                 <a href="#" id="user-button"><i class="fas fa-user"></i></a>
                 <a href="#" class="nav-link" data-tab="cart"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+            <!-- Search bar (hidden by default) -->
+            <div class="header-search" id="header-search" aria-hidden="true">
+                <form id="search-form">
+                    <input id="search-input" type="search" placeholder="Buscar productos..." aria-label="Buscar productos">
+                    <button class="btn" id="search-submit" type="submit">Buscar</button>
+                    <button class="btn btn-secondary" id="search-clear" type="button">Limpiar</button>
+                </form>
             </div>
         </div>
     </header>
