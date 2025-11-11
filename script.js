@@ -1,11 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    /**
-     * script.js (versión en español)
-     * - Maneja productos, búsqueda, carrito y autenticación (demo local)
-     * - Conserva las IDs del HTML y las claves de localStorage para compatibilidad
-     */
-
-    // Estado
+    
     let carrito = [];
     let productoSeleccionado = null;
 
@@ -26,12 +20,12 @@ document.addEventListener('DOMContentLoaded', function () {
         { servicio: 'Refuerzo de talón', descripcion: 'Refuerzo interno para mayor durabilidad', precio: 10.00 }
     ];
 
-    // Claves (strings) en localStorage: NO cambiar
+    
     const CLAVE_USUARIOS = 'mz_users_v1';
     const CLAVE_CARRITO_BASE = 'mz_cart_v1';
     const CLAVE_USUARIO_ACTUAL = 'mz_current_user_v1';
 
-    // Inicializar
+    
     inicializarApp();
 
     function inicializarApp() {
