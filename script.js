@@ -97,9 +97,16 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('input', function(e){ if (e.target.classList && e.target.classList.contains('cart-quantity-input')) { const id = e.target.getAttribute('data-cart-id'); const val = Math.max(1, parseInt(e.target.value) || 1); establecerCantidadCarritoPorId(id, val); } });
         const checkoutBtn = document.getElementById('checkout-btn'); if (checkoutBtn) checkoutBtn.addEventListener('click', function(e){ e.preventDefault(); if (!obtenerUsuarioSesion()) { abrirModalAuth('login'); return; } alert('Procediendo al pago... (demo)'); });
         const searchToggle = document.getElementById('search-toggle'); const headerSearch = document.getElementById('header-search'); const searchForm = document.getElementById('search-form'); const searchInput = document.getElementById('search-input'); const searchClear = document.getElementById('search-clear');
-        if (searchToggle) searchToggle.addEventListener('click', function(e){ e.preventDefault(); if (headerSearch) headerSearch.classList.toggle('active'); setTimeout(() => { if (searchInput) searchInput.focus(); }, 50); });
+        if (searchToggle) searchToggle.addEventListener('click', function(e){
+            e.preventDefault();
+            if (!headerSearch) return;
+            // El CSS muestra .header-search cuando aria-hidden="false"
+            const oculto = headerSearch.getAttribute('aria-hidden') === 'true';
+            headerSearch.setAttribute('aria-hidden', oculto ? 'false' : 'true');
+            if (oculto) setTimeout(() => { if (searchInput) searchInput.focus(); }, 50);
+        });
         if (searchForm) searchForm.addEventListener('submit', function(e){ e.preventDefault(); buscarProductos(searchInput && searchInput.value); });
-        if (searchClear) searchClear.addEventListener('click', function(e){ e.preventDefault(); if (searchInput) searchInput.value = ''; renderizarListaProductos(); if (headerSearch) headerSearch.classList.remove('active'); mostrarPestaña('products'); });
+    if (searchClear) searchClear.addEventListener('click', function(e){ e.preventDefault(); if (searchInput) searchInput.value = ''; renderizarListaProductos(); if (headerSearch) headerSearch.setAttribute('aria-hidden', 'true'); mostrarPestaña('products'); });
         vincularListenersAuth();
     }
 
