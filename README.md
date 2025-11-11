@@ -1,7 +1,7 @@
 # 🥾 Calzado del Pueblo
 
 Sitio web de **calzado urbano para jóvenes** con secciones interactivas de productos, reparaciones y carrito de compras.  
-Diseño moderno, funcional y adaptable a cualquier dispositivo.
+Diseño moderno
 
 ---
 
