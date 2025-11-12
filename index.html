@@ -18,7 +18,6 @@
                     <li><a href="#" class="nav-link" data-tab="home">Inicio</a></li>
                     <li><a href="#" class="nav-link" data-tab="products">Productos</a></li>
                     <li><a href="#" class="nav-link" data-tab="repair-service">Reparaciones</a></li>
-                    <li><a href="#" class="nav-link" data-tab="cart">Carrito</a></li>
                 </ul>
             </nav>
             
@@ -245,6 +244,11 @@
     <!-- Auth Modal -->
     <div id="auth-modal" class="auth-modal" aria-hidden="true">
         <div class="auth-modal-content">
+            <!-- Loading overlay for auth actions -->
+            <div id="auth-loading" class="auth-loading" aria-hidden="true" role="status" aria-live="polite">
+                <div class="spinner" aria-hidden="true"></div>
+                <div class="loading-text">Cargando...</div>
+            </div>
             <button class="auth-close" id="auth-close" aria-label="Cerrar">&times;</button>
             <div class="auth-forms">
                 <div class="auth-tabs">

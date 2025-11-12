@@ -156,7 +156,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function manejarRegistro(e) { e.preventDefault(); const username = (document.getElementById('reg-username').value || '').trim(); const password = (document.getElementById('reg-password').value || ''); const name = (document.getElementById('reg-name').value || '').trim(); const email = (document.getElementById('reg-email').value || '').trim(); const phone = (document.getElementById('reg-phone').value || '').trim(); const birth = document.getElementById('reg-birth').value; const country = (document.getElementById('reg-country').value || '').trim(); const curp = (document.getElementById('reg-curp').value || '').trim(); const err = document.getElementById('reg-error'); if (!username || !password || !name || !email || !birth || !country || !curp) { if (err) err.textContent = 'Completa todos los campos obligatorios.'; return; } if (!/^\S+@\S+\.\S+$/.test(email)) { if (err) err.textContent = 'Correo electrónico inválido.'; return; } if (phone && !/^\d{10}$/.test(phone)) { if (err) err.textContent = 'El teléfono debe tener 10 dígitos.'; return; } if (!/^([A-Z]{4})(\d{6})([HM])([A-Z]{5})([A-Z\d]{2})$/.test(curp)) { if (err) err.textContent = 'CURP inválido. Debe tener 18 caracteres y formato oficial.'; return; } if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/.test(country)) { if (err) err.textContent = 'El país solo debe contener letras y espacios.'; return; } const birthDate = new Date(birth); const today = new Date(); const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate()); if (birthDate > today) { if (err) err.textContent = 'La fecha de nacimiento debe ser en el pasado.'; return; } if (birthDate > minDate) { if (err) err.textContent = 'Debes tener al menos 13 años.'; return; } let usuarios = obtenerUsuarios(); if (usuarios.find(x => x.username === username)) { if (err) err.textContent = 'El usuario ya existe.'; return; } usuarios.push({ username, password, name, email, phone, birth, country, curp }); guardarUsuarios(usuarios); establecerUsuarioSesion({ username, name, email, phone, birth, country, curp }); cerrarModalAuth(); mostrarEstadoUsuario(); }
 
-    function manejarLogin(e) { e.preventDefault(); const email = (document.getElementById('auth-email').value || '').trim(); const password = (document.getElementById('auth-password').value || ''); const err = document.getElementById('auth-error'); if (!email || !password) { if (err) err.textContent = 'Completa tu correo y contraseña.'; return; } const usuarios = obtenerUsuarios(); const encontrado = usuarios.find(u => u.email === email && u.password === password); if (encontrado) { establecerUsuarioSesion({ username: encontrado.username, name: encontrado.name, email: encontrado.email, phone: encontrado.phone, birth: encontrado.birth, country: encontrado.country, curp: encontrado.curp }); cerrarModalAuth(); mostrarEstadoUsuario(); } else { if (err) err.textContent = 'Correo o contraseña incorrectos.'; } }
+    function manejarLogin(e) {
+        e.preventDefault();
+        const email = (document.getElementById('auth-email').value || '').trim();
+        const password = (document.getElementById('auth-password').value || '');
+        const err = document.getElementById('auth-error');
+        const spinner = document.getElementById('auth-loading');
+        const loginBtn = document.getElementById('login-btn');
+
+        if (!email || !password) {
+            if (err) err.textContent = 'Completa tu correo y contraseña.';
+            return;
+        }
+
+        // Clear previous error
+        if (err) err.textContent = '';
+
+        // Show loading overlay and disable button
+        if (spinner) { spinner.setAttribute('aria-hidden', 'false'); spinner.classList.add('active'); }
+        if (loginBtn) loginBtn.disabled = true;
+
+        // Simulate brief loading (like a network request) then validate
+        setTimeout(function() {
+            const usuarios = obtenerUsuarios();
+            const encontrado = usuarios.find(u => u.email === email && u.password === password);
+
+            if (encontrado) {
+                establecerUsuarioSesion({ username: encontrado.username, name: encontrado.name, email: encontrado.email, phone: encontrado.phone, birth: encontrado.birth, country: encontrado.country, curp: encontrado.curp });
+                // hide spinner
+                if (spinner) { spinner.setAttribute('aria-hidden', 'true'); spinner.classList.remove('active'); }
+                if (loginBtn) loginBtn.disabled = false;
+                cerrarModalAuth();
+                mostrarEstadoUsuario();
+            } else {
+                if (err) err.textContent = 'Correo o contraseña incorrectos.';
+                if (spinner) { spinner.setAttribute('aria-hidden', 'true'); spinner.classList.remove('active'); }
+                if (loginBtn) loginBtn.disabled = false;
+            }
+        }, 700);
+    }
+
 
     // ---------- Estado Usuario UI ----------
     function mostrarEstadoUsuario() { const botonUsuario = document.getElementById('user-button'); const actual = obtenerUsuarioSesion(); if (!botonUsuario) return; if (actual && (actual.username || actual.name || actual.email)) { botonUsuario.innerHTML = `<button class="user-badge" id="user-badge-button" style="border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:20px;"><span style="font-weight:600;color:var(--primary);">${escapeHtml(actual.name || actual.username)}</span><span style="font-size:0.9em;color:#666;">(${escapeHtml(actual.username)})</span></button>`; const badge = document.getElementById('user-badge-button'); if (badge) badge.addEventListener('click', function(e){ e.preventDefault(); abrirModalPerfil(); }); } else { botonUsuario.innerHTML = '<i class="fas fa-user"></i>'; } }
