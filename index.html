@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calzado del Pueblo - Estilo Urbano</title>
@@ -8,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header -->
+    
     <header>
         <div class="container header-container">
             <a href="#" class="logo">Calzado del <span>Pueblo</span></a>
@@ -22,17 +23,8 @@
             </nav>
             
             <div class="header-icons">
-                <a href="#" id="search-toggle"><i class="fas fa-search"></i></a>
                 <a href="#" id="user-button"><i class="fas fa-user"></i></a>
                 <a href="#" class="nav-link" data-tab="cart"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-            <!-- Search bar (hidden by default) -->
-            <div class="header-search" id="header-search" aria-hidden="true">
-                <form id="search-form">
-                    <input id="search-input" type="search" placeholder="Buscar productos..." aria-label="Buscar productos">
-                    <button class="btn" id="search-submit" type="submit">Buscar</button>
-                    <button class="btn btn-secondary" id="search-clear" type="button">Limpiar</button>
-                </form>
             </div>
         </div>
     </header>
@@ -161,10 +153,10 @@
         </div>
     </section>
 
-    <!-- Cart Tab -->
+
     <section class="cart tab-content" id="cart-tab">
         <div class="container">
-            <h2 class="section-title">Tu Carrito de Compras</h2>
+            <h2 class="section-title">Carrito</h2>
             
             <div class="cart-container">
                 <div class="cart-items" id="cart-items">
@@ -234,7 +226,7 @@
             </div>
             
             <div class="copyright">
-                <p>&copy; 2023 Calzado del Pueblo. Todos los derechos reservados.</p>
+                <p>&copy; 2022 Calzado del Pueblo. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
@@ -269,14 +261,18 @@
                         <a href="#" id="forgot-password-link" style="font-size:0.9rem;color:var(--primary);">¿Olvidaste tu contraseña?</a>
                     </div>
                     <div style="text-align:center; margin:12px 0; color:#666; font-size:0.9rem;">o iniciar sesión con</div>
-                    <div id="google-signin-button" style="display:flex; justify-content:center; margin-bottom:8px;"></div>
+                    <!-- Botón oficial de Google (renderizado por la librería) -->
+                    <div style="display:flex; justify-content:center; margin-bottom:6px;">
+                        <div id="google-signin-button"></div>
+                    </div>
+                    <div id="google-prompt-msg" style="font-size:0.9rem;color:#666;margin-top:6px;text-align:center;"></div>
                     <div class="form-actions">
                         <button class="btn" id="login-btn" type="submit">Entrar</button>
                     </div>
                     <div class="auth-error" id="auth-error" role="alert"></div>
                 </form>
 
-                <!-- Registro más completo -->
+                <!-- Registro-->
                 <form id="register-form" class="auth-form">
                     <div class="form-group">
                         <label for="reg-username">Usuario</label>
@@ -313,7 +309,9 @@
                     </div>
                     <div class="form-actions">
                         <button class="btn" id="register-btn" type="submit">Crear cuenta</button>
+                        <div id="google-register-button" style="display:inline-block;margin-left:8px;"></div>
                     </div>
+                    <div id="google-register-prompt-msg" style="font-size:0.9rem;color:#666;margin-top:6px;text-align:center;"></div>
                     <div class="auth-error" id="reg-error" role="alert"></div>
                 </form>
             </div>

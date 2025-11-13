@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
         renderizarListaServicios();
         vincularListeners();
         cargarCarritoDesdeStorage();
+        // Inicializar botón de Google Sign-In si está configurado
+        iniciarGoogleSignIn();
     }
 
     // ---------- Productos y búsqueda ----------
@@ -90,17 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('click', function(e){ if (!e.target.classList) return; if (e.target.classList.contains('remove-item')) { const id = e.target.getAttribute('data-cart-id'); eliminarDelCarritoPorId(id); } if (e.target.classList.contains('cart-decrease')) { const id = e.target.getAttribute('data-cart-id'); cambiarCantidadCarritoPorId(id, -1); } if (e.target.classList.contains('cart-increase')) { const id = e.target.getAttribute('data-cart-id'); cambiarCantidadCarritoPorId(id, 1); } });
         document.addEventListener('input', function(e){ if (e.target.classList && e.target.classList.contains('cart-quantity-input')) { const id = e.target.getAttribute('data-cart-id'); const val = Math.max(1, parseInt(e.target.value) || 1); establecerCantidadCarritoPorId(id, val); } });
         const checkoutBtn = document.getElementById('checkout-btn'); if (checkoutBtn) checkoutBtn.addEventListener('click', function(e){ e.preventDefault(); if (!obtenerUsuarioSesion()) { abrirModalAuth('login'); return; } alert('Procediendo al pago... (demo)'); });
-        const searchToggle = document.getElementById('search-toggle'); const headerSearch = document.getElementById('header-search'); const searchForm = document.getElementById('search-form'); const searchInput = document.getElementById('search-input'); const searchClear = document.getElementById('search-clear');
-        if (searchToggle) searchToggle.addEventListener('click', function(e){
-            e.preventDefault();
-            if (!headerSearch) return;
-            // El CSS muestra .header-search cuando aria-hidden="false"
-            const oculto = headerSearch.getAttribute('aria-hidden') === 'true';
-            headerSearch.setAttribute('aria-hidden', oculto ? 'false' : 'true');
-            if (oculto) setTimeout(() => { if (searchInput) searchInput.focus(); }, 50);
-        });
-        if (searchForm) searchForm.addEventListener('submit', function(e){ e.preventDefault(); buscarProductos(searchInput && searchInput.value); });
-    if (searchClear) searchClear.addEventListener('click', function(e){ e.preventDefault(); if (searchInput) searchInput.value = ''; renderizarListaProductos(); if (headerSearch) headerSearch.setAttribute('aria-hidden', 'true'); mostrarPestaña('products'); });
+        // Search bar removed (UI was deleted). Keeping buscarProductos() function available if needed later.
         vincularListenersAuth();
     }
 
@@ -198,11 +190,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // ---------- Estado Usuario UI ----------
-    function mostrarEstadoUsuario() { const botonUsuario = document.getElementById('user-button'); const actual = obtenerUsuarioSesion(); if (!botonUsuario) return; if (actual && (actual.username || actual.name || actual.email)) { botonUsuario.innerHTML = `<button class="user-badge" id="user-badge-button" style="border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:20px;"><span style="font-weight:600;color:var(--primary);">${escapeHtml(actual.name || actual.username)}</span><span style="font-size:0.9em;color:#666;">(${escapeHtml(actual.username)})</span></button>`; const badge = document.getElementById('user-badge-button'); if (badge) badge.addEventListener('click', function(e){ e.preventDefault(); abrirModalPerfil(); }); } else { botonUsuario.innerHTML = '<i class="fas fa-user"></i>'; } }
+    function mostrarEstadoUsuario() {
+        const botonUsuario = document.getElementById('user-button');
+        const actual = obtenerUsuarioSesion();
+        if (!botonUsuario) return;
+        if (actual && (actual.username || actual.name || actual.email)) {
+            const avatarHtml = actual.picture ? `<img src="${escapeHtml(actual.picture)}" alt="avatar" class="user-avatar" />` : `<i class="fas fa-user-circle" style="font-size:20px;color:var(--primary)"></i>`;
+            botonUsuario.innerHTML = `<button class="user-badge" id="user-badge-button" style="border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:20px;">${avatarHtml}<div style="display:flex;flex-direction:column;align-items:flex-start;"><span style="font-weight:600;color:var(--primary);font-size:0.95rem;">${escapeHtml(actual.name || actual.username)}</span><span style="font-size:0.75rem;color:#666;">${escapeHtml(actual.username || '')}</span></div></button>`;
+            const badge = document.getElementById('user-badge-button');
+            if (badge) badge.addEventListener('click', function(e){ e.preventDefault(); abrirModalPerfil(); });
+        } else {
+            botonUsuario.innerHTML = '<i class="fas fa-user"></i>';
+        }
+    }
 
     // ---------- Modal perfil (editable) ----------
     function abrirModalPerfil() { const actual = obtenerUsuarioSesion(); const cont = document.querySelector('.auth-forms'); const ORIGINAL = cont ? cont.innerHTML : ''; if (!cont) return; const html = `
-            <div style="padding:8px 12px;">
+            <div style="padding:8px 12px; text-align:center;">
+                ${actual && actual.picture ? `<div style="margin-bottom:8px;"><img src="${escapeHtml(actual.picture)}" alt="avatar" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:3px solid #f0f0f0" /></div>` : ''}
                 <h3 style="margin-bottom:6px;text-align:center;">${escapeHtml(actual.name || actual.username || '')}</h3>
                 <p style="color:#666;margin-bottom:6px;text-align:center;">Usuario: <b>${escapeHtml(actual.username || '')}</b></p>
                 <div class="form-group"><label for="profile-email">Correo</label><input id="profile-email" type="email" class="form-control" style="width:100%;" value="${escapeHtml(actual.email || '')}" /></div>
@@ -223,6 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const authClose = document.getElementById('auth-close'); if (authClose) authClose.addEventListener('click', function(e){ e.preventDefault(); cerrarModalAuth(); });
         const tabLogin = document.getElementById('tab-login'); const tabRegister = document.getElementById('tab-register'); if (tabLogin) tabLogin.addEventListener('click', function(){ abrirModalAuth('login'); }); if (tabRegister) tabRegister.addEventListener('click', function(){ abrirModalAuth('register'); });
         const loginForm = document.getElementById('login-form'); const registerForm = document.getElementById('register-form'); if (loginForm) loginForm.addEventListener('submit', manejarLogin); if (registerForm) registerForm.addEventListener('submit', manejarRegistro);
+    // (Official Google button will be rendered by the library; prompt feedback handled in iniciarGoogleSignIn)
         mostrarEstadoUsuario(); const modal = document.getElementById('auth-modal'); if (modal) modal.addEventListener('click', function(e){ if (e.target === modal) cerrarModalAuth(); });
         const forgot = document.getElementById('forgot-password-link'); if (forgot) forgot.addEventListener('click', function(e){ e.preventDefault(); mostrarRestablecerContrasena(); });
 
@@ -241,8 +247,105 @@ document.addEventListener('DOMContentLoaded', function () {
     // ---------- Google Sign-In (opcional) ----------
     const GOOGLE_CLIENT_ID = 'REPLACE_WITH_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
     function decodificarJwt(token) { try { const base64Url = token.split('.')[1]; const base64 = base64Url.replace(/-/g,'+').replace(/_/g,'/'); const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c){ return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2); }).join('')); return JSON.parse(jsonPayload); } catch(e) { return null; } }
-    function manejarCredencialGoogle(response) { const payload = decodificarJwt(response.credential); if (!payload) { console.warn('No se pudo decodificar el token de Google.'); return; } const usuario = { username: payload.email || payload.sub, name: payload.name, email: payload.email, picture: payload.picture }; establecerUsuarioSesion(usuario); cerrarModalAuth(); mostrarEstadoUsuario(); }
-    function iniciarGoogleSignIn() { if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.indexOf('REPLACE_WITH_GOOGLE_CLIENT_ID') !== -1) { console.info('Google Client ID no configurado. Ignorando inicialización de Google Sign-In.'); return; } const tryInit = function(){ if (window.google && google.accounts && google.accounts.id) { google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: manejarCredencialGoogle }); const cont = document.getElementById('google-signin-button'); if (cont) google.accounts.id.renderButton(cont, { theme: 'outline', size: 'large' }); return true; } return false; }; if (!tryInit()) { const start = Date.now(); const iv = setInterval(function(){ if (tryInit() || (Date.now() - start) > 5000) clearInterval(iv); },200); } }
+    function manejarCredencialGoogle(response) {
+        const payload = decodificarJwt(response.credential);
+        if (!payload) { console.warn('No se pudo decodificar el token de Google.'); return; }
+
+        // Construir objeto de usuario a partir del payload de Google
+        const usuario = {
+            username: (payload.email ? payload.email.split('@')[0] : payload.sub),
+            name: payload.name || '',
+            email: payload.email || '',
+            picture: payload.picture || ''
+        };
+
+        // Guardar en lista de usuarios local si no existe (registro implícito)
+        try {
+            let usuarios = obtenerUsuarios();
+            const existe = usuarios.find(u => u.email === usuario.email);
+            if (!existe) {
+                // Asegurar username único
+                let base = usuario.username || 'guser';
+                let candidate = base;
+                let i = 1;
+                while (usuarios.find(u => u.username === candidate)) {
+                    candidate = base + i;
+                    i++;
+                }
+                usuario.username = candidate;
+                // Añadir usuario con contraseña vacía (Google users no usan password local)
+                usuarios.push({ username: usuario.username, password: '', name: usuario.name, email: usuario.email, phone: '', birth: '', country: '', curp: '', picture: usuario.picture });
+                guardarUsuarios(usuarios);
+            }
+        } catch (e) {
+            console.warn('No se pudo guardar usuario Google en localStorage', e);
+        }
+
+        // Establecer sesión incluyendo la imagen
+        establecerUsuarioSesion({ username: usuario.username, name: usuario.name, email: usuario.email, phone: '', birth: '', country: '', curp: '', picture: usuario.picture });
+        cerrarModalAuth();
+        mostrarEstadoUsuario();
+    }
+    function iniciarGoogleSignIn() {
+        if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.indexOf('REPLACE_WITH_GOOGLE_CLIENT_ID') !== -1) {
+            console.info('Google Client ID no configurado. Ignorando inicialización de Google Sign-In.');
+            return;
+        }
+
+        const tryInit = function(){
+            if (window.google && google.accounts && google.accounts.id) {
+                // Initialize Google Identity Services with One-Tap enabled
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: manejarCredencialGoogle,
+                    auto_select: false,
+                    cancel_on_tap_outside: true
+                });
+
+                // Prompt One-Tap (may show if eligible)
+                // Render the official Google button in both login and register locations (if present)
+                const contLogin = document.getElementById('google-signin-button');
+                const contRegister = document.getElementById('google-register-button');
+                try {
+                    if (contLogin) {
+                        google.accounts.id.renderButton(contLogin, { theme: 'outline', size: 'large', type: 'standard' });
+                    }
+                    if (contRegister) {
+                        google.accounts.id.renderButton(contRegister, { theme: 'outline', size: 'large', type: 'standard' });
+                    }
+
+                    // Prompt One-Tap and handle notification feedback for better UX
+                    google.accounts.id.prompt(function(notification) {
+                        // notification has methods: isNotDisplayed(), isSkippedMoment(), isDismissedMoment()
+                        const msgEl = document.getElementById('google-prompt-msg');
+                        const regMsgEl = document.getElementById('google-register-prompt-msg');
+                        if (notification.isNotDisplayed && notification.isNotDisplayed()) {
+                            const reason = notification.getNotDisplayedReason ? notification.getNotDisplayedReason() : '';
+                            const message = 'One‑Tap no está disponible (bloqueado o no elegible). Usa el botón de Google.' + (reason ? ' (' + reason + ')' : '');
+                            if (msgEl) msgEl.textContent = message;
+                            if (regMsgEl) regMsgEl.textContent = message;
+                        } else if (notification.isDismissed && notification.isDismissed()) {
+                            if (msgEl) msgEl.textContent = 'Si cerraste la ventana, puedes intentar iniciar sesión con el botón de Google.';
+                            if (regMsgEl) regMsgEl.textContent = '';
+                        } else if (notification.isSkippedMoment && notification.isSkippedMoment()) {
+                            // user skipped; clear messages
+                            if (msgEl) msgEl.textContent = '';
+                            if (regMsgEl) regMsgEl.textContent = '';
+                        }
+                    });
+                } catch (e) {
+                    console.warn('Error mostrando One-Tap o renderButton:', e);
+                }
+                return true;
+            }
+            return false;
+        };
+
+        if (!tryInit()) {
+            const start = Date.now();
+            const iv = setInterval(function(){ if (tryInit() || (Date.now() - start) > 5000) clearInterval(iv); },200);
+        }
+    }
 
     // ---------- Reparación: solicitud y cotización ----------
     function enviarSolicitudCotizacion() { const seleccionadas = document.querySelectorAll('.repair-checkbox:checked'); const nombre = document.getElementById('customer-name') ? document.getElementById('customer-name').value : ''; const correo = document.getElementById('customer-email') ? document.getElementById('customer-email').value : ''; if (seleccionadas.length === 0) { alert('Por favor, selecciona al menos un servicio de reparación.'); return; } if (!nombre || !correo) { alert('Por favor, completa tu nombre y correo electrónico.'); return; } let total = 0; let lista = ''; seleccionadas.forEach(cb => { const serv = cb.getAttribute('data-service'); const precio = parseFloat(cb.getAttribute('data-price')) || 0; total += precio; lista += `- ${serv}: $${precio.toFixed(2)}\n`; }); alert(`✅ Cotización solicitada exitosamente!\n\n📋 Servicios seleccionados:\n${lista}\n💰 Total estimado: $${total.toFixed(2)}\n\n📧 Te contactaremos pronto a ${correo} para confirmar los detalles.`); document.querySelectorAll('.repair-checkbox').forEach(cb => cb.checked = false); if (document.getElementById('customer-name')) document.getElementById('customer-name').value = ''; if (document.getElementById('customer-email')) document.getElementById('customer-email').value = ''; if (document.getElementById('customer-phone')) document.getElementById('customer-phone').value = ''; if (document.getElementById('repair-description')) document.getElementById('repair-description').value = ''; actualizarCotizacionReparacion(); }
