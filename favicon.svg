@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Fondo rojo (color de la marca) -->
+  <rect width="100" height="100" fill="#e74c3c" rx="10"/>
+  
+  <!-- Silueta de una zapatilla -->
+  <g transform="translate(50, 50)">
+    <!-- Suela -->
+    <ellipse cx="0" cy="15" rx="28" ry="8" fill="#fff" opacity="0.9"/>
+    
+    <!-- Cuerpo principal de la zapatilla -->
+    <path d="M -20 -5 Q -25 -15 -15 -20 L 15 -20 Q 25 -15 20 -5 Z" fill="#fff" opacity="0.95"/>
+    
+    <!-- Puntera -->
+    <ellipse cx="20" cy="5" rx="12" ry="10" fill="#fff" opacity="0.9"/>
+    
+    <!-- Detalle de cordones -->
+    <line x1="-10" y1="-15" x2="-10" y2="5" stroke="#333" stroke-width="1.5" opacity="0.8"/>
+    <line x1="0" y1="-18" x2="0" y2="5" stroke="#333" stroke-width="1.5" opacity="0.8"/>
+    <line x1="10" y1="-15" x2="10" y2="5" stroke="#333" stroke-width="1.5" opacity="0.8"/>
+  </g>
+  
+  <!-- Texto "CDP" (Calzado del Pueblo) en la esquina inferior derecha -->
+  <text x="75" y="90" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff" opacity="0.8">CDP</text>
+</svg>
