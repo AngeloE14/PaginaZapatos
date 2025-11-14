@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const CLAVE_USUARIOS = 'mz_users_v1';
     const CLAVE_CARRITO = 'mz_cart_v1';
     const CLAVE_USUARIO_ACTUAL = 'mz_current_user_v1';
+    const capaCarga = document.getElementById('pantalla-carga');
+    const textoCarga = document.getElementById('texto-carga');
 
     let carrito = [];
     let productoSeleccionado = null;
@@ -51,7 +53,26 @@ document.addEventListener('DOMContentLoaded', function () {
         { nombre: 'Refuerzo de talón', descripcion: 'Refuerzo interno para mayor durabilidad', precio: 10.00 }
     ];
 
+    // Iniciamos mostrando un mensaje genérico mientras se arma la vista
+    mostrarCargaGlobal('Preparando vitrina...');
     inicializarApp();
+
+    /**
+     * Activa el overlay del spinner global con un mensaje opcional.
+     */
+    function mostrarCargaGlobal(mensaje = 'Cargando contenido...') {
+        if (!capaCarga) return;
+        if (textoCarga && mensaje) textoCarga.textContent = mensaje;
+        capaCarga.classList.add('activa');
+    }
+
+    /**
+     * Oculta el overlay del spinner global.
+     */
+    function ocultarCargaGlobal() {
+        if (!capaCarga) return;
+        capaCarga.classList.remove('activa');
+    }
 
     function inicializarApp() {
         mostrarProductos();
@@ -73,6 +94,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }, 100);
         }
+
+        // Pequeña demora para permitir que la interfaz termine de pintarse antes de quitar el spinner
+        setTimeout(ocultarCargaGlobal, 450);
     }
 
     function mostrarProductos() {
@@ -260,6 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        mostrarCargaGlobal('Generando cotización...');
         let total = 0;
         let lista = '';
         seleccionados.forEach(cb => {
@@ -276,6 +301,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('customer-email').value = '';
         document.getElementById('customer-phone').value = '';
         actualizarCotizacion();
+        setTimeout(ocultarCargaGlobal, 400);
     }
 
     function abrirModalAutenticacion(modo = 'iniciar-sesion') {
@@ -328,11 +354,13 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        mostrarCargaGlobal('Creando tu cuenta...');
         usuarios.push({ usuario, contraseña, nombre, correo, pais, curpRfc, telefono });
         localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
         establecerUsuario({ usuario, nombre, correo, pais, telefono });
         cerrarModalAutenticacion();
         actualizarUsuario();
+        setTimeout(ocultarCargaGlobal, 400);
     }
 
     function manejarInicioDeSesion(e) {
@@ -345,6 +373,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        mostrarCargaGlobal('Validando tus datos...');
         const usuarios = obtenerUsuarios();
         const encontrado = usuarios.find(u => u.correo === correo && u.contraseña === contraseña);
 
@@ -352,7 +381,9 @@ document.addEventListener('DOMContentLoaded', function () {
             establecerUsuario({ usuario: encontrado.usuario, nombre: encontrado.nombre, correo: encontrado.correo, telefono: encontrado.telefono });
             cerrarModalAutenticacion();
             actualizarUsuario();
+            setTimeout(ocultarCargaGlobal, 350);
         } else {
+            ocultarCargaGlobal();
             alert('Correo o contraseña incorrectos.');
         }
     }

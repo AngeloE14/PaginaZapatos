@@ -17,7 +17,9 @@
 
 
 html {
+    /* Desplazamiento suave y compensación para el header fijo */
     scroll-behavior: smooth;
+    scroll-padding-top: 90px;
     overflow-x: hidden;
     height: 100%;
 }
@@ -40,6 +42,53 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0;
+}
+
+/* Spinner global reutilizable (pantalla completa) */
+.pantalla-carga {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(26, 26, 26, 0.72);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 220ms ease;
+    backdrop-filter: blur(1px);
+}
+
+.pantalla-carga.activa {
+    opacity: 1;
+    visibility: visible;
+}
+
+.carga-contenido {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 28px 36px;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+.carga-spinner {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.35);
+    border-top-color: var(--color-secundario);
+    animation: girar 0.9s linear infinite;
+}
+
+.pantalla-carga p {
+    font-weight: 500;
+    letter-spacing: 0.4px;
 }
 
 a {

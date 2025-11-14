@@ -11,6 +11,14 @@
 </head>
 <body>
 
+    <!-- Capa de carga global: muestra un spinner mientras se prepara la vista o se ejecutan acciones importantes -->
+    <div id="pantalla-carga" class="pantalla-carga activa" aria-live="polite" aria-label="Cargando contenido">
+        <div class="carga-contenido">
+            <div class="carga-spinner" role="status"></div>
+            <p id="texto-carga">Preparando vitrina...</p>
+        </div>
+    </div>
+
     <main class="contenido-principal">
         <header>
             <div class="container header-container">
