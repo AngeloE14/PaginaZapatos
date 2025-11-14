@@ -315,10 +315,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function abrirModalAutenticacion(modo = 'iniciar-sesion') {
         const modal = document.getElementById('auth-modal');
         modal.classList.add('active');
-        document.getElementById('tab-login').classList.toggle('active', modo === 'iniciar-sesion');
-        document.getElementById('tab-register').classList.toggle('active', modo === 'registro');
-        document.getElementById('login-form').classList.toggle('active', modo === 'iniciar-sesion');
-        document.getElementById('register-form').classList.toggle('active', modo === 'registro');
+        const esLogin = modo === 'iniciar-sesion';
+        const esRegistro = modo === 'registro';
+        document.getElementById('tab-login').classList.toggle('active', esLogin);
+        document.getElementById('tab-register').classList.toggle('active', esRegistro);
+        document.getElementById('login-form').classList.toggle('active', esLogin);
+        document.getElementById('register-form').classList.toggle('active', esRegistro);
+        document.getElementById('recover-password-form').classList.remove('active');
     }
 
     function cerrarModalAutenticacion() {
@@ -529,13 +532,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function mostrarFormularioRecuperacion() {
-        document.querySelectorAll('form').forEach(f => f.classList.remove('active'));
+        document.querySelectorAll('.auth-forms form').forEach(f => f.classList.remove('active'));
         document.getElementById('recover-password-form').classList.add('active');
+        document.getElementById('tab-login').classList.remove('active');
+        document.getElementById('tab-register').classList.remove('active');
     }
 
     function volverAlLogin() {
-        document.querySelectorAll('form').forEach(f => f.classList.remove('active'));
+        document.querySelectorAll('.auth-forms form').forEach(f => f.classList.remove('active'));
         document.getElementById('login-form').classList.add('active');
+        document.getElementById('tab-login').classList.add('active');
+        document.getElementById('tab-register').classList.remove('active');
     }
 
     function enviarEnlaceRecuperacion(e) {
