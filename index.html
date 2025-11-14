@@ -11,15 +11,6 @@
 </head>
 <body>
 
-    <!-- Capa de carga global: muestra un spinner mientras se prepara la vista inicial -->
-    <div id="pantalla-carga" class="pantalla-carga activa" aria-live="polite" aria-label="Cargando contenido">
-        <div class="carga-contenido">
-            <div class="carga-spinner" role="status"></div>
-            <p id="texto-carga">Preparando sitio...</p>
-            <p id="texto-carga">Cargando...</p>
-        </div>
-    </div>
-
     <main class="contenido-principal">
         <header>
             <div class="container header-container">
@@ -235,9 +226,6 @@
     <!--Autenticación -->
     <div id="auth-modal" class="auth-modal" aria-hidden="true">
         <div class="auth-modal-content">
-            <div id="auth-loading" class="auth-loading" aria-hidden="true">
-                <div class="spinner"></div>
-            </div>
             <div class="auth-forms">
                 <div class="auth-tabs">
                     <button id="tab-login" class="tab-btn active">Iniciar Sesión</button>
@@ -310,12 +298,5 @@
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="aplicacion.js"></script>
-    <!-- Loader global para acciones de autenticación -->
-    <div id="auth-global-loader" class="auth-global-loader" aria-hidden="true" aria-live="polite">
-        <div class="agl-content" role="alert" aria-label="Procesando autenticación">
-            <div class="agl-spinner" aria-hidden="true"></div>
-            <p id="agl-text">Procesando...</p>
-        </div>
-    </div>
 </body>
 </html>

@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const CLAVE_USUARIOS = 'mz_users_v1';
     const CLAVE_CARRITO = 'mz_cart_v1';
     const CLAVE_USUARIO_ACTUAL = 'mz_current_user_v1';
-    const capaCarga = document.getElementById('pantalla-carga');
-    const textoCarga = document.getElementById('texto-carga');
 
     let carrito = [];
     let productoSeleccionado = null;
@@ -53,39 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
         { nombre: 'Refuerzo de talón', descripcion: 'Refuerzo interno para mayor durabilidad', precio: 10.00 }
     ];
 
-    // Iniciamos mostrando la capa de carga
-    mostrarCargaGlobal('Cargando...');
     inicializarApp();
-
-    function mostrarCargaGlobal(mensaje = 'Cargando...') {
-        if (!capaCarga) return;
-        if (textoCarga && mensaje) textoCarga.textContent = mensaje;
-        capaCarga.classList.add('activa');
-    }
-
-    function ocultarCargaGlobal() {
-        if (!capaCarga) return;
-        capaCarga.classList.remove('activa');
-    }
-
-    // Loader global dedicado a autenticación
-    const authGlobalLoader = document.getElementById('auth-global-loader');
-    const aglText = document.getElementById('agl-text');
-
-    function mostrarAuthLoader(mensaje = 'Procesando...') {
-        if (!authGlobalLoader) return;
-        if (aglText) aglText.textContent = mensaje;
-        authGlobalLoader.classList.add('active');
-    }
-
-    function ocultarAuthLoader(delay = 0) {
-        if (!authGlobalLoader) return;
-        if (delay > 0) {
-            setTimeout(() => authGlobalLoader.classList.remove('active'), delay);
-        } else {
-            authGlobalLoader.classList.remove('active');
-        }
-    }
 
     function desplazarSuavemente(idSeccion) {
         const destino = document.getElementById(idSeccion);
@@ -117,8 +83,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 100);
         }
 
-        // Ocultar loader cuando todo esté listo
-        setTimeout(ocultarCargaGlobal, 600);
     }
 
     function mostrarProductos() {
@@ -306,7 +270,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        mostrarCargaGlobal('Generando cotización...');
         let total = 0;
         let lista = '';
         seleccionados.forEach(cb => {
@@ -323,7 +286,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('customer-email').value = '';
         document.getElementById('customer-phone').value = '';
         actualizarCotizacion();
-        setTimeout(ocultarCargaGlobal, 400);
     }
 
     function abrirModalAutenticacion(modo = 'iniciar-sesion') {
@@ -378,22 +340,11 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('El correo ya está registrado.');
             return;
         }
-
-<<<<<<< HEAD
-    const btn = e.submitter || document.querySelector('#register-form button[type="submit"]');
-    if (btn) btn.classList.add('loading');
-    mostrarAuthLoader('Creando tu cuenta...');
         usuarios.push({ contraseña, nombre, correo, pais, curpRfc, telefono });
-=======
-        mostrarCargaGlobal('Creando tu cuenta...');
-        usuarios.push({ usuario, contraseña, nombre, correo, pais, curpRfc, telefono });
->>>>>>> parent of 9f5e6f0 (Elimino el nombre de usuario ya que es innecesario)
         localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
         establecerUsuario({ usuario, nombre, correo, pais, telefono });
         cerrarModalAutenticacion();
         actualizarUsuario();
-        ocultarAuthLoader(500);
-        if (btn) setTimeout(()=>btn.classList.remove('loading'),600);
     }
 
     function manejarInicioDeSesion(e) {
@@ -406,9 +357,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const btn = e.submitter || document.getElementById('login-btn');
-        if (btn) btn.classList.add('loading');
-        mostrarAuthLoader('Validando tus datos...');
         const usuarios = obtenerUsuarios();
         const encontrado = usuarios.find(u => u.correo === correo && u.contraseña === contraseña);
 
@@ -416,11 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
             establecerUsuario({ usuario: encontrado.usuario, nombre: encontrado.nombre, correo: encontrado.correo, telefono: encontrado.telefono });
             cerrarModalAutenticacion();
             actualizarUsuario();
-            ocultarAuthLoader(400);
-            if (btn) setTimeout(()=>btn.classList.remove('loading'),500);
         } else {
-            ocultarAuthLoader();
-            if (btn) btn.classList.remove('loading');
             alert('Correo o contraseña incorrectos.');
         }
     }
@@ -431,7 +375,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const usuario = obtenerUsuario();
 
         if (usuario) {
-<<<<<<< HEAD
             const displayName = (usuario.nombre || '').trim() || usuario.usuario || usuario.correo || 'Mi cuenta';
             if (boton) {
                 boton.innerHTML = '<i class="fas fa-user-circle"></i>';
@@ -442,10 +385,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 nameEl.textContent = displayName;
                 nameEl.style.display = 'block';
             }
-=======
-            boton.innerHTML = `<i class="fas fa-user-circle"></i> ${usuario.nombre || usuario.usuario}`;
-            boton.style.cursor = 'pointer';
->>>>>>> parent of 9f5e6f0 (Elimino el nombre de usuario ya que es innecesario)
         } else {
             boton.innerHTML = '<i class="fas fa-user"></i>';
             boton.style.cursor = 'pointer';
@@ -479,14 +418,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function cerrarSesion() {
-        mostrarAuthLoader('Cerrando sesión...');
-        setTimeout(() => {
-            localStorage.removeItem(CLAVE_USUARIO_ACTUAL);
-            actualizarUsuario();
-            cerrarMenuUsuario();
-            mostrarPestana('inicio');
-            ocultarAuthLoader(300);
-        }, 400);
+        localStorage.removeItem(CLAVE_USUARIO_ACTUAL);
+        actualizarUsuario();
+        cerrarMenuUsuario();
+        mostrarPestana('inicio');
     }
 
     function mostrarMenuUsuario() {
@@ -557,10 +492,8 @@ document.addEventListener('DOMContentLoaded', function () {
             establecerUsuario(usuario);
             cerrarModalAutenticacion();
             actualizarUsuario();
-            ocultarAuthLoader(300);
         } catch(e) {
             console.error('Error con Google:', e);
-            ocultarAuthLoader();
         }
     }
 
@@ -709,11 +642,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const btnCot = document.getElementById('request-quote');
         if (btnCot) btnCot.addEventListener('click', function(e){
             e.preventDefault();
-            btnCot.classList.add('loading');
-            setTimeout(()=>{
-                enviarCotizacion(e);
-                btnCot.classList.remove('loading');
-            },800);
+            enviarCotizacion(e);
         });
 
         const btnRepairStart = document.getElementById('repair-start-btn');
