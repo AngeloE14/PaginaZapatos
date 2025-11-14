@@ -15,9 +15,11 @@
     padding: 0;
 }
 
+
 html {
     scroll-behavior: smooth;
     overflow-x: hidden;
+    height: 100%;
 }
 
 body {
@@ -27,6 +29,9 @@ body {
     width: 100%;
     overflow-x: hidden;
     line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 a {
@@ -836,6 +841,7 @@ footer {
     background-color: var(--color-primario);
     color: #fff;
     padding: 40px 0 15px;
+    margin-top: auto;
 }
 
 .footer-content {
