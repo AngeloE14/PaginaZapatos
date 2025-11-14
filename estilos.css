@@ -216,12 +216,15 @@ section {
     opacity: 0.9;
 }
 
+.featured {
+    padding: 40px 0;
+}
 
 .section-title {
     text-align: center;
     font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     color: var(--color-primario);
 }
 
@@ -229,7 +232,7 @@ section {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 30px;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
 }
 
 .product-card {
@@ -285,7 +288,7 @@ section {
 
 
 .product-detail {
-    padding: 80px 0;
+    padding: 60px 0;
     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
 }
 
@@ -399,7 +402,7 @@ section {
 
 
 .cart {
-    padding: 80px 0;
+    padding: 40px 0;
     background: var(--color-claro);
 }
 
@@ -492,7 +495,7 @@ section {
 
 .repair-service,
 .repair-quote {
-    padding: 80px 0;
+    padding: 40px 0;
     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
 }
 
@@ -832,7 +835,7 @@ form p {
 footer {
     background-color: var(--color-primario);
     color: #fff;
-    padding: 50px 0 20px;
+    padding: 40px 0 15px;
 }
 
 .footer-content {
@@ -1192,10 +1195,16 @@ footer {
 
 .tab-content {
     display: none;
+    padding: 0;
+    margin: 0;
+    height: 0;
+    overflow: hidden;
 }
 
 .tab-content.active {
     display: block;
+    height: auto;
+    overflow: visible;
 }
 
 .back-btn {
