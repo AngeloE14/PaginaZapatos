@@ -354,13 +354,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function actualizarUsuario() {
         const boton = document.getElementById('boton-usuario');
+        const userMenu = document.querySelector('.user-menu-container');
         const usuario = obtenerUsuario();
 
         if (usuario) {
             boton.innerHTML = `<i class="fas fa-user-circle"></i> ${usuario.nombre || usuario.usuario}`;
             boton.style.cursor = 'pointer';
+            if (userMenu) userMenu.style.display = 'block';
         } else {
             boton.innerHTML = '<i class="fas fa-user"></i>';
+            if (userMenu) userMenu.style.display = 'none';
+            cerrarMenuUsuario();
         }
     }
 
@@ -388,6 +392,18 @@ document.addEventListener('DOMContentLoaded', function () {
     function cerrarSesion() {
         localStorage.removeItem(CLAVE_USUARIO_ACTUAL);
         actualizarUsuario();
+        cerrarMenuUsuario();
+        mostrarPestana('inicio');
+    }
+
+    function mostrarMenuUsuario() {
+        const menu = document.getElementById('user-menu');
+        if (menu) menu.classList.add('show');
+    }
+
+    function cerrarMenuUsuario() {
+        const menu = document.getElementById('user-menu');
+        if (menu) menu.classList.remove('show');
     }
 
     function inicializarGoogle() {
@@ -541,21 +557,24 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('cart-menos')) {
                 const idx = parseInt(e.target.getAttribute('data-idx'));
-                if (carrito[idx].cantidad > 1) carrito[idx].cantidad--;
+                if (carrito[idx] && carrito[idx].cantidad > 1) carrito[idx].cantidad--;
                 guardarCarrito();
                 mostrarCarrito();
             }
             if (e.target.classList.contains('cart-mas')) {
                 const idx = parseInt(e.target.getAttribute('data-idx'));
-                carrito[idx].cantidad++;
+                if (carrito[idx]) carrito[idx].cantidad++;
                 guardarCarrito();
                 mostrarCarrito();
             }
             if (e.target.classList.contains('remove-item')) {
+                e.preventDefault();
                 const idx = parseInt(e.target.getAttribute('data-idx'));
-                carrito.splice(idx, 1);
-                guardarCarrito();
-                mostrarCarrito();
+                if (idx >= 0 && idx < carrito.length) {
+                    carrito.splice(idx, 1);
+                    guardarCarrito();
+                    mostrarCarrito();
+                }
             }
         });
 
@@ -592,8 +611,29 @@ document.addEventListener('DOMContentLoaded', function () {
         // Autenticación
         document.getElementById('boton-usuario').addEventListener('click', function(e) {
             e.preventDefault();
-            if (!obtenerUsuario()) {
+            const usuario = obtenerUsuario();
+            if (!usuario) {
                 abrirModalAutenticacion('iniciar-sesion');
+            } else {
+                mostrarMenuUsuario();
+            }
+        });
+
+        // Cerrar sesión
+        const btnLogout = document.getElementById('btn-logout');
+        if (btnLogout) {
+            btnLogout.addEventListener('click', function(e) {
+                e.preventDefault();
+                cerrarSesion();
+            });
+        }
+
+        // Cerrar menú si se hace clic fuera
+        document.addEventListener('click', function(e) {
+            const userMenuContainer = document.querySelector('.user-menu-container');
+            const botonUsuario = document.getElementById('boton-usuario');
+            if (userMenuContainer && !userMenuContainer.contains(e.target) && e.target !== botonUsuario) {
+                cerrarMenuUsuario();
             }
         });
 
