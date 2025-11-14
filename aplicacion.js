@@ -1,0 +1,554 @@
+document.addEventListener('DOMContentLoaded', function () {
+    
+    const ID_GOOGLE = '321766301291-k2ni9fbsm6ddmvte8otola8gro8lg92b.apps.googleusercontent.com';
+    const CLAVE_USUARIOS = 'mz_users_v1';
+    const CLAVE_CARRITO = 'mz_cart_v1';
+    const CLAVE_USUARIO_ACTUAL = 'mz_current_user_v1';
+
+    let carrito = [];
+    let productoSeleccionado = null;
+    const PRODUCTOS = [
+        {
+            id: 1,
+            nombre: 'Urban Classic Black',
+            precio: 89.99,
+            imagen: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=764&q=80',
+            descripcion: 'Zapatillas urbanas clásicas en color negro, perfectas para el día a día.',
+            tallas: [7, 8, 9, 10, 11, 12]
+        },
+        {
+            id: 2,
+            nombre: 'Sport White',
+            precio: 94.99,
+            imagen: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&auto=format&fit=crop&w=812&q=80',
+            descripcion: 'Zapatillas deportivas en blanco.',
+            tallas: [6, 7, 8, 9, 10, 11]
+        },
+        {
+            id: 3,
+            nombre: 'Black Pro',
+            precio: 99.99,
+            imagen: 'https://images.unsplash.com/photo-1605030753481-bb38b08c384a?ixlib=rb-4.0.3&auto=format&fit=crop&w=749&q=80',
+            descripcion: 'Edición profesional en negro con refuerzos estratégicos.',
+            tallas: [8, 9, 10, 11, 12, 13]
+        },
+        {
+            id: 4,
+            nombre: 'Red Street',
+            precio: 87.99,
+            imagen: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80',
+            descripcion: 'Zapatillas urbanas en rojo vibrante para destacar tu estilo.',
+            tallas: [7, 8, 9, 10, 11]
+        }
+    ];
+
+    const SERVICIOS = [
+        { nombre: 'Cambio de suela', descripcion: 'Reemplazo completo de la suela desgastada', precio: 25.00 },
+        { nombre: 'Reparación de costuras', descripcion: 'Arreglo de costuras rotas o desgastadas', precio: 15.00 },
+        { nombre: 'Reemplazo de cordones', descripcion: 'Cambio de cordones por unos nuevos', precio: 8.00 },
+        { nombre: 'Limpieza profunda', descripcion: 'Limpieza completa y restauración de color', precio: 12.00 },
+        { nombre: 'Reparación de cremallera', descripcion: 'Arreglo o reemplazo de cremallera dañada', precio: 18.00 },
+        { nombre: 'Refuerzo de talón', descripcion: 'Refuerzo interno para mayor durabilidad', precio: 10.00 }
+    ];
+
+    inicializarApp();
+
+    function inicializarApp() {
+        mostrarProductos();
+        mostrarServicios();
+        vincularEventos();
+        cargarCarrito();
+        actualizarUsuario();
+        
+        if (typeof google !== 'undefined') {
+            inicializarGoogle();
+        } else {
+            let intentos = 0;
+            const intervalo = setInterval(function() {
+                if (typeof google !== 'undefined') {
+                    clearInterval(intervalo);
+                    inicializarGoogle();
+                } else if (++intentos > 50) {
+                    clearInterval(intervalo);
+                }
+            }, 100);
+        }
+    }
+
+    function mostrarProductos() {
+        const contenedor = document.querySelector('.products-grid');
+        if (!contenedor) return;
+        
+        contenedor.innerHTML = '';
+        PRODUCTOS.forEach(producto => {
+            const tarjeta = document.createElement('div');
+            tarjeta.className = 'product-card';
+            tarjeta.innerHTML = `
+                <div class="product-img"><img src="${producto.imagen}" alt="${producto.nombre}"></div>
+                <div class="product-info">
+                    <h3 class="product-title">${producto.nombre}</h3>
+                    <p class="product-price">$${producto.precio.toFixed(2)}</p>
+                    <a href="#" class="btn ver-producto" data-id="${producto.id}">Ver Detalles</a>
+                </div>
+            `;
+            contenedor.appendChild(tarjeta);
+        });
+    }
+
+    function mostrarDetalleProducto(id) {
+        productoSeleccionado = PRODUCTOS.find(p => p.id === id);
+        if (!productoSeleccionado) return;
+        
+        const contenedor = document.getElementById('product-detail-container');
+        contenedor.innerHTML = `
+            <div class="product-detail-image"><img src="${productoSeleccionado.imagen}" alt="${productoSeleccionado.nombre}"></div>
+            <div class="product-detail-info">
+                <h2>${productoSeleccionado.nombre}</h2>
+                <p class="product-detail-price">$${productoSeleccionado.precio.toFixed(2)}</p>
+                <p class="product-detail-description">${productoSeleccionado.descripcion}</p>
+                <div class="size-selector">
+                    <h3>Selecciona tu talla:</h3>
+                    <div class="size-options">
+                        ${productoSeleccionado.tallas.map(t => `<div class="size-option" data-size="${t}">${t}</div>`).join('')}
+                    </div>
+                </div>
+                <div class="quantity-selector">
+                    <h3>Cantidad:</h3>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn decrease">-</button>
+                        <input type="number" class="quantity-input" value="1" min="1">
+                        <button class="quantity-btn increase">+</button>
+                    </div>
+                </div>
+                <button class="btn agregar-carrito">Añadir al Carrito</button>
+            </div>
+        `;
+        mostrarPestana('product-detail');
+    }
+
+    function agregarAlCarrito() {
+        const usuario = obtenerUsuario();
+        if (!usuario) {
+            abrirModalAutenticacion('iniciar-sesion');
+            return;
+        }
+
+        const talla = document.querySelector('.size-option.selected')?.getAttribute('data-size');
+        const cantidad = Math.max(1, parseInt(document.querySelector('.quantity-input')?.value) || 1);
+
+        if (!talla) {
+            alert('Por favor, selecciona una talla.');
+            return;
+        }
+
+        const indice = carrito.findIndex(i => i.id === productoSeleccionado.id && i.talla === talla);
+        
+        if (indice !== -1) {
+            carrito[indice].cantidad += cantidad;
+        } else {
+            carrito.push({
+                id: productoSeleccionado.id,
+                nombre: productoSeleccionado.nombre,
+                precio: productoSeleccionado.precio,
+                talla,
+                cantidad,
+                imagen: productoSeleccionado.imagen
+            });
+        }
+
+        guardarCarrito();
+        mostrarPestana('carrito');
+        alert('Producto añadido al carrito.');
+    }
+
+    function mostrarCarrito() {
+        const contenedor = document.getElementById('cart-items');
+        const resumen = document.getElementById('cart-summary');
+
+        if (carrito.length === 0) {
+            document.getElementById('empty-cart-message').style.display = 'block';
+            resumen.style.display = 'none';
+            return;
+        }
+
+        document.getElementById('empty-cart-message').style.display = 'none';
+        resumen.style.display = 'block';
+
+        contenedor.innerHTML = carrito.map((item, idx) => `
+            <div class="cart-item">
+                <img src="${item.imagen}" alt="${item.nombre}" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h4>${item.nombre}</h4>
+                    <p>Talla: ${item.talla}</p>
+                    <p>Precio: $${item.precio.toFixed(2)}</p>
+                </div>
+                <div class="cart-item-quantity">
+                    <button class="quantity-btn cart-menos" data-idx="${idx}">-</button>
+                    <input type="number" class="quantity-input" value="${item.cantidad}" min="1" data-idx="${idx}">
+                    <button class="quantity-btn cart-mas" data-idx="${idx}">+</button>
+                </div>
+                <div class="cart-item-total">$${(item.precio * item.cantidad).toFixed(2)}</div>
+                <button class="remove-item" data-idx="${idx}">Eliminar</button>
+            </div>
+        `).join('');
+
+        const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+        const envio = subtotal > 100 ? 0 : 10;
+        const total = subtotal + envio;
+
+        document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('cart-shipping').textContent = `$${envio.toFixed(2)}`;
+        document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
+    }
+
+    function guardarCarrito() {
+        localStorage.setItem(CLAVE_CARRITO, JSON.stringify(carrito));
+    }
+
+    function cargarCarrito() {
+        try {
+            carrito = JSON.parse(localStorage.getItem(CLAVE_CARRITO)) || [];
+        } catch {
+            carrito = [];
+        }
+    }
+
+    function mostrarServicios() {
+        const contenedor = document.getElementById('repair-services');
+        if (!contenedor) return;
+        
+        contenedor.innerHTML = '';
+        SERVICIOS.forEach((servicio, idx) => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td>${servicio.nombre}</td>
+                <td>${servicio.descripcion}</td>
+                <td class="repair-price">$${servicio.precio.toFixed(2)}</td>
+                <td><input type="checkbox" class="repair-checkbox" data-idx="${idx}" data-price="${servicio.precio}"></td>
+            `;
+            contenedor.appendChild(fila);
+        });
+    }
+
+    function actualizarCotizacion() {
+        const seleccionados = document.querySelectorAll('.repair-checkbox:checked');
+        let total = 0;
+        seleccionados.forEach(cb => {
+            total += parseFloat(cb.getAttribute('data-price')) || 0;
+        });
+        const el = document.getElementById('repair-quote-total');
+        if (el) el.textContent = `$${total.toFixed(2)}`;
+    }
+
+    function enviarCotizacion() {
+        const seleccionados = document.querySelectorAll('.repair-checkbox:checked');
+        const nombre = document.getElementById('customer-name')?.value || '';
+        const correo = document.getElementById('customer-email')?.value || '';
+
+        if (seleccionados.length === 0) {
+            alert('Por favor, selecciona al menos un servicio.');
+            return;
+        }
+
+        if (!nombre || !correo) {
+            alert('Por favor, completa tu nombre y correo.');
+            return;
+        }
+
+        let total = 0;
+        let lista = '';
+        seleccionados.forEach(cb => {
+            const idx = parseInt(cb.getAttribute('data-idx'));
+            const precio = SERVICIOS[idx].precio;
+            total += precio;
+            lista += `- ${SERVICIOS[idx].nombre}: $${precio.toFixed(2)}\n`;
+        });
+
+        alert(`✅ Cotización solicitada!\n\n${lista}\nTotal: $${total.toFixed(2)}\n\n📧 Contactaremos a ${correo}`);
+
+        document.querySelectorAll('.repair-checkbox').forEach(cb => cb.checked = false);
+        document.getElementById('customer-name').value = '';
+        document.getElementById('customer-email').value = '';
+        document.getElementById('customer-phone').value = '';
+        actualizarCotizacion();
+    }
+
+    function abrirModalAutenticacion(modo = 'iniciar-sesion') {
+        const modal = document.getElementById('auth-modal');
+        modal.classList.add('active');
+        document.getElementById('tab-login').classList.toggle('active', modo === 'iniciar-sesion');
+        document.getElementById('tab-register').classList.toggle('active', modo === 'registro');
+        document.getElementById('login-form').classList.toggle('active', modo === 'iniciar-sesion');
+        document.getElementById('register-form').classList.toggle('active', modo === 'registro');
+    }
+
+    function cerrarModalAutenticacion() {
+        document.getElementById('auth-modal').classList.remove('active');
+    }
+
+    function manejarRegistro(e) {
+        e.preventDefault();
+        const usuario = (document.getElementById('reg-username').value || '').trim();
+        const contraseña = (document.getElementById('reg-password').value || '');
+        const nombre = (document.getElementById('reg-name').value || '').trim();
+        const correo = (document.getElementById('reg-email').value || '').trim();
+        const telefono = (document.getElementById('reg-phone').value || '').trim();
+
+        if (!usuario || !contraseña || !nombre || !correo) {
+            alert('Completa todos los campos obligatorios.');
+            return;
+        }
+
+        if (contraseña.length < 6) {
+            alert('La contraseña debe tener al menos 6 caracteres.');
+            return;
+        }
+
+        if (!/^\S+@\S+\.\S+$/.test(correo)) {
+            alert('Correo inválido.');
+            return;
+        }
+
+        let usuarios = obtenerUsuarios();
+        
+        if (usuarios.find(u => u.usuario === usuario)) {
+            alert('El usuario ya existe.');
+            return;
+        }
+
+        if (usuarios.find(u => u.correo === correo)) {
+            alert('El correo ya está registrado.');
+            return;
+        }
+
+        usuarios.push({ usuario, contraseña, nombre, correo, telefono });
+        localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
+        establecerUsuario({ usuario, nombre, correo, telefono });
+        cerrarModalAutenticacion();
+        actualizarUsuario();
+    }
+
+    function manejarInicioDeSesion(e) {
+        e.preventDefault();
+        const correo = (document.getElementById('auth-email').value || '').trim();
+        const contraseña = (document.getElementById('auth-password').value || '');
+        
+        if (!correo || !contraseña) {
+            alert('Completa correo y contraseña.');
+            return;
+        }
+
+        const usuarios = obtenerUsuarios();
+        const encontrado = usuarios.find(u => u.correo === correo && u.contraseña === contraseña);
+
+        if (encontrado) {
+            establecerUsuario({ usuario: encontrado.usuario, nombre: encontrado.nombre, correo: encontrado.correo, telefono: encontrado.telefono });
+            cerrarModalAutenticacion();
+            actualizarUsuario();
+        } else {
+            alert('Correo o contraseña incorrectos.');
+        }
+    }
+
+    function actualizarUsuario() {
+        const boton = document.getElementById('boton-usuario');
+        const usuario = obtenerUsuario();
+
+        if (usuario) {
+            boton.innerHTML = `<i class="fas fa-user-circle"></i> ${usuario.nombre || usuario.usuario}`;
+            boton.style.cursor = 'pointer';
+        } else {
+            boton.innerHTML = '<i class="fas fa-user"></i>';
+        }
+    }
+
+    function obtenerUsuarios() {
+        try {
+            return JSON.parse(localStorage.getItem(CLAVE_USUARIOS)) || [];
+        } catch {
+            return [];
+        }
+    }
+
+    function obtenerUsuario() {
+        try {
+            const datos = localStorage.getItem(CLAVE_USUARIO_ACTUAL);
+            return datos ? JSON.parse(datos) : null;
+        } catch {
+            return null;
+        }
+    }
+
+    function establecerUsuario(usuario) {
+        localStorage.setItem(CLAVE_USUARIO_ACTUAL, JSON.stringify(usuario));
+    }
+
+    function cerrarSesion() {
+        localStorage.removeItem(CLAVE_USUARIO_ACTUAL);
+        actualizarUsuario();
+    }
+
+    function inicializarGoogle() {
+        if (!ID_GOOGLE || ID_GOOGLE.includes('REPLACE')) return;
+
+        google.accounts.id.initialize({
+            client_id: ID_GOOGLE,
+            callback: manejarGoogle,
+            auto_select: false,
+        });
+
+        const contenedorLogin = document.getElementById('google-signin-button');
+        const contenedorRegistro = document.getElementById('google-register-button');
+
+        if (contenedorLogin) {
+            google.accounts.id.renderButton(contenedorLogin, {
+                theme: 'outline',
+                size: 'large',
+                text: 'signin_with',
+            });
+        }
+
+        if (contenedorRegistro) {
+            google.accounts.id.renderButton(contenedorRegistro, {
+                theme: 'outline',
+                size: 'large',
+                text: 'signin_with',
+            });
+        }
+    }
+
+    function manejarGoogle(respuesta) {
+        try {
+            const payload = JSON.parse(atob(respuesta.credential.split('.')[1]));
+            const usuario = {
+                usuario: payload.email.split('@')[0],
+                nombre: payload.name,
+                correo: payload.email,
+                telefono: ''
+            };
+
+            let usuarios = obtenerUsuarios();
+            if (!usuarios.find(u => u.correo === usuario.correo)) {
+                usuarios.push(usuario);
+                localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
+            }
+
+            establecerUsuario(usuario);
+            cerrarModalAutenticacion();
+            actualizarUsuario();
+        } catch(e) {
+            console.error('Error con Google:', e);
+        }
+    }
+
+    function mostrarPestana(id) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        const el = document.getElementById(`${id}-tab`);
+        if (el) el.classList.add('active');
+        if (id === 'carrito') mostrarCarrito();
+    }
+
+    function vincularEventos() {
+        // Navegación
+        document.querySelectorAll('.nav-link').forEach(link =>
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tab = this.getAttribute('data-tab');
+                mostrarPestana(tab);
+            })
+        );
+
+        // Productos
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('ver-producto')) {
+                e.preventDefault();
+                mostrarDetalleProducto(parseInt(e.target.getAttribute('data-id')));
+            }
+            if (e.target.classList.contains('agregar-carrito')) {
+                e.preventDefault();
+                agregarAlCarrito();
+            }
+        });
+
+        // Tallas
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('size-option')) {
+                document.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
+                e.target.classList.add('selected');
+            }
+        });
+
+        // Cantidad
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('quantity-btn')) {
+                const input = e.target.parentElement.querySelector('.quantity-input');
+                let valor = parseInt(input.value) || 1;
+                if (e.target.classList.contains('decrease') && valor > 1) valor--;
+                if (e.target.classList.contains('increase')) valor++;
+                input.value = valor;
+            }
+        });
+
+        // Carrito
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('cart-menos')) {
+                const idx = parseInt(e.target.getAttribute('data-idx'));
+                if (carrito[idx].cantidad > 1) carrito[idx].cantidad--;
+                guardarCarrito();
+                mostrarCarrito();
+            }
+            if (e.target.classList.contains('cart-mas')) {
+                const idx = parseInt(e.target.getAttribute('data-idx'));
+                carrito[idx].cantidad++;
+                guardarCarrito();
+                mostrarCarrito();
+            }
+            if (e.target.classList.contains('remove-item')) {
+                const idx = parseInt(e.target.getAttribute('data-idx'));
+                carrito.splice(idx, 1);
+                guardarCarrito();
+                mostrarCarrito();
+            }
+        });
+
+        // Reparaciones
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('repair-checkbox')) {
+                actualizarCotizacion();
+            }
+        });
+
+        const btnCot = document.getElementById('request-quote');
+        if (btnCot) btnCot.addEventListener('click', enviarCotizacion);
+
+        // Autenticación
+        document.getElementById('boton-usuario').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!obtenerUsuario()) {
+                abrirModalAutenticacion('iniciar-sesion');
+            }
+        });
+
+        document.getElementById('tab-login').addEventListener('click', function() {
+            abrirModalAutenticacion('iniciar-sesion');
+        });
+
+        document.getElementById('tab-register').addEventListener('click', function() {
+            abrirModalAutenticacion('registro');
+        });
+
+        document.getElementById('auth-close').addEventListener('click', cerrarModalAutenticacion);
+
+        document.getElementById('login-form').addEventListener('submit', manejarInicioDeSesion);
+        document.getElementById('register-form').addEventListener('submit', manejarRegistro);
+
+        document.getElementById('checkout-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!obtenerUsuario()) {
+                abrirModalAutenticacion('iniciar-sesion');
+            } else {
+                alert('Procesando pago... (demo)');
+            }
+        });
+    }
+});
