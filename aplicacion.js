@@ -76,6 +76,25 @@ document.addEventListener('DOMContentLoaded', function () {
         capaCarga.classList.remove('activa');
     }
 
+    // Loader global dedicado a autenticación
+    const authGlobalLoader = document.getElementById('auth-global-loader');
+    const aglText = document.getElementById('agl-text');
+
+    function mostrarAuthLoader(mensaje = 'Procesando...') {
+        if (!authGlobalLoader) return;
+        if (aglText) aglText.textContent = mensaje;
+        authGlobalLoader.classList.add('active');
+    }
+
+    function ocultarAuthLoader(delay = 0) {
+        if (!authGlobalLoader) return;
+        if (delay > 0) {
+            setTimeout(() => authGlobalLoader.classList.remove('active'), delay);
+        } else {
+            authGlobalLoader.classList.remove('active');
+        }
+    }
+
     function desplazarSuavemente(idSeccion) {
         const destino = document.getElementById(idSeccion);
         if (!destino) return;
@@ -361,13 +380,13 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        mostrarCargaGlobal('Creando tu cuenta...');
+        mostrarAuthLoader('Creando tu cuenta...');
         usuarios.push({ contraseña, nombre, correo, pais, curpRfc, telefono });
         localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
         establecerUsuario({ nombre, correo, pais, telefono });
         cerrarModalAutenticacion();
         actualizarUsuario();
-        setTimeout(ocultarCargaGlobal, 400);
+        ocultarAuthLoader(500);
     }
 
     function manejarInicioDeSesion(e) {
@@ -380,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        mostrarCargaGlobal('Validando tus datos...');
+    mostrarAuthLoader('Validando tus datos...');
         const usuarios = obtenerUsuarios();
         const encontrado = usuarios.find(u => u.correo === correo && u.contraseña === contraseña);
 
@@ -388,9 +407,9 @@ document.addEventListener('DOMContentLoaded', function () {
             establecerUsuario({ nombre: encontrado.nombre, correo: encontrado.correo, telefono: encontrado.telefono, pais: encontrado.pais });
             cerrarModalAutenticacion();
             actualizarUsuario();
-            setTimeout(ocultarCargaGlobal, 350);
+            ocultarAuthLoader(400);
         } else {
-            ocultarCargaGlobal();
+            ocultarAuthLoader();
             alert('Correo o contraseña incorrectos.');
         }
     }
@@ -433,10 +452,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function cerrarSesion() {
-        localStorage.removeItem(CLAVE_USUARIO_ACTUAL);
-        actualizarUsuario();
-        cerrarMenuUsuario();
-        mostrarPestana('inicio');
+        mostrarAuthLoader('Cerrando sesión...');
+        setTimeout(() => {
+            localStorage.removeItem(CLAVE_USUARIO_ACTUAL);
+            actualizarUsuario();
+            cerrarMenuUsuario();
+            mostrarPestana('inicio');
+            ocultarAuthLoader(300);
+        }, 400);
     }
 
     function mostrarMenuUsuario() {
@@ -498,8 +521,10 @@ document.addEventListener('DOMContentLoaded', function () {
             establecerUsuario({ nombre: usuario.nombre, correo: usuario.correo, telefono: usuario.telefono, pais: usuario.pais });
             cerrarModalAutenticacion();
             actualizarUsuario();
+            ocultarAuthLoader(300);
         } catch(e) {
             console.error('Error con Google:', e);
+            ocultarAuthLoader();
         }
     }
 

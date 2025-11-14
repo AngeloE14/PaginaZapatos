@@ -310,5 +310,12 @@
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="aplicacion.js"></script>
+    <!-- Loader global para acciones de autenticación -->
+    <div id="auth-global-loader" class="auth-global-loader" aria-hidden="true" aria-live="polite">
+        <div class="agl-content" role="alert" aria-label="Procesando autenticación">
+            <div class="agl-spinner" aria-hidden="true"></div>
+            <p id="agl-text">Procesando...</p>
+        </div>
+    </div>
 </body>
 </html>

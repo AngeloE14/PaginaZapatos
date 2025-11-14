@@ -65,6 +65,54 @@ body {
     visibility: visible;
 }
 
+/* Loader global específico para autenticación */
+.auth-global-loader {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 10, 10, 0.55);
+    backdrop-filter: blur(3px);
+    z-index: 3000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 240ms ease;
+}
+
+.auth-global-loader.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.agl-content {
+    background: linear-gradient(135deg, #ffffff 0%, #f5f8ff 100%);
+    padding: 28px 34px;
+    border-radius: 18px;
+    box-shadow: 0 25px 55px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    min-width: 260px;
+}
+
+.agl-spinner {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 5px solid rgba(0,0,0,0.15);
+    border-top-color: var(--color-acento);
+    animation: girar 0.9s linear infinite;
+}
+
+#agl-text {
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.6px;
+    color: var(--color-primario);
+}
+
 .carga-contenido {
     background: rgba(0, 0, 0, 0.5);
     padding: 28px 36px;
@@ -750,6 +798,11 @@ section {
 
     .repair-quote-grid {
         grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .quote-badges {
+        justify-content: center;
     }
 
     .repair-quote-header {
@@ -759,6 +812,48 @@ section {
     .quote-table-wrapper,
     .repair-form {
         padding: 18px;
+    }
+
+    .quote-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .repair-table th,
+    .repair-table td {
+        padding: 12px 10px;
+        font-size: 0.82rem;
+    }
+
+    .repair-form h3 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .repair-table thead {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+    }
+    .repair-table th:nth-child(2),
+    .repair-table td:nth-child(2) {
+        display: none; /* Oculta descripción para ultra pantallas pequeñas */
+    }
+    .quote-pill {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+    .repair-form .form-group label {
+        font-size: 0.8rem;
+    }
+    .repair-form input {
+        font-size: 0.85rem;
+        padding: 10px 12px;
+    }
+    #request-quote {
+        font-size: 0.75rem;
+        padding: 10px 14px;
     }
 }
 
