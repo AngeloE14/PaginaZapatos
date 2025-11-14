@@ -208,6 +208,24 @@ nav ul li a:hover::after {
     position: relative;
 }
 
+.menu-toggle {
+    display: none;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 180ms ease, border 180ms ease;
+}
+
+.menu-toggle:hover,
+.menu-toggle:focus-visible {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-secundario);
+}
+
 .header-icons a {
     font-size: 18px;
     transition: color 180ms ease;
@@ -1245,11 +1263,34 @@ footer {
         flex-direction: column;
         gap: 15px;
         padding: 12px 0;
-        align-items: flex-start;
+        align-items: stretch;
     }
 
     .logo {
         font-size: 24px;
+        display: inline-block;
+    }
+
+    .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-left: auto;
+    }
+
+    .header-container nav,
+    .header-container .header-icons {
+        display: none;
+        width: 100%;
+    }
+
+    .header-container.nav-open nav {
+        display: block;
+    }
+
+    .header-container.nav-open .header-icons {
+        display: flex;
     }
 
     nav ul {
@@ -1263,6 +1304,7 @@ footer {
         width: 100%;
         display: flex;
         gap: 15px;
+        justify-content: space-between;
     }
 
     .header-icons a {

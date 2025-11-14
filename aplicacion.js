@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const CLAVE_USUARIO_ACTUAL = 'mz_current_user_v1';
     const capaCarga = document.getElementById('pantalla-carga');
     const textoCarga = document.getElementById('texto-carga');
+    const headerContainer = document.querySelector('.header-container');
+    const menuToggle = document.getElementById('menu-toggle');
 
     let carrito = [];
     let productoSeleccionado = null;
@@ -564,6 +566,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function actualizarMenuMobile(abierto) {
+        if (!menuToggle || !headerContainer) return;
+        menuToggle.setAttribute('aria-expanded', String(abierto));
+        headerContainer.classList.toggle('nav-open', abierto);
+    }
+
+    function cerrarMenuMobile() {
+        actualizarMenuMobile(false);
+    }
+
     function vincularEventos() {
         // Navegación
         document.querySelectorAll('.nav-link').forEach(link =>
@@ -571,6 +583,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.preventDefault();
                 const tab = this.getAttribute('data-tab');
                 mostrarPestana(tab);
+                if (window.innerWidth <= 768) cerrarMenuMobile();
             })
         );
 
@@ -672,6 +685,19 @@ document.addEventListener('DOMContentLoaded', function () {
         if (formRecuperar) {
             formRecuperar.addEventListener('submit', enviarEnlaceRecuperacion);
         }
+
+        if (menuToggle && headerContainer) {
+            menuToggle.addEventListener('click', function() {
+                const expanded = this.getAttribute('aria-expanded') === 'true';
+                actualizarMenuMobile(!expanded);
+            });
+        }
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                cerrarMenuMobile();
+            }
+        });
 
         // Autenticación
         document.getElementById('boton-usuario').addEventListener('click', function(e) {
