@@ -55,13 +55,8 @@ document.addEventListener('DOMContentLoaded', function () {
         { nombre: 'Refuerzo de talón', descripcion: 'Refuerzo interno para mayor durabilidad', precio: 10.00 }
     ];
 
-<<<<<<< HEAD
     // Iniciamos mostrando la capa de carga
     mostrarCargaGlobal('Cargando...');
-=======
-    // Iniciamos mostrando un mensaje genérico mientras se arma la vista
-    mostrarCargaGlobal('Preparando vitrina...');
->>>>>>> parent of e66cf61 (.....testeo)
     inicializarApp();
 
     function mostrarCargaGlobal(mensaje = 'Cargando...') {
