@@ -916,36 +916,10 @@ section {
         line-height: 1.6;
     }
 
-        .quote-table-wrapper,
+    .quote-table-wrapper,
     .repair-form {
-        padding: 18px 14px;
+        padding: 20px 16px;
         margin: 0 8px;
-    }
-
-    .quote-table-header {
-        text-align: center;
-        padding: 0 8px;
-    }
-
-    .quote-table-header h3 {
-        font-size: 1.1rem;
-        margin-bottom: 8px;
-    }
-
-    .quote-table-header p {
-        font-size: 0.85rem;
-        line-height: 1.5;
-    }
-
-    .repair-form h3 {
-        font-size: 1.1rem;
-        margin-bottom: 10px;
-    }
-
-    .form-help {
-        font-size: 0.85rem;
-        padding: 0 8px;
-        margin-bottom: 16px;
     }
 
     .quote-table-wrapper {
@@ -956,14 +930,17 @@ section {
     .quote-table-header {
         text-align: center;
         margin-bottom: 20px;
+        padding: 0 8px;
     }
 
     .quote-table-header h3 {
-        font-size: 1.2rem;
+        font-size: 1.15rem;
+        margin-bottom: 8px;
     }
 
     .quote-table-header p {
-        font-size: 0.9rem;
+        font-size: 0.88rem;
+        line-height: 1.5;
     }
 
     .repair-table th,
@@ -1173,6 +1150,23 @@ section {
     grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
     gap: clamp(24px, 3vw, 40px);
     align-items: start;
+}
+
+/* Fijar comportamiento en móvil cuando esta regla aparece después en el archivo */
+@media (max-width: 768px) {
+    .repair-quote-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    .quote-table-wrapper,
+    .repair-form {
+        width: 100%;
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 .quote-table-wrapper {
