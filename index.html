@@ -9,131 +9,133 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="container header-container">
-            <a href="#" class="logo">Calzado del <span>Pueblo</span></a>
-            <nav>
-                <ul>
-                    <li><a href="#" class="nav-link" data-tab="inicio">Inicio</a></li>
-                    <li><a href="#" class="nav-link" data-tab="productos">Productos</a></li>
-                    <li><a href="#" class="nav-link" data-tab="reparaciones">Reparaciones</a></li>
-                </ul>
-            </nav>
-            <div class="header-icons">
-                <div class="user-menu-container">
-                    <a href="#" id="boton-usuario"><i class="fas fa-user"></i></a>
-                    <div id="user-menu" class="user-menu">
-                        <a href="#" id="btn-logout" class="logout-btn">Cerrar Sesión</a>
-                    </div>
-                </div>
-                <a href="#" class="nav-link" data-tab="carrito"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-        </div>
-    </header>
 
-    <section class="hero tab-content active" id="inicio-tab">
-        <div class="container hero-content">
-            <h1>Estilo Urbano para Jóvenes</h1>
-            <p>Descubre la nueva colección de calzado juvenil con actitud y autenticidad.</p>
-            <a href="#" class="btn nav-link" data-tab="productos">Ver Colección</a>
-        </div>
-    </section>
-
-    <section class="featured tab-content" id="productos-tab">
-        <div class="container">
-            <h2 class="section-title">Nuestra Colección</h2>
-            <div class="products-grid"></div>
-        </div>
-    </section>
-
-    <section class="product-detail tab-content" id="product-detail-tab">
-        <div class="container">
-            <a href="#" class="back-btn nav-link" data-tab="productos">
-                <i class="fas fa-arrow-left"></i> Volver a Productos
-            </a>
-            <div class="product-detail-container" id="product-detail-container"></div>
-        </div>
-    </section>
-
-    
-    <section class="repair-service tab-content" id="reparaciones-tab">
-        <div class="container">
-            <div class="repair-hero">
-                <h2>¿Tus zapatos favoritos necesitan reparación?</h2>
-                <p>En Calzado del Pueblo nos encargamos de darle una segunda vida a tu calzado.</p>
-                <a href="#" class="btn nav-link" data-tab="repair-quote">Solicitar Reparación</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="repair-quote tab-content" id="repair-quote-tab">
-        <div class="container">
-            <a href="#" class="back-btn nav-link" data-tab="reparaciones">
-                <i class="fas fa-arrow-left"></i> Volver a Reparaciones
-            </a>
-            <div class="repair-container">
-                <h2 class="section-title">Solicitar Cotización</h2>
-                <table class="repair-table">
-                    <thead>
-                        <tr>
-                            <th>Servicio</th>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                            <th>Seleccionar</th>
-                        </tr>
-                    </thead>
-                    <tbody id="repair-services"></tbody>
-                </table>
-                <div class="repair-form">
-                    <h3>Información de Contacto</h3>
-                    <div class="form-group">
-                        <label for="customer-name">Nombre completo *</label>
-                        <input type="text" id="customer-name" class="form-control" placeholder="Tu nombre">
+    <main class="contenido-principal">
+        <header>
+            <div class="container header-container">
+                <a href="#" class="logo">Calzado del <span>Pueblo</span></a>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="nav-link" data-tab="inicio">Inicio</a></li>
+                        <li><a href="#" class="nav-link" data-tab="productos">Productos</a></li>
+                        <li><a href="#" class="nav-link" data-tab="reparaciones">Reparaciones</a></li>
+                    </ul>
+                </nav>
+                <div class="header-icons">
+                    <div class="user-menu-container">
+                        <a href="#" id="boton-usuario"><i class="fas fa-user"></i></a>
+                        <div id="user-menu" class="user-menu">
+                            <a href="#" id="btn-logout" class="logout-btn">Cerrar Sesión</a>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="customer-email">Correo electrónico *</label>
-                        <input type="email" id="customer-email" class="form-control" placeholder="tu@email.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="customer-phone">Teléfono</label>
-                        <input type="tel" id="customer-phone" class="form-control" placeholder="Tu número">
-                    </div>
-                    <div class="quote-summary" id="quote-summary">
-                        <h4>Total: <span id="repair-quote-total">$0.00</span></h4>
-                    </div>
-                    <button class="btn" id="request-quote">Solicitar Cotización</button>
+                    <a href="#" class="nav-link" data-tab="carrito"><i class="fas fa-shopping-cart"></i></a>
                 </div>
             </div>
-        </div>
-    </section>
+        </header>
 
-    <section class="cart tab-content" id="carrito-tab">
-        <div class="container">
-            <h2 class="section-title">Carrito</h2>
-            <div class="cart-container">
-                <div class="cart-items" id="cart-items">
-                    <div class="empty-cart-message" id="empty-cart-message">
-                        <p>Tu carrito está vacío. <a href="#" class="nav-link" data-tab="productos">¡Agrega productos!</a></p>
-                    </div>
-                </div>
-                <div class="cart-summary" id="cart-summary" style="display: none;">
-                    <div class="summary-row">
-                        <span>Subtotal:</span>
-                        <span id="cart-subtotal">$0.00</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Envío:</span>
-                        <span id="cart-shipping">$0.00</span>
-                    </div>
-                    <div class="summary-row summary-total">
-                        <span>Total:</span>
-                        <span id="cart-total">$0.00</span>
-                    </div>
-                    <a href="#" id="checkout-btn" class="btn" style="width: 100%; text-align: center; margin-top: 20px;">Proceder al Pago</a>
+        <section class="hero tab-content active" id="inicio-tab">
+            <div class="container hero-content">
+                <h1>Estilo Urbano para Jóvenes</h1>
+                <p>Descubre la nueva colección de calzado juvenil con actitud y autenticidad.</p>
+                <a href="#" class="btn nav-link" data-tab="productos">Ver Colección</a>
+            </div>
+        </section>
+
+        <section class="featured tab-content" id="productos-tab">
+            <div class="container">
+                <h2 class="section-title">Nuestra Colección</h2>
+                <div class="products-grid"></div>
+            </div>
+        </section>
+
+        <section class="product-detail tab-content" id="product-detail-tab">
+            <div class="container">
+                <a href="#" class="back-btn nav-link" data-tab="productos">
+                    <i class="fas fa-arrow-left"></i> Volver a Productos
+                </a>
+                <div class="product-detail-container" id="product-detail-container"></div>
+            </div>
+        </section>
+
+        <section class="repair-service tab-content" id="reparaciones-tab">
+            <div class="container">
+                <div class="repair-hero">
+                    <h2>¿Tus zapatos favoritos necesitan reparación?</h2>
+                    <p>En Calzado del Pueblo nos encargamos de darle una segunda vida a tu calzado.</p>
+                    <a href="#" class="btn nav-link" data-tab="repair-quote">Solicitar Reparación</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <section class="repair-quote tab-content" id="repair-quote-tab">
+            <div class="container">
+                <a href="#" class="back-btn nav-link" data-tab="reparaciones">
+                    <i class="fas fa-arrow-left"></i> Volver a Reparaciones
+                </a>
+                <div class="repair-container">
+                    <h2 class="section-title">Solicitar Cotización</h2>
+                    <table class="repair-table">
+                        <thead>
+                            <tr>
+                                <th>Servicio</th>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Seleccionar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repair-services"></tbody>
+                    </table>
+                    <div class="repair-form">
+                        <h3>Información de Contacto</h3>
+                        <div class="form-group">
+                            <label for="customer-name">Nombre completo *</label>
+                            <input type="text" id="customer-name" class="form-control" placeholder="Tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-email">Correo electrónico *</label>
+                            <input type="email" id="customer-email" class="form-control" placeholder="tu@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-phone">Teléfono</label>
+                            <input type="tel" id="customer-phone" class="form-control" placeholder="Tu número">
+                        </div>
+                        <div class="quote-summary" id="quote-summary">
+                            <h4>Total: <span id="repair-quote-total">$0.00</span></h4>
+                        </div>
+                        <button class="btn" id="request-quote">Solicitar Cotización</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cart tab-content" id="carrito-tab">
+            <div class="container">
+                <h2 class="section-title">Carrito</h2>
+                <div class="cart-container">
+                    <div class="cart-items" id="cart-items">
+                        <div class="empty-cart-message" id="empty-cart-message">
+                            <p>Tu carrito está vacío. <a href="#" class="nav-link" data-tab="productos">¡Agrega productos!</a></p>
+                        </div>
+                    </div>
+                    <div class="cart-summary" id="cart-summary" style="display: none;">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="cart-subtotal">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Envío:</span>
+                            <span id="cart-shipping">$0.00</span>
+                        </div>
+                        <div class="summary-row summary-total">
+                            <span>Total:</span>
+                            <span id="cart-total">$0.00</span>
+                        </div>
+                        <a href="#" id="checkout-btn" class="btn" style="width: 100%; text-align: center; margin-top: 20px;">Proceder al Pago</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <footer>
         <div class="container">
