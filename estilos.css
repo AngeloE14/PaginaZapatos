@@ -822,24 +822,71 @@ section {
 }
 
 @media (max-width: 768px) {
+    .repair-service {
+        padding: clamp(40px, 6vw, 80px) 0;
+    }
+
     .repair-hero {
         text-align: center;
+        padding: 0 16px;
+        margin-bottom: clamp(32px, 4vw, 48px);
     }
 
     .repair-hero h2 {
-        font-size: 2.1rem;
+        font-size: clamp(1.8rem, 5.5vw, 2.1rem);
+        line-height: 1.2;
+        margin-bottom: 16px;
+    }
+
+    .repair-eyebrow {
+        font-size: 0.8rem;
+        letter-spacing: 0.15em;
     }
 
     .repair-description {
         margin: 0 auto;
+        font-size: 1rem;
+        padding: 0 8px;
     }
 
     .repair-steps-grid {
         grid-template-columns: 1fr;
+        gap: clamp(16px, 3vw, 24px);
+        padding: 0 12px;
     }
 
     .repair-step-card {
-        text-align: left;
+        text-align: center;
+        padding: 24px 20px;
+        align-items: center;
+    }
+
+    .repair-step-card h3 {
+        font-size: 1.05rem;
+        text-align: center;
+    }
+
+    .repair-step-card p {
+        font-size: 0.95rem;
+        text-align: center;
+        line-height: 1.6;
+    }
+
+    .repair-cta {
+        padding: 0 16px;
+        margin-top: 20px;
+    }
+
+    .btn-cta {
+        width: 100%;
+        max-width: 320px;
+        padding: 14px 32px;
+        font-size: 0.9rem;
+    }
+
+    .cta-note {
+        font-size: 0.9rem;
+        padding: 0 12px;
     }
 
     .repair-quote-grid {
@@ -849,10 +896,13 @@ section {
 
     .quote-badges {
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .repair-quote-header {
         flex-direction: column;
+        text-align: center;
+        gap: 20px;
     }
 
     .quote-table-wrapper,
@@ -873,33 +923,76 @@ section {
 
     .repair-form h3 {
         font-size: 1.2rem;
+        text-align: center;
+    }
+
+    .form-help {
+        text-align: center;
     }
 }
 
 @media (max-width: 600px) {
+    .repair-service {
+        padding: clamp(30px, 5vw, 60px) 0;
+    }
+
+    .repair-hero {
+        padding: 0 12px;
+    }
+
+    .repair-hero h2 {
+        font-size: clamp(1.6rem, 6vw, 1.9rem);
+    }
+
+    .repair-steps-grid {
+        padding: 0 8px;
+    }
+
+    .repair-step-card {
+        padding: 20px 16px;
+    }
+
+    .step-circle {
+        width: 38px;
+        height: 38px;
+        font-size: 0.95rem;
+    }
+
     .repair-table thead {
         position: sticky;
         top: 0;
         z-index: 2;
     }
+
     .repair-table th:nth-child(2),
     .repair-table td:nth-child(2) {
         display: none; /* Oculta descripción para ultra pantallas pequeñas */
     }
+
     .quote-pill {
         font-size: 0.75rem;
         padding: 6px 12px;
     }
+
     .repair-form .form-group label {
-        font-size: 0.8rem;
-    }
-    .repair-form input {
         font-size: 0.85rem;
-        padding: 10px 12px;
     }
+
+    .repair-form input,
+    .repair-form select {
+        font-size: 0.9rem;
+        padding: 11px 14px;
+    }
+
     #request-quote {
-        font-size: 0.75rem;
-        padding: 10px 14px;
+        font-size: 0.85rem;
+        padding: 12px 20px;
+        width: 100%;
+    }
+
+    .btn-cta {
+        font-size: 0.85rem;
+        padding: 12px 28px;
     }
 }
 
