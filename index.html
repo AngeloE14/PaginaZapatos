@@ -68,32 +68,61 @@
 
         <section class="repair-service tab-content" id="reparaciones-tab">
             <div class="container">
-                <div class="repair-hero">
-                    <h2>¿Tus zapatos favoritos necesitan reparación?</h2>
-                    <p>En Calzado del Pueblo nos encargamos de devolverles la vida. Repararemos suelas, cordones, cremalleras y más con procesos profesionales.</p>
+                <div class="repair-layout">
+                    <div class="repair-copy">
+                        <p class="repair-eyebrow">Servicio técnico especializado</p>
+                        <h2>Rescatamos tus tenis favoritos en menos de <span>72 horas</span></h2>
+                        <p class="repair-description">Nuestro laboratorio trabaja con procesos artesanales y herramientas de precisión para alargar la vida de tu calzado urbano. Hacemos diagnósticos gratuitos y te acompañamos en todo el proceso.</p>
+                        <div class="repair-highlights">
+                            <div class="highlight-card">
+                                <strong>+2,000</strong>
+                                <span>Pares recuperados</span>
+                            </div>
+                            <div class="highlight-card">
+                                <strong>12</strong>
+                                <span>Servicios disponibles</span>
+                            </div>
+                            <div class="highlight-card">
+                                <strong>30 días</strong>
+                                <span>Garantía de servicio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="repair-visual">
+                        <div class="repair-visual-card">
+                            <div class="repair-badge">Garantía incluida</div>
+                            <img src="https://images.unsplash.com/photo-1484519332611-516457305ff6?auto=format&fit=crop&w=800&q=80" alt="Especialista reparando calzado" loading="lazy">
+                            <p>Equipo certificado en restauración premium</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="repair-steps">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <p>Trae tus zapatos a nuestra tienda</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <p>Evaluamos el trabajo necesario</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <p>Te damos un presupuesto y plazo</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">4</div>
-                        <p>Reparamos y quedan como nuevos</p>
-                    </div>
+                <div class="repair-steps" role="list">
+                    <article class="step-card" role="listitem">
+                        <div class="step-number">01</div>
+                        <h3>Diagnóstico</h3>
+                        <p>Agenda tu cita o tráelos directo, revisamos daños y materiales.</p>
+                    </article>
+                    <article class="step-card" role="listitem">
+                        <div class="step-number">02</div>
+                        <h3>Plan de trabajo</h3>
+                        <p>Te mostramos las intervenciones recomendadas y el tiempo estimado.</p>
+                    </article>
+                    <article class="step-card" role="listitem">
+                        <div class="step-number">03</div>
+                        <h3>Cotización</h3>
+                        <p>Transparencia total en precios, puedes elegir los servicios que prefieras.</p>
+                    </article>
+                    <article class="step-card" role="listitem">
+                        <div class="step-number">04</div>
+                        <h3>Entrega</h3>
+                        <p>Te avisamos para recolectar tu par como nuevo o lo enviamos a domicilio.</p>
+                    </article>
                 </div>
 
                 <div class="repair-cta">
-                    <a href="#" class="btn nav-link" data-tab="repair-quote">Solicitar reparación</a>
+                    <button id="repair-start-btn" class="btn btn-gradient">Quiero mi cotización</button>
+                    <p class="cta-note">Diagnóstico sin costo y seguimiento en tiempo real.</p>
                 </div>
             </div>
         </section>
@@ -103,21 +132,40 @@
                 <a href="#" class="back-btn nav-link" data-tab="reparaciones">
                     <i class="fas fa-arrow-left"></i> Volver a Reparaciones
                 </a>
-                <div class="repair-container">
-                    <h2 class="section-title">Solicitar Cotización</h2>
-                    <table class="repair-table">
-                        <thead>
-                            <tr>
-                                <th>Servicio</th>
-                                <th>Descripción</th>
-                                <th>Precio</th>
-                                <th>Seleccionar</th>
-                            </tr>
-                        </thead>
-                        <tbody id="repair-services"></tbody>
-                    </table>
+                <div class="repair-quote-header">
+                    <div>
+                        <p class="repair-eyebrow">Cotiza en línea</p>
+                        <h2>Solicita tu reparación personalizada</h2>
+                        <p>Elige los servicios que tu par necesita y recibe un estimado inmediato. Todos los precios incluyen limpieza previa y pruebas de calidad.</p>
+                    </div>
+                    <div class="quote-badges">
+                        <span class="quote-pill">Diagnóstico gratis</span>
+                        <span class="quote-pill">Entrega express</span>
+                        <span class="quote-pill">Garantía 30 días</span>
+                    </div>
+                </div>
+
+                <div class="repair-quote-grid">
+                    <div class="quote-table-wrapper">
+                        <div class="quote-table-header">
+                            <h3>Catálogo de servicios</h3>
+                            <p>Marca los trabajos que deseas incluir en tu solicitud.</p>
+                        </div>
+                        <table class="repair-table">
+                            <thead>
+                                <tr>
+                                    <th>Servicio</th>
+                                    <th>Descripción</th>
+                                    <th>Precio</th>
+                                    <th>Seleccionar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="repair-services"></tbody>
+                        </table>
+                    </div>
                     <div class="repair-form">
                         <h3>Información de Contacto</h3>
+                        <p class="form-help">Te enviaremos la confirmación y seguimiento al correo registrado.</p>
                         <div class="form-group">
                             <label for="customer-name">Nombre completo *</label>
                             <input type="text" id="customer-name" class="form-control" placeholder="Tu nombre">
@@ -131,9 +179,12 @@
                             <input type="tel" id="customer-phone" class="form-control" placeholder="Tu número">
                         </div>
                         <div class="quote-summary" id="quote-summary">
-                            <h4>Total: <span id="repair-quote-total">$0.00</span></h4>
+                            <h4>Total estimado</h4>
+                            <p class="quote-total" id="repair-quote-total">$0.00</p>
+                            <span>Incluye IVA y mano de obra</span>
                         </div>
-                        <button class="btn" id="request-quote">Solicitar Cotización</button>
+                        <button class="btn btn-gradient" id="request-quote">Solicitar Cotización</button>
+                        <p class="privacy-note">Al enviar aceptas el uso de tus datos para confirmar la cita.</p>
                     </div>
                 </div>
             </div>

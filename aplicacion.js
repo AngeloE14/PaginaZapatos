@@ -74,6 +74,14 @@ document.addEventListener('DOMContentLoaded', function () {
         capaCarga.classList.remove('activa');
     }
 
+    function desplazarSuavemente(idSeccion) {
+        const destino = document.getElementById(idSeccion);
+        if (!destino) return;
+        requestAnimationFrame(() => {
+            destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
     function inicializarApp() {
         mostrarProductos();
         mostrarServicios();
@@ -497,8 +505,14 @@ document.addEventListener('DOMContentLoaded', function () {
     function mostrarPestana(id) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         const el = document.getElementById(`${id}-tab`);
-        if (el) el.classList.add('active');
+        if (el) {
+            el.classList.add('active');
+            desplazarSuavemente(`${id}-tab`);
+        }
         if (id === 'carrito') mostrarCarrito();
+        if (id === 'repair-quote') {
+            setTimeout(() => document.getElementById('customer-name')?.focus(), 250);
+        }
     }
 
     function alternarVisibilidadContraseña(idInput, idBoton) {
@@ -628,6 +642,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const btnCot = document.getElementById('request-quote');
         if (btnCot) btnCot.addEventListener('click', enviarCotizacion);
+
+        const btnRepairStart = document.getElementById('repair-start-btn');
+        if (btnRepairStart) {
+            btnRepairStart.addEventListener('click', function() {
+                mostrarPestana('repair-quote');
+            });
+        }
 
         // Toggle contraseñas
         alternarVisibilidadContraseña('auth-password', 'toggle-login-password');
