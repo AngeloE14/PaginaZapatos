@@ -330,7 +330,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function manejarRegistro(e) {
         e.preventDefault();
-        const usuario = (document.getElementById('reg-username').value || '').trim();
         const contraseña = (document.getElementById('reg-password').value || '');
         const nombre = (document.getElementById('reg-name').value || '').trim();
         const correo = (document.getElementById('reg-email').value || '').trim();
@@ -338,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const curpRfc = (document.getElementById('reg-curp-rfc').value || '').trim();
         const telefono = (document.getElementById('reg-phone').value || '').trim();
 
-        if (!usuario || !contraseña || !nombre || !correo || !pais) {
+        if (!contraseña || !nombre || !correo || !pais) {
             alert('Completa todos los campos obligatorios.');
             return;
         }
@@ -354,11 +353,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         let usuarios = obtenerUsuarios();
-        
-        if (usuarios.find(u => u.usuario === usuario)) {
-            alert('El usuario ya existe.');
-            return;
-        }
 
         if (usuarios.find(u => u.correo === correo)) {
             alert('El correo ya está registrado.');
@@ -366,9 +360,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         mostrarCargaGlobal('Creando tu cuenta...');
-        usuarios.push({ usuario, contraseña, nombre, correo, pais, curpRfc, telefono });
+        usuarios.push({ contraseña, nombre, correo, pais, curpRfc, telefono });
         localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
-        establecerUsuario({ usuario, nombre, correo, pais, telefono });
+        establecerUsuario({ nombre, correo, pais, telefono });
         cerrarModalAutenticacion();
         actualizarUsuario();
         setTimeout(ocultarCargaGlobal, 400);
@@ -389,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const encontrado = usuarios.find(u => u.correo === correo && u.contraseña === contraseña);
 
         if (encontrado) {
-            establecerUsuario({ usuario: encontrado.usuario, nombre: encontrado.nombre, correo: encontrado.correo, telefono: encontrado.telefono });
+            establecerUsuario({ nombre: encontrado.nombre, correo: encontrado.correo, telefono: encontrado.telefono, pais: encontrado.pais });
             cerrarModalAutenticacion();
             actualizarUsuario();
             setTimeout(ocultarCargaGlobal, 350);
@@ -405,7 +399,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const usuario = obtenerUsuario();
 
         if (usuario) {
-            boton.innerHTML = `<i class="fas fa-user-circle"></i> ${usuario.nombre || usuario.usuario}`;
+            const displayName = (usuario.nombre || '').trim() || usuario.usuario || usuario.correo || 'Mi cuenta';
+            boton.innerHTML = `<i class="fas fa-user-circle"></i> ${displayName}`;
             boton.style.cursor = 'pointer';
         } else {
             boton.innerHTML = '<i class="fas fa-user"></i>';
@@ -485,10 +480,11 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const payload = JSON.parse(atob(respuesta.credential.split('.')[1]));
             const usuario = {
-                usuario: payload.email.split('@')[0],
                 nombre: payload.name,
                 correo: payload.email,
-                telefono: ''
+                telefono: '',
+                pais: payload.locale || '',
+                contraseña: ''
             };
 
             let usuarios = obtenerUsuarios();
@@ -497,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
             }
 
-            establecerUsuario(usuario);
+            establecerUsuario({ nombre: usuario.nombre, correo: usuario.correo, telefono: usuario.telefono, pais: usuario.pais });
             cerrarModalAutenticacion();
             actualizarUsuario();
         } catch(e) {
