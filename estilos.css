@@ -258,24 +258,6 @@ nav ul li a:hover::after {
     align-items: center;
 }
 
-.menu-toggle {
-    display: none;
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 180ms ease, border 180ms ease;
-}
-
-.menu-toggle:hover,
-.menu-toggle:focus-visible {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--color-secundario);
-}
-
 .header-icons a {
     font-size: 18px;
     transition: color 180ms ease;
@@ -1380,12 +1362,17 @@ footer {
             "nav nav nav";
         gap: 12px 14px;
         padding: 12px 0;
+<<<<<<< HEAD
         align-items: center;
+=======
+        align-items: flex-start;
+>>>>>>> parent of 3772d53 (Ajuste: configurando disposicion para dispositivos moviles...)
     }
 
     .logo {
         grid-area: logo;
         font-size: 24px;
+<<<<<<< HEAD
         display: inline-block;
     }
 
@@ -1407,6 +1394,8 @@ footer {
 
     .header-container.nav-open nav {
         display: block;
+=======
+>>>>>>> parent of 3772d53 (Ajuste: configurando disposicion para dispositivos moviles...)
     }
 
     nav ul {
@@ -1419,8 +1408,13 @@ footer {
     .header-icons {
         grid-area: icons;
         width: 100%;
+<<<<<<< HEAD
         justify-content: flex-end;
         gap: 12px;
+=======
+        display: flex;
+        gap: 15px;
+>>>>>>> parent of 3772d53 (Ajuste: configurando disposicion para dispositivos moviles...)
     }
 
     .header-icons a {
