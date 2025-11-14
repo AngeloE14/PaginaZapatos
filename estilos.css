@@ -263,6 +263,7 @@ nav ul li a:hover::after {
     transition: transform 200ms ease, opacity 200ms ease;
     font-size: 0.9rem;
     flex-shrink: 0;
+    margin-left: -24px; /* Compensa ancho del icono + gap para alinear texto con el encabezado */
 }
 
 .logout-btn-label {
