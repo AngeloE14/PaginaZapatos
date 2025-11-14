@@ -135,6 +135,37 @@ nav ul li a:hover::after {
     align-items: center;
 }
 
+.menu-toggle {
+    display: none;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: #fff;
+    border-radius: 14px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1;
+    gap: 4px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.menu-toggle:hover,
+.menu-toggle:focus-visible {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+}
+
+.menu-toggle-bar {
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 99px;
+}
+
 .header-icons a {
     font-size: 18px;
     transition: color 180ms ease;
@@ -1373,6 +1404,42 @@ footer {
     }
 }
 
+@media (max-width: 640px) {
+    .hero-content {
+        align-items: stretch;
+        text-align: left;
+        gap: 16px;
+    }
+
+    .hero-content .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .products-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .product-card {
+        max-width: 360px;
+        margin: 0 auto;
+    }
+
+    .product-detail {
+        padding: 30px 0;
+    }
+
+    .repair-quote-header {
+        text-align: left;
+        gap: 16px;
+    }
+
+    .quote-badges {
+        justify-content: flex-start;
+    }
+}
+
 @media (max-width: 480px) {
     .container {
         padding: 0 12px;
@@ -1428,7 +1495,7 @@ footer {
     }
 
     .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: minmax(0, 1fr);
         gap: 12px;
     }
 

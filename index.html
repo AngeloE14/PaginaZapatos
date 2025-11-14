@@ -15,7 +15,12 @@
         <header>
             <div class="container header-container">
                 <a href="#" class="logo">Calzado del <span>Pueblo</span></a>
-                <nav>
+                <button id="menu-toggle" class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="main-navigation">
+                    <span class="menu-toggle-bar"></span>
+                    <span class="menu-toggle-bar"></span>
+                    <span class="menu-toggle-bar"></span>
+                </button>
+                <nav id="main-navigation" aria-label="Menú principal">
                     <ul>
                         <li><a href="#" class="nav-link" data-tab="inicio">Inicio</a></li>
                         <li><a href="#" class="nav-link" data-tab="productos">Productos</a></li>
@@ -251,7 +256,6 @@
 
                 <form id="register-form">
                     <h2>Crear Cuenta</h2>
-                    <input type="text" id="reg-username" placeholder="Nombre de usuario" required>
                     <input type="text" id="reg-name" placeholder="Nombre completo" required>
                     <input type="email" id="reg-email" placeholder="Correo electrónico" required>
                     <select id="reg-country" required>

@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const CLAVE_USUARIOS = 'mz_users_v1';
     const CLAVE_CARRITO = 'mz_cart_v1';
     const CLAVE_USUARIO_ACTUAL = 'mz_current_user_v1';
+    const headerContainer = document.querySelector('.header-container');
+    const menuToggleBtn = document.getElementById('menu-toggle');
 
     let carrito = [];
     let productoSeleccionado = null;
@@ -59,6 +61,17 @@ document.addEventListener('DOMContentLoaded', function () {
         requestAnimationFrame(() => {
             destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
+    }
+
+    function actualizarEstadoMenuResponsive(abierto) {
+        if (!menuToggleBtn) return;
+        menuToggleBtn.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    }
+
+    function cerrarMenuResponsive() {
+        if (!headerContainer) return;
+        headerContainer.classList.remove('nav-open');
+        actualizarEstadoMenuResponsive(false);
     }
 
     function inicializarApp() {
@@ -306,7 +319,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function manejarRegistro(e) {
         e.preventDefault();
-        const usuario = (document.getElementById('reg-username').value || '').trim();
         const contraseña = (document.getElementById('reg-password').value || '');
         const nombre = (document.getElementById('reg-name').value || '').trim();
         const correo = (document.getElementById('reg-email').value || '').trim();
@@ -314,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const curpRfc = (document.getElementById('reg-curp-rfc').value || '').trim();
         const telefono = (document.getElementById('reg-phone').value || '').trim();
 
-        if (!usuario || !contraseña || !nombre || !correo || !pais) {
+        if (!contraseña || !nombre || !correo || !pais) {
             alert('Completa todos los campos obligatorios.');
             return;
         }
@@ -331,18 +343,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let usuarios = obtenerUsuarios();
         
-        if (usuarios.find(u => u.usuario === usuario)) {
-            alert('El usuario ya existe.');
-            return;
-        }
-
-        if (usuarios.find(u => u.correo === correo)) {
+        if (usuarios.find(u => (u.correo || '').toLowerCase() === correo.toLowerCase())) {
             alert('El correo ya está registrado.');
             return;
         }
         usuarios.push({ contraseña, nombre, correo, pais, curpRfc, telefono });
         localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
-        establecerUsuario({ usuario, nombre, correo, pais, telefono });
+        establecerUsuario({ nombre, correo, pais, telefono });
         cerrarModalAutenticacion();
         actualizarUsuario();
     }
@@ -361,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const encontrado = usuarios.find(u => u.correo === correo && u.contraseña === contraseña);
 
         if (encontrado) {
-            establecerUsuario({ usuario: encontrado.usuario, nombre: encontrado.nombre, correo: encontrado.correo, telefono: encontrado.telefono });
+            establecerUsuario({ nombre: encontrado.nombre, correo: encontrado.correo, telefono: encontrado.telefono, pais: encontrado.pais });
             cerrarModalAutenticacion();
             actualizarUsuario();
         } else {
@@ -375,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const usuario = obtenerUsuario();
 
         if (usuario) {
-            const displayName = (usuario.nombre || '').trim() || usuario.usuario || usuario.correo || 'Mi cuenta';
+            const displayName = (usuario.nombre || '').trim() || usuario.correo || 'Mi cuenta';
             if (boton) {
                 boton.innerHTML = '<i class="fas fa-user-circle"></i>';
                 boton.style.cursor = 'pointer';
@@ -566,9 +573,23 @@ document.addEventListener('DOMContentLoaded', function () {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const tab = this.getAttribute('data-tab');
-                mostrarPestana(tab);
+                if (tab) mostrarPestana(tab);
+                cerrarMenuResponsive();
             })
         );
+
+        if (menuToggleBtn && headerContainer) {
+            menuToggleBtn.addEventListener('click', function() {
+                const abierto = headerContainer.classList.toggle('nav-open');
+                actualizarEstadoMenuResponsive(abierto);
+            });
+        }
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                cerrarMenuResponsive();
+            }
+        });
 
         // Productos
         document.addEventListener('click', function(e) {
