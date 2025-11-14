@@ -55,57 +55,19 @@ document.addEventListener('DOMContentLoaded', function () {
         { nombre: 'Refuerzo de talón', descripcion: 'Refuerzo interno para mayor durabilidad', precio: 10.00 }
     ];
 
-    // Iniciamos loader (etapas se configuran dentro de inicializarApp)
-    mostrarCargaGlobal('Preparando...', 0);
+    // Iniciamos mostrando la capa de carga
+    mostrarCargaGlobal('Cargando...');
     inicializarApp();
 
-    // Barra y lista de etapas
-    const barraProgreso = document.getElementById('carga-progress-bar');
-    const etapasLista = document.getElementById('carga-etapas');
-    let etapasActuales = [];
-
-    function mostrarCargaGlobal(mensaje = 'Cargando...', progreso = 0) {
+    function mostrarCargaGlobal(mensaje = 'Cargando...') {
         if (!capaCarga) return;
         if (textoCarga && mensaje) textoCarga.textContent = mensaje;
-        if (barraProgreso) barraProgreso.style.width = `${Math.min(Math.max(progreso,0),100)}%`;
         capaCarga.classList.add('activa');
-    }
-
-    function actualizarCargaGlobal(mensaje, progreso) {
-        if (!capaCarga) return;
-        if (mensaje && textoCarga) textoCarga.textContent = mensaje;
-        if (typeof progreso === 'number' && barraProgreso)
-            barraProgreso.style.width = `${Math.min(Math.max(progreso,0),100)}%`;
-    }
-
-    function configurarEtapas(etapas = []) {
-        etapasActuales = etapas.slice();
-        if (!etapasLista) return;
-        etapasLista.innerHTML = etapasActuales.map((e,i)=>`<li data-idx="${i}">${e}</li>`).join('');
-    }
-
-    function activarEtapa(idx) {
-        if (!etapasLista) return;
-        etapasLista.querySelectorAll('li').forEach(li => li.classList.toggle('activa', parseInt(li.dataset.idx) === idx));
     }
 
     function ocultarCargaGlobal() {
         if (!capaCarga) return;
         capaCarga.classList.remove('activa');
-        if (barraProgreso) barraProgreso.style.width = '0%';
-        if (etapasLista) etapasLista.innerHTML = '';
-    }
-
-    function cargarConEtapas(etapas, intervalo = 500) {
-        configurarEtapas(etapas);
-        etapas.forEach((etapa, i) => {
-            setTimeout(() => {
-                activarEtapa(i);
-                const porcentaje = ((i+1) / etapas.length) * 100;
-                actualizarCargaGlobal(etapa, porcentaje);
-            }, i * intervalo);
-        });
-        setTimeout(ocultarCargaGlobal, etapas.length * intervalo + 450);
     }
 
     // Loader global dedicado a autenticación
@@ -136,33 +98,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function inicializarApp() {
-        // Etapas visuales
-        cargarConEtapas(['Inicializando','Cargando productos','Cargando servicios','Configurando interfaz','Listo']);
-
-        // Sincronización de carga real
-        let loaded = { productos: false, servicios: false };
-        function checkLoaded() {
-            if (loaded.productos && loaded.servicios) {
-                setTimeout(ocultarCargaGlobal, 350);
-            }
-        }
-
-        function mostrarProductosSync() {
-            mostrarProductos();
-            loaded.productos = true;
-            checkLoaded();
-        }
-        function mostrarServiciosSync() {
-            mostrarServicios();
-            loaded.servicios = true;
-            checkLoaded();
-        }
-
-        setTimeout(mostrarProductosSync, 200);
-        setTimeout(mostrarServiciosSync, 260);
-        setTimeout(vincularEventos, 320);
-        setTimeout(cargarCarrito, 380);
-        setTimeout(actualizarUsuario, 420);
+        mostrarProductos();
+        mostrarServicios();
+        vincularEventos();
+        cargarCarrito();
+        actualizarUsuario();
 
         // Google Identity carga asíncrona
         if (typeof google !== 'undefined') {
@@ -178,32 +118,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }, 100);
         }
-    }
 
-    function generarSkeletonProductos(cant = 8) {
-        return `<div class="products-skeleton">${Array.from({length: cant}).map(()=>'<div class="skeleton"></div>').join('')}</div>`;
+        // Ocultar loader cuando todo esté listo
+        setTimeout(ocultarCargaGlobal, 600);
     }
 
     function mostrarProductos() {
         const contenedor = document.querySelector('.products-grid');
         if (!contenedor) return;
-        contenedor.innerHTML = generarSkeletonProductos();
-        setTimeout(() => {
-            contenedor.innerHTML = '';
-            PRODUCTOS.forEach(producto => {
-                const tarjeta = document.createElement('div');
-                tarjeta.className = 'product-card';
-                tarjeta.innerHTML = `
-                    <div class="product-img"><img src="${producto.imagen}" alt="${producto.nombre}" loading="lazy"></div>
-                    <div class="product-info">
-                        <h3 class="product-title">${producto.nombre}</h3>
-                        <p class="product-price">$${producto.precio.toFixed(2)}</p>
-                        <a href="#" class="btn ver-producto" data-id="${producto.id}">Ver Detalles</a>
-                    </div>
-                `;
-                contenedor.appendChild(tarjeta);
-            });
-        }, 500);
+        
+        contenedor.innerHTML = '';
+        PRODUCTOS.forEach(producto => {
+            const tarjeta = document.createElement('div');
+            tarjeta.className = 'product-card';
+            tarjeta.innerHTML = `
+                <div class="product-img"><img src="${producto.imagen}" alt="${producto.nombre}" loading="lazy"></div>
+                <div class="product-info">
+                    <h3 class="product-title">${producto.nombre}</h3>
+                    <p class="product-price">$${producto.precio.toFixed(2)}</p>
+                    <a href="#" class="btn ver-producto" data-id="${producto.id}">Ver Detalles</a>
+                </div>
+            `;
+            contenedor.appendChild(tarjeta);
+        });
     }
 
     function mostrarDetalleProducto(id) {
@@ -332,20 +269,18 @@ document.addEventListener('DOMContentLoaded', function () {
     function mostrarServicios() {
         const contenedor = document.getElementById('repair-services');
         if (!contenedor) return;
-        contenedor.innerHTML = `<tr><td colspan="4"><div class="skeleton" style="height:42px"></div></td></tr>`;
-        setTimeout(() => {
-            contenedor.innerHTML = '';
-            SERVICIOS.forEach((servicio, idx) => {
-                const fila = document.createElement('tr');
-                fila.innerHTML = `
-                    <td>${servicio.nombre}</td>
-                    <td>${servicio.descripcion}</td>
-                    <td class="repair-price">$${servicio.precio.toFixed(2)}</td>
-                    <td><input type="checkbox" class="repair-checkbox" data-idx="${idx}" data-price="${servicio.precio}"></td>
-                `;
-                contenedor.appendChild(fila);
-            });
-        }, 550);
+        
+        contenedor.innerHTML = '';
+        SERVICIOS.forEach((servicio, idx) => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td>${servicio.nombre}</td>
+                <td>${servicio.descripcion}</td>
+                <td class="repair-price">$${servicio.precio.toFixed(2)}</td>
+                <td><input type="checkbox" class="repair-checkbox" data-idx="${idx}" data-price="${servicio.precio}"></td>
+            `;
+            contenedor.appendChild(fila);
+        });
     }
 
     function actualizarCotizacion() {
@@ -775,8 +710,8 @@ document.addEventListener('DOMContentLoaded', function () {
             btnCot.classList.add('loading');
             setTimeout(()=>{
                 enviarCotizacion(e);
-                setTimeout(()=>btnCot.classList.remove('loading'),650);
-            },220);
+                btnCot.classList.remove('loading');
+            },800);
         });
 
         const btnRepairStart = document.getElementById('repair-start-btn');

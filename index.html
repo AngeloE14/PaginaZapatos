@@ -11,15 +11,11 @@
 </head>
 <body>
 
-    <!-- Capa de carga global: muestra un spinner mientras se prepara la vista o se ejecutan acciones importantes -->
+    <!-- Capa de carga global: muestra un spinner mientras se prepara la vista inicial -->
     <div id="pantalla-carga" class="pantalla-carga activa" aria-live="polite" aria-label="Cargando contenido">
-        <div class="carga-contenido" role="alert">
-            <div class="carga-spinner" role="status" aria-hidden="true"></div>
-            <p id="texto-carga">Preparando...</p>
-            <div class="carga-progress" aria-hidden="true">
-                <div class="carga-progress-bar" id="carga-progress-bar" style="width:0%"></div>
-            </div>
-            <ul class="carga-etapas" id="carga-etapas" aria-hidden="true"></ul>
+        <div class="carga-contenido">
+            <div class="carga-spinner" role="status"></div>
+            <p id="texto-carga">Cargando...</p>
         </div>
     </div>
 
