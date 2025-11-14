@@ -577,146 +577,88 @@ section {
 }
 
 
-.repair-service,
+.repair-service {
+    padding: clamp(60px, 8vw, 120px) 0;
+    background: linear-gradient(180deg, #f5fbf5 0%, #eef6eb 45%, #eef6eb 100%);
+}
+
 .repair-quote {
     padding: clamp(40px, 6vw, 80px) 0;
     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
 }
 
-.repair-layout {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: clamp(24px, 4vw, 48px);
-    align-items: center;
-    margin-bottom: clamp(30px, 4vw, 60px);
+.repair-hero {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto clamp(40px, 5vw, 64px);
 }
 
-.repair-copy h2 {
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    color: var(--color-primario);
-    line-height: 1.1;
+.repair-hero h2 {
+    font-size: clamp(2.2rem, 5vw, 3.1rem);
+    color: #1a1a1a;
+    margin-bottom: 12px;
 }
 
-.repair-copy h2 span {
-    color: var(--color-secundario);
+.repair-hero p {
+    max-width: 640px;
+    margin: 0 auto;
 }
 
 .repair-eyebrow {
     text-transform: uppercase;
-    letter-spacing: 0.25em;
+    letter-spacing: 0.2em;
     font-size: 0.85rem;
     color: var(--color-secundario);
     margin-bottom: 12px;
+    font-weight: 600;
 }
 
 .repair-description {
     font-size: 1.05rem;
-    color: #555;
-    margin: 20px 0 30px;
-    max-width: 520px;
+    color: #4d4d4d;
+    margin-bottom: 0;
 }
 
-.repair-highlights {
+.repair-steps-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: clamp(18px, 3vw, 26px);
+    margin-bottom: clamp(30px, 4vw, 50px);
 }
 
-.highlight-card {
+.repair-step-card {
     background: #fff;
-    border-radius: 14px;
-    padding: 18px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    border-radius: 18px;
+    padding: 26px 28px;
+    box-shadow: 0 25px 45px rgba(70, 83, 100, 0.14);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    border: 1px solid rgba(90, 83, 255, 0.08);
+    gap: 12px;
 }
 
-.highlight-card strong {
-    font-size: 1.6rem;
-    color: var(--color-primario);
-}
-
-.highlight-card span {
-    color: #6c6c6c;
-    font-weight: 500;
-}
-
-.repair-visual {
-    position: relative;
-}
-
-.repair-visual-card {
-    background: #fff;
-    border-radius: 24px;
-    padding: 20px;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-    text-align: center;
-}
-
-.repair-visual-card img {
-    width: 100%;
-    height: 340px;
-    object-fit: cover;
-    border-radius: 18px;
-    margin-bottom: 16px;
-}
-
-.repair-visual-card p {
-    color: #505050;
-    font-weight: 600;
-}
-
-.repair-badge {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    background: linear-gradient(135deg, var(--color-secundario), var(--color-acento));
+.step-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #d85d89, #c353b5);
     color: #fff;
-    padding: 10px 18px;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-/* Tarjetas de proceso para la sección de reparaciones */
-.repair-steps {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
-    margin: 0 auto 30px auto;
-    width: 100%;
-}
-
-.step-card {
-    background: #fff;
-    border-radius: 18px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(20, 20, 43, 0.08);
-    position: relative;
-}
-
-.step-number {
-    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-weight: 700;
-    letter-spacing: 0.25em;
-    color: var(--color-secundario);
+    font-size: 1rem;
+    box-shadow: 0 8px 18px rgba(210, 93, 123, 0.35);
 }
 
-.step-card h3 {
-    font-size: 1.2rem;
-    color: var(--color-primario);
+.repair-step-card h3 {
+    font-size: 1.1rem;
+    color: #1d1d1d;
+    line-height: 1.3;
 }
 
-.step-card p {
-    color: var(--color-texto);
-    font-weight: 500;
+.repair-step-card p {
+    color: #555;
     line-height: 1.5;
 }
 
@@ -724,8 +666,25 @@ section {
     text-align: center;
     display: flex;
     flex-direction: column;
+    gap: 12px;
     align-items: center;
-    gap: 10px;
+}
+
+.btn-cta {
+    background: #d94d64;
+    border: none;
+    color: #fff;
+    padding: 16px 38px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+    text-transform: uppercase;
+    box-shadow: 0 15px 30px rgba(217, 77, 100, 0.35);
+}
+
+.btn-cta:hover {
+    background: #c53b52;
 }
 
 .btn-gradient {
@@ -739,32 +698,29 @@ section {
 }
 
 .cta-note {
-    font-size: 0.95rem;
-    color: #666;
+    font-size: 0.96rem;
+    color: #4e4e4e;
 }
 
 @media (max-width: 768px) {
-    .repair-visual-card img {
-        height: 260px;
-    }
-
-    .repair-badge {
-        position: static;
-        display: inline-flex;
-        margin-bottom: 12px;
-    }
-
-    .repair-layout {
+    .repair-hero {
         text-align: center;
     }
 
-    .repair-description {
-        margin-left: auto;
-        margin-right: auto;
+    .repair-hero h2 {
+        font-size: 2.1rem;
     }
 
-    .repair-highlights {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    .repair-description {
+        margin: 0 auto;
+    }
+
+    .repair-steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .repair-step-card {
+        text-align: left;
     }
 
     .repair-quote-grid {
