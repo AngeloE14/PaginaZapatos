@@ -13,9 +13,13 @@
 
     <!-- Capa de carga global: muestra un spinner mientras se prepara la vista o se ejecutan acciones importantes -->
     <div id="pantalla-carga" class="pantalla-carga activa" aria-live="polite" aria-label="Cargando contenido">
-        <div class="carga-contenido">
-            <div class="carga-spinner" role="status"></div>
+        <div class="carga-contenido" role="alert">
+            <div class="carga-spinner" role="status" aria-hidden="true"></div>
             <p id="texto-carga">Preparando...</p>
+            <div class="carga-progress" aria-hidden="true">
+                <div class="carga-progress-bar" id="carga-progress-bar" style="width:0%"></div>
+            </div>
+            <ul class="carga-etapas" id="carga-etapas" aria-hidden="true"></ul>
         </div>
     </div>
 
@@ -35,12 +39,13 @@
                 </nav>
                 <div class="header-icons">
                     <div class="user-menu-container">
-                        <a href="#" id="boton-usuario"><i class="fas fa-user"></i></a>
-                        <div id="user-menu" class="user-menu">
-                            <a href="#" id="btn-logout" class="logout-btn">Cerrar Sesión</a>
+                        <a href="#" id="boton-usuario" class="icon-only" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"></i></a>
+                        <div id="user-menu" class="user-menu" aria-hidden="true" role="menu">
+                            <div id="user-info-name" class="user-info-name" aria-label="Usuario" style="display:none;"></div>
+                            <a href="#" id="btn-logout" class="logout-btn" role="menuitem">Cerrar Sesión</a>
                         </div>
                     </div>
-                    <a href="#" class="nav-link" data-tab="carrito"><i class="fas fa-shopping-cart"></i></a>
+                    <a href="#" class="nav-link icon-only" data-tab="carrito" aria-label="Ver carrito"><i class="fas fa-shopping-cart"></i></a>
                 </div>
             </div>
         </header>

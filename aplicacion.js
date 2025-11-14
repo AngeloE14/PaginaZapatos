@@ -55,25 +55,57 @@ document.addEventListener('DOMContentLoaded', function () {
         { nombre: 'Refuerzo de talón', descripcion: 'Refuerzo interno para mayor durabilidad', precio: 10.00 }
     ];
 
-    // Iniciamos mostrando un mensaje genérico mientras se arma la vista
-    mostrarCargaGlobal('Preparando...');
+    // Iniciamos loader (etapas se configuran dentro de inicializarApp)
+    mostrarCargaGlobal('Preparando...', 0);
     inicializarApp();
 
-    /**
-     * Activa el overlay del spinner global con un mensaje opcional.
-     */
-    function mostrarCargaGlobal(mensaje = 'Cargando contenido...') {
+    // Barra y lista de etapas
+    const barraProgreso = document.getElementById('carga-progress-bar');
+    const etapasLista = document.getElementById('carga-etapas');
+    let etapasActuales = [];
+
+    function mostrarCargaGlobal(mensaje = 'Cargando...', progreso = 0) {
         if (!capaCarga) return;
         if (textoCarga && mensaje) textoCarga.textContent = mensaje;
+        if (barraProgreso) barraProgreso.style.width = `${Math.min(Math.max(progreso,0),100)}%`;
         capaCarga.classList.add('activa');
     }
 
-    /**
-     * Oculta el overlay del spinner global.
-     */
+    function actualizarCargaGlobal(mensaje, progreso) {
+        if (!capaCarga) return;
+        if (mensaje && textoCarga) textoCarga.textContent = mensaje;
+        if (typeof progreso === 'number' && barraProgreso)
+            barraProgreso.style.width = `${Math.min(Math.max(progreso,0),100)}%`;
+    }
+
+    function configurarEtapas(etapas = []) {
+        etapasActuales = etapas.slice();
+        if (!etapasLista) return;
+        etapasLista.innerHTML = etapasActuales.map((e,i)=>`<li data-idx="${i}">${e}</li>`).join('');
+    }
+
+    function activarEtapa(idx) {
+        if (!etapasLista) return;
+        etapasLista.querySelectorAll('li').forEach(li => li.classList.toggle('activa', parseInt(li.dataset.idx) === idx));
+    }
+
     function ocultarCargaGlobal() {
         if (!capaCarga) return;
         capaCarga.classList.remove('activa');
+        if (barraProgreso) barraProgreso.style.width = '0%';
+        if (etapasLista) etapasLista.innerHTML = '';
+    }
+
+    function cargarConEtapas(etapas, intervalo = 500) {
+        configurarEtapas(etapas);
+        etapas.forEach((etapa, i) => {
+            setTimeout(() => {
+                activarEtapa(i);
+                const porcentaje = ((i+1) / etapas.length) * 100;
+                actualizarCargaGlobal(etapa, porcentaje);
+            }, i * intervalo);
+        });
+        setTimeout(ocultarCargaGlobal, etapas.length * intervalo + 450);
     }
 
     // Loader global dedicado a autenticación
@@ -104,12 +136,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function inicializarApp() {
-        mostrarProductos();
-        mostrarServicios();
-        vincularEventos();
-        cargarCarrito();
-        actualizarUsuario();
-        
+        // Etapas visuales
+        cargarConEtapas(['Inicializando','Cargando productos','Cargando servicios','Configurando interfaz','Listo']);
+
+        // Skeletons y datos con leves retardos para que se perciba la carga
+        setTimeout(mostrarProductos, 200);
+        setTimeout(mostrarServicios, 260);
+        setTimeout(vincularEventos, 320);
+        setTimeout(cargarCarrito, 380);
+        setTimeout(actualizarUsuario, 420);
+
+        // Google Identity carga asíncrona
         if (typeof google !== 'undefined') {
             inicializarGoogle();
         } else {
@@ -123,29 +160,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }, 100);
         }
+    }
 
-        // Pequeña demora para permitir que la interfaz termine de pintarse antes de quitar el spinner
-        setTimeout(ocultarCargaGlobal, 450);
+    function generarSkeletonProductos(cant = 8) {
+        return `<div class="products-skeleton">${Array.from({length: cant}).map(()=>'<div class="skeleton"></div>').join('')}</div>`;
     }
 
     function mostrarProductos() {
         const contenedor = document.querySelector('.products-grid');
         if (!contenedor) return;
-        
-        contenedor.innerHTML = '';
-        PRODUCTOS.forEach(producto => {
-            const tarjeta = document.createElement('div');
-            tarjeta.className = 'product-card';
-            tarjeta.innerHTML = `
-                <div class="product-img"><img src="${producto.imagen}" alt="${producto.nombre}"></div>
-                <div class="product-info">
-                    <h3 class="product-title">${producto.nombre}</h3>
-                    <p class="product-price">$${producto.precio.toFixed(2)}</p>
-                    <a href="#" class="btn ver-producto" data-id="${producto.id}">Ver Detalles</a>
-                </div>
-            `;
-            contenedor.appendChild(tarjeta);
-        });
+        contenedor.innerHTML = generarSkeletonProductos();
+        setTimeout(() => {
+            contenedor.innerHTML = '';
+            PRODUCTOS.forEach(producto => {
+                const tarjeta = document.createElement('div');
+                tarjeta.className = 'product-card';
+                tarjeta.innerHTML = `
+                    <div class="product-img"><img src="${producto.imagen}" alt="${producto.nombre}" loading="lazy"></div>
+                    <div class="product-info">
+                        <h3 class="product-title">${producto.nombre}</h3>
+                        <p class="product-price">$${producto.precio.toFixed(2)}</p>
+                        <a href="#" class="btn ver-producto" data-id="${producto.id}">Ver Detalles</a>
+                    </div>
+                `;
+                contenedor.appendChild(tarjeta);
+            });
+        }, 500);
     }
 
     function mostrarDetalleProducto(id) {
@@ -274,18 +314,20 @@ document.addEventListener('DOMContentLoaded', function () {
     function mostrarServicios() {
         const contenedor = document.getElementById('repair-services');
         if (!contenedor) return;
-        
-        contenedor.innerHTML = '';
-        SERVICIOS.forEach((servicio, idx) => {
-            const fila = document.createElement('tr');
-            fila.innerHTML = `
-                <td>${servicio.nombre}</td>
-                <td>${servicio.descripcion}</td>
-                <td class="repair-price">$${servicio.precio.toFixed(2)}</td>
-                <td><input type="checkbox" class="repair-checkbox" data-idx="${idx}" data-price="${servicio.precio}"></td>
-            `;
-            contenedor.appendChild(fila);
-        });
+        contenedor.innerHTML = `<tr><td colspan="4"><div class="skeleton" style="height:42px"></div></td></tr>`;
+        setTimeout(() => {
+            contenedor.innerHTML = '';
+            SERVICIOS.forEach((servicio, idx) => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${servicio.nombre}</td>
+                    <td>${servicio.descripcion}</td>
+                    <td class="repair-price">$${servicio.precio.toFixed(2)}</td>
+                    <td><input type="checkbox" class="repair-checkbox" data-idx="${idx}" data-price="${servicio.precio}"></td>
+                `;
+                contenedor.appendChild(fila);
+            });
+        }, 550);
     }
 
     function actualizarCotizacion() {
@@ -380,13 +422,16 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        mostrarAuthLoader('Creando tu cuenta...');
+    const btn = e.submitter || document.querySelector('#register-form button[type="submit"]');
+    if (btn) btn.classList.add('loading');
+    mostrarAuthLoader('Creando tu cuenta...');
         usuarios.push({ contraseña, nombre, correo, pais, curpRfc, telefono });
         localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
         establecerUsuario({ nombre, correo, pais, telefono });
         cerrarModalAutenticacion();
         actualizarUsuario();
         ocultarAuthLoader(500);
+        if (btn) setTimeout(()=>btn.classList.remove('loading'),600);
     }
 
     function manejarInicioDeSesion(e) {
@@ -399,7 +444,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-    mostrarAuthLoader('Validando tus datos...');
+        const btn = e.submitter || document.getElementById('login-btn');
+        if (btn) btn.classList.add('loading');
+        mostrarAuthLoader('Validando tus datos...');
         const usuarios = obtenerUsuarios();
         const encontrado = usuarios.find(u => u.correo === correo && u.contraseña === contraseña);
 
@@ -408,24 +455,37 @@ document.addEventListener('DOMContentLoaded', function () {
             cerrarModalAutenticacion();
             actualizarUsuario();
             ocultarAuthLoader(400);
+            if (btn) setTimeout(()=>btn.classList.remove('loading'),500);
         } else {
             ocultarAuthLoader();
+            if (btn) btn.classList.remove('loading');
             alert('Correo o contraseña incorrectos.');
         }
     }
 
     function actualizarUsuario() {
         const boton = document.getElementById('boton-usuario');
-        const userMenu = document.querySelector('.user-menu-container');
+        const nameEl = document.getElementById('user-info-name');
         const usuario = obtenerUsuario();
 
         if (usuario) {
             const displayName = (usuario.nombre || '').trim() || usuario.usuario || usuario.correo || 'Mi cuenta';
-            boton.innerHTML = `<i class="fas fa-user-circle"></i> ${displayName}`;
-            boton.style.cursor = 'pointer';
+            if (boton) {
+                boton.innerHTML = '<i class="fas fa-user-circle"></i>';
+                boton.style.cursor = 'pointer';
+                boton.setAttribute('title', displayName);
+            }
+            if (nameEl) {
+                nameEl.textContent = displayName;
+                nameEl.style.display = 'block';
+            }
         } else {
             boton.innerHTML = '<i class="fas fa-user"></i>';
             boton.style.cursor = 'pointer';
+            if (nameEl) {
+                nameEl.textContent = '';
+                nameEl.style.display = 'none';
+            }
             cerrarMenuUsuario();
         }
     }
@@ -464,12 +524,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function mostrarMenuUsuario() {
         const menu = document.getElementById('user-menu');
-        if (menu) menu.classList.add('show');
+        const boton = document.getElementById('boton-usuario');
+        if (menu) {
+            menu.classList.add('show');
+            menu.setAttribute('aria-hidden', 'false');
+        }
+        if (boton) boton.setAttribute('aria-expanded', 'true');
     }
 
     function cerrarMenuUsuario() {
         const menu = document.getElementById('user-menu');
-        if (menu) menu.classList.remove('show');
+        const boton = document.getElementById('boton-usuario');
+        if (menu) {
+            menu.classList.remove('show');
+            menu.setAttribute('aria-hidden', 'true');
+        }
+        if (boton) boton.setAttribute('aria-expanded', 'false');
     }
 
     function inicializarGoogle() {
@@ -682,7 +752,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         const btnCot = document.getElementById('request-quote');
-        if (btnCot) btnCot.addEventListener('click', enviarCotizacion);
+        if (btnCot) btnCot.addEventListener('click', function(e){
+            e.preventDefault();
+            btnCot.classList.add('loading');
+            setTimeout(()=>{
+                enviarCotizacion(e);
+                setTimeout(()=>btnCot.classList.remove('loading'),650);
+            },220);
+        });
 
         const btnRepairStart = document.getElementById('repair-start-btn');
         if (btnRepairStart) {
