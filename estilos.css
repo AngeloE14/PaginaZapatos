@@ -16,48 +16,57 @@
 }
 
 
-html {
-    /* Desplazamiento suave y compensación para el header fijo */
-    scroll-behavior: smooth;
-    scroll-padding-top: 90px;
-    overflow-x: hidden;
-    height: 100%;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: var(--color-texto);
-    background: var(--color-primario);
-    width: 100%;
-    overflow-x: hidden;
-    line-height: 1.6;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.contenido-principal {
-    flex: 1 0 auto;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    background: #f8f9fa;
-}
-
-/* Spinner global reutilizable (pantalla completa) */
+/* Loader global visual refinado */
 .pantalla-carga {
     position: fixed;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(26, 26, 26, 0.72);
+    background: rgba(26, 26, 26, 0.78);
     z-index: 2000;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 220ms ease;
-    backdrop-filter: blur(1px);
+    transition: opacity 320ms cubic-bezier(.4,0,.2,1);
+    backdrop-filter: blur(2.5px);
+}
+.pantalla-carga.activa {
+    opacity: 1;
+    visibility: visible;
+}
+.carga-contenido {
+    background: rgba(24, 24, 24, 0.92);
+    padding: 36px 44px 32px;
+    border-radius: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.32);
+    min-width: 220px;
+    min-height: 180px;
+    animation: loaderPopIn .5s cubic-bezier(.4,0,.2,1);
+}
+@keyframes loaderPopIn {
+    0% { transform: scale(.85) translateY(30px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.carga-spinner {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 5px solid rgba(255,255,255,0.22);
+    border-top-color: var(--color-secundario);
+    animation: girar 0.9s linear infinite;
+    margin-bottom: 8px;
+}
+.pantalla-carga p {
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    font-size: 1.05rem;
+    margin-bottom: 0;
 }
 
 .pantalla-carga.activa {

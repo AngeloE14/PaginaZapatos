@@ -139,9 +139,27 @@ document.addEventListener('DOMContentLoaded', function () {
         // Etapas visuales
         cargarConEtapas(['Inicializando','Cargando productos','Cargando servicios','Configurando interfaz','Listo']);
 
-        // Skeletons y datos con leves retardos para que se perciba la carga
-        setTimeout(mostrarProductos, 200);
-        setTimeout(mostrarServicios, 260);
+        // Sincronización de carga real
+        let loaded = { productos: false, servicios: false };
+        function checkLoaded() {
+            if (loaded.productos && loaded.servicios) {
+                setTimeout(ocultarCargaGlobal, 350);
+            }
+        }
+
+        function mostrarProductosSync() {
+            mostrarProductos();
+            loaded.productos = true;
+            checkLoaded();
+        }
+        function mostrarServiciosSync() {
+            mostrarServicios();
+            loaded.servicios = true;
+            checkLoaded();
+        }
+
+        setTimeout(mostrarProductosSync, 200);
+        setTimeout(mostrarServiciosSync, 260);
         setTimeout(vincularEventos, 320);
         setTimeout(cargarCarrito, 380);
         setTimeout(actualizarUsuario, 420);
