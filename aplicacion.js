@@ -292,9 +292,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const contraseña = (document.getElementById('reg-password').value || '');
         const nombre = (document.getElementById('reg-name').value || '').trim();
         const correo = (document.getElementById('reg-email').value || '').trim();
+        const pais = (document.getElementById('reg-country').value || '').trim();
+        const curpRfc = (document.getElementById('reg-curp-rfc').value || '').trim();
         const telefono = (document.getElementById('reg-phone').value || '').trim();
 
-        if (!usuario || !contraseña || !nombre || !correo) {
+        if (!usuario || !contraseña || !nombre || !correo || !pais) {
             alert('Completa todos los campos obligatorios.');
             return;
         }
@@ -321,9 +323,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        usuarios.push({ usuario, contraseña, nombre, correo, telefono });
+        usuarios.push({ usuario, contraseña, nombre, correo, pais, curpRfc, telefono });
         localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
-        establecerUsuario({ usuario, nombre, correo, telefono });
+        establecerUsuario({ usuario, nombre, correo, pais, telefono });
         cerrarModalAutenticacion();
         actualizarUsuario();
     }
@@ -448,6 +450,33 @@ document.addEventListener('DOMContentLoaded', function () {
         if (id === 'carrito') mostrarCarrito();
     }
 
+    function alternarVisibilidadContraseña(idInput, idBoton) {
+        const input = document.getElementById(idInput);
+        const boton = document.getElementById(idBoton);
+        if (!input || !boton) return;
+
+        boton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const esPassword = input.type === 'password';
+            input.type = esPassword ? 'text' : 'password';
+            boton.innerHTML = esPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+        });
+    }
+
+    function mostrarOlvideContraseña() {
+        const usuario = prompt('Ingresa tu correo electrónico:');
+        if (!usuario) return;
+
+        const usuarios = obtenerUsuarios();
+        const encontrado = usuarios.find(u => u.correo === usuario);
+
+        if (encontrado) {
+            alert(`✅ Se envió un enlace de recuperación a ${usuario}\n\n(En una app real, se enviaría un correo)`);
+        } else {
+            alert('❌ No encontramos una cuenta con ese correo.');
+        }
+    }
+
     function vincularEventos() {
         // Navegación
         document.querySelectorAll('.nav-link').forEach(link =>
@@ -520,6 +549,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const btnCot = document.getElementById('request-quote');
         if (btnCot) btnCot.addEventListener('click', enviarCotizacion);
+
+        // Toggle contraseñas
+        alternarVisibilidadContraseña('auth-password', 'toggle-login-password');
+        alternarVisibilidadContraseña('reg-password', 'toggle-register-password');
+
+        // Olvidé contraseña
+        document.getElementById('forgot-password-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            mostrarOlvideContraseña();
+        });
 
         // Autenticación
         document.getElementById('boton-usuario').addEventListener('click', function(e) {
