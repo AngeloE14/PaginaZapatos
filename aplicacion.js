@@ -463,17 +463,36 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function mostrarOlvideContraseña() {
-        const usuario = prompt('Ingresa tu correo electrónico:');
-        if (!usuario) return;
+    function mostrarFormularioRecuperacion() {
+        document.querySelectorAll('form').forEach(f => f.classList.remove('active'));
+        document.getElementById('recover-password-form').classList.add('active');
+    }
+
+    function volverAlLogin() {
+        document.querySelectorAll('form').forEach(f => f.classList.remove('active'));
+        document.getElementById('login-form').classList.add('active');
+    }
+
+    function enviarEnlaceRecuperacion(e) {
+        e.preventDefault();
+        const correo = (document.getElementById('recover-email').value || '').trim();
+        const errorEl = document.getElementById('recover-error');
+
+        if (!correo) {
+            errorEl.textContent = 'Por favor ingresa tu correo.';
+            return;
+        }
 
         const usuarios = obtenerUsuarios();
-        const encontrado = usuarios.find(u => u.correo === usuario);
+        const encontrado = usuarios.find(u => u.correo === correo);
 
         if (encontrado) {
-            alert(`✅ Se envió un enlace de recuperación a ${usuario}\n\n(En una app real, se enviaría un correo)`);
+            errorEl.textContent = '';
+            alert(`✅ Se envió un enlace de recuperación a ${correo}\n\n(En una app real, se enviaría un correo con un enlace de recuperación seguro)`);
+            document.getElementById('recover-email').value = '';
+            volverAlLogin();
         } else {
-            alert('❌ No encontramos una cuenta con ese correo.');
+            errorEl.textContent = '❌ No encontramos una cuenta con ese correo.';
         }
     }
 
@@ -554,11 +573,21 @@ document.addEventListener('DOMContentLoaded', function () {
         alternarVisibilidadContraseña('auth-password', 'toggle-login-password');
         alternarVisibilidadContraseña('reg-password', 'toggle-register-password');
 
-        // Olvidé contraseña
+        // Recuperación de contraseña
         document.getElementById('forgot-password-link').addEventListener('click', function(e) {
             e.preventDefault();
-            mostrarOlvideContraseña();
+            mostrarFormularioRecuperacion();
         });
+
+        document.getElementById('back-to-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            volverAlLogin();
+        });
+
+        const formRecuperar = document.getElementById('recover-password-form');
+        if (formRecuperar) {
+            formRecuperar.addEventListener('submit', enviarEnlaceRecuperacion);
+        }
 
         // Autenticación
         document.getElementById('boton-usuario').addEventListener('click', function(e) {

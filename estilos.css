@@ -15,11 +15,17 @@
     padding: 0;
 }
 
+html, body {
+    height: auto;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--color-texto);
     background: #f8f9fa;
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
 }
 
 a {
@@ -713,6 +719,26 @@ form button {
     margin-top: 10px;
 }
 
+.back-to-login {
+    background: transparent;
+    color: var(--color-acento);
+    border: 2px solid var(--color-acento);
+    padding: 10px 16px;
+    margin-top: 12px;
+    font-size: 0.9rem;
+    width: 100%;
+    transition: all 200ms ease;
+}
+
+.back-to-login:hover {
+    background: var(--color-acento);
+    color: #fff;
+}
+
+form p {
+    margin: 0;
+    line-height: 1.5;
+}
 
 .auth-loading {
     position: absolute;
