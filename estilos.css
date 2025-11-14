@@ -231,15 +231,15 @@ nav ul li a:hover::after {
     align-items: center;
     justify-content: center; /* Centra icono y texto */
     gap: 6px; /* Menor separación al centrar */
-    padding: 10px 14px;
+    padding: 8px 16px;
     color: var(--color-primario);
     font-weight: 500;
     white-space: nowrap;
-    border-radius: 6px;
+    border-radius: 20px; /* Apariencia más de "pill" para que se perciba centrado */
     transition: background-color 200ms ease, color 200ms ease, box-shadow 200ms ease;
     position: relative;
-    width: 100%;
-    margin: 0;
+    width: auto; /* Evita ocupar todo el ancho */
+    margin: 6px auto 10px; /* Centra dentro del contenedor del menú */
 }
 
 .logout-btn:hover {
