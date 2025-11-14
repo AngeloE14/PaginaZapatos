@@ -424,11 +424,39 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem(CLAVE_USUARIO_ACTUAL, JSON.stringify(usuario));
     }
 
+    function mostrarAvisoTemporal(mensaje, tipo = 'info') {
+        const tipoNormalizado = ['success', 'info', 'error'].includes(tipo) ? tipo : 'info';
+        let contenedor = document.getElementById('toast-container');
+        if (!contenedor) {
+            contenedor = document.createElement('div');
+            contenedor.id = 'toast-container';
+            contenedor.className = 'toast-container';
+            document.body.appendChild(contenedor);
+        }
+
+        const aviso = document.createElement('div');
+        aviso.className = `toast toast-${tipoNormalizado}`;
+        aviso.setAttribute('role', 'status');
+        aviso.setAttribute('aria-live', 'polite');
+        aviso.textContent = mensaje;
+        contenedor.appendChild(aviso);
+
+        requestAnimationFrame(() => {
+            aviso.classList.add('show');
+        });
+
+        setTimeout(() => {
+            aviso.classList.remove('show');
+            aviso.addEventListener('transitionend', () => aviso.remove(), { once: true });
+        }, 3400);
+    }
+
     function cerrarSesion() {
         localStorage.removeItem(CLAVE_USUARIO_ACTUAL);
         actualizarUsuario();
         cerrarMenuUsuario();
         mostrarPestana('inicio');
+        mostrarAvisoTemporal('Sesión cerrada correctamente.', 'success');
     }
 
     function mostrarMenuUsuario() {
@@ -707,9 +735,30 @@ document.addEventListener('DOMContentLoaded', function () {
         // Cerrar sesión
         const btnLogout = document.getElementById('btn-logout');
         if (btnLogout) {
+            const labelEl = btnLogout.querySelector('.logout-btn-label');
+            const textoOriginal = btnLogout.dataset.originalLabel || (labelEl ? labelEl.textContent.trim() : 'Cerrar Sesión');
+            const textoCarga = btnLogout.dataset.loadingLabel || 'Cerrando...';
+
             btnLogout.addEventListener('click', function(e) {
                 e.preventDefault();
-                cerrarSesion();
+                if (btnLogout.classList.contains('is-logging-out')) {
+                    return;
+                }
+
+                if (labelEl) {
+                    labelEl.textContent = textoCarga;
+                }
+                btnLogout.classList.add('is-logging-out');
+                btnLogout.setAttribute('aria-busy', 'true');
+
+                setTimeout(() => {
+                    cerrarSesion();
+                    btnLogout.classList.remove('is-logging-out');
+                    btnLogout.removeAttribute('aria-busy');
+                    if (labelEl) {
+                        labelEl.textContent = textoOriginal;
+                    }
+                }, 650);
             });
         }
 

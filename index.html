@@ -32,7 +32,11 @@
                         <a href="#" id="boton-usuario" class="icon-only" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"></i></a>
                         <div id="user-menu" class="user-menu" aria-hidden="true" role="menu">
                             <div id="user-info-name" class="user-info-name" aria-label="Usuario" style="display:none;"></div>
-                            <a href="#" id="btn-logout" class="logout-btn" role="menuitem">Cerrar Sesión</a>
+                            <a href="#" id="btn-logout" class="logout-btn" role="menuitem" data-original-label="Cerrar Sesión" data-loading-label="Cerrando...">
+                                <span class="logout-btn-icon" aria-hidden="true"><i class="fas fa-arrow-right-from-bracket"></i></span>
+                                <span class="logout-btn-label">Cerrar Sesión</span>
+                                <span class="logout-spinner" aria-hidden="true"></span>
+                            </a>
                         </div>
                     </div>
                     <a href="#" class="nav-link icon-only" data-tab="carrito" aria-label="Ver carrito"><i class="fas fa-shopping-cart"></i></a>
