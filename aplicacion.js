@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
         cargarCarrito();
         actualizarUsuario();
 
-        // Google Identity carga asíncrona
+        // Carga google
         if (typeof google !== 'undefined') {
             inicializarGoogle();
         } else {
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const resumen = document.getElementById('cart-summary');
         if (!contenedor || !resumen) return;
 
-        // Si el carrito está vacío, reconstruimos el bloque con el mensaje vacío
+        // Reviso si el  carrito esta vacio
         if (carrito.length === 0) {
             contenedor.innerHTML = `
                 <div class="empty-cart-message" id="empty-cart-message">
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Con elementos en el carrito
+        
         resumen.style.display = 'block';
         contenedor.innerHTML = carrito.map((item, idx) => `
             <div class="cart-item">
@@ -596,7 +596,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function vincularEventos() {
-        // Navegación
         document.querySelectorAll('.nav-link').forEach(link =>
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -619,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Productos
+        
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('ver-producto')) {
                 e.preventDefault();
@@ -631,7 +630,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Tallas
+        
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('size-option')) {
                 document.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
@@ -639,7 +638,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Cantidad
+        
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('quantity-btn')) {
                 const input = e.target.parentElement.querySelector('.quantity-input');
@@ -650,7 +649,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Carrito
+        
         document.addEventListener('click', function(e) {
             // Debug: verificar qué elemento se clickeó
             const target = e.target;
@@ -681,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Reparaciones
+        
         document.addEventListener('change', function(e) {
             if (e.target.classList.contains('repair-checkbox')) {
                 actualizarCotizacion();
@@ -701,7 +700,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Toggle contraseñas
+        
         alternarVisibilidadContraseña('auth-password', 'toggle-login-password');
         alternarVisibilidadContraseña('reg-password', 'toggle-register-password');
 
@@ -762,7 +761,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Cerrar menú si se hace clic fuera
+       
         document.addEventListener('click', function(e) {
             const userMenuContainer = document.querySelector('.user-menu-container');
             const botonUsuario = document.getElementById('boton-usuario');
