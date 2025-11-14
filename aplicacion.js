@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
 
     // Iniciamos mostrando un mensaje genérico mientras se arma la vista
-    mostrarCargaGlobal('Preparando vitrina...');
+    mostrarCargaGlobal('Preparando...');
     inicializarApp();
 
     /**
