@@ -360,10 +360,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (usuario) {
             boton.innerHTML = `<i class="fas fa-user-circle"></i> ${usuario.nombre || usuario.usuario}`;
             boton.style.cursor = 'pointer';
-            if (userMenu) userMenu.style.display = 'block';
         } else {
             boton.innerHTML = '<i class="fas fa-user"></i>';
-            if (userMenu) userMenu.style.display = 'none';
+            boton.style.cursor = 'pointer';
             cerrarMenuUsuario();
         }
     }

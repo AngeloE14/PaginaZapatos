@@ -17,12 +17,15 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--color-texto);
     background: #f8f9fa;
+    width: 100%;
+    overflow-x: hidden;
     line-height: 1.6;
 }
 
@@ -134,7 +137,6 @@ nav ul li a:hover::after {
 
 .user-menu-container {
     position: relative;
-    display: none;
 }
 
 .header-icons a {
@@ -184,6 +186,11 @@ nav ul li a:hover::after {
 .logout-btn:hover {
     background: var(--color-claro);
     color: var(--color-secundario);
+}
+
+section {
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .hero {
