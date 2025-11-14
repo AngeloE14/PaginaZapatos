@@ -274,15 +274,16 @@ section {
     opacity: 0.9;
 }
 
+/* Productos */
 .featured {
-    padding: 40px 0;
+    padding: clamp(24px, 5vh, 48px) 0 clamp(36px, 7vh, 64px);
 }
 
 .section-title {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 4vw, 2.5rem);
     font-weight: 700;
-    margin-bottom: 40px;
+    margin-bottom: clamp(24px, 4vw, 36px);
     color: var(--color-primario);
 }
 
