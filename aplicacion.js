@@ -559,21 +559,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Carrito
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('cart-menos')) {
-                const idx = parseInt(e.target.getAttribute('data-idx'));
-                if (carrito[idx] && carrito[idx].cantidad > 1) carrito[idx].cantidad--;
-                guardarCarrito();
-                mostrarCarrito();
+            // Debug: verificar qué elemento se clickeó
+            const target = e.target;
+            
+            if (target.classList.contains('cart-menos')) {
+                const idx = parseInt(target.getAttribute('data-idx'));
+                if (!isNaN(idx) && carrito[idx] && carrito[idx].cantidad > 1) {
+                    carrito[idx].cantidad--;
+                    guardarCarrito();
+                    mostrarCarrito();
+                }
             }
-            if (e.target.classList.contains('cart-mas')) {
-                const idx = parseInt(e.target.getAttribute('data-idx'));
-                if (carrito[idx]) carrito[idx].cantidad++;
-                guardarCarrito();
-                mostrarCarrito();
+            if (target.classList.contains('cart-mas')) {
+                const idx = parseInt(target.getAttribute('data-idx'));
+                if (!isNaN(idx) && carrito[idx]) {
+                    carrito[idx].cantidad++;
+                    guardarCarrito();
+                    mostrarCarrito();
+                }
             }
-            if (e.target.classList.contains('remove-item')) {
-                const idx = parseInt(e.target.getAttribute('data-idx'));
-                if (idx >= 0 && idx < carrito.length) {
+            if (target.classList.contains('remove-item')) {
+                const idx = parseInt(target.getAttribute('data-idx'));
+                if (!isNaN(idx) && idx >= 0 && idx < carrito.length) {
                     carrito.splice(idx, 1);
                     guardarCarrito();
                     mostrarCarrito();
