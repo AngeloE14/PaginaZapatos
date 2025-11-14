@@ -588,6 +588,50 @@ section {
     padding: 40px;
 }
 
+/* Tarjetas de proceso para la sección de reparaciones */
+.repair-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin: 0 auto 30px auto;
+    width: 100%;
+}
+
+.step-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+}
+
+.step-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-secundario), var(--color-acento));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.step-card p {
+    text-align: center;
+    color: var(--color-texto);
+    font-weight: 500;
+}
+
+.repair-cta {
+    display: flex;
+    justify-content: center;
+}
+
 .repair-hero h2 {
     font-size: 2.5rem;
     margin-bottom: 20px;
