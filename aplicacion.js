@@ -164,16 +164,21 @@ document.addEventListener('DOMContentLoaded', function () {
     function mostrarCarrito() {
         const contenedor = document.getElementById('cart-items');
         const resumen = document.getElementById('cart-summary');
+        if (!contenedor || !resumen) return;
 
+        // Si el carrito está vacío, reconstruimos el bloque con el mensaje vacío
         if (carrito.length === 0) {
-            document.getElementById('empty-cart-message').style.display = 'block';
+            contenedor.innerHTML = `
+                <div class="empty-cart-message" id="empty-cart-message">
+                    <p>Tu carrito está vacío. <a href="#" class="nav-link" data-tab="productos">¡Agrega productos!</a></p>
+                </div>
+            `;
             resumen.style.display = 'none';
             return;
         }
 
-        document.getElementById('empty-cart-message').style.display = 'none';
+        // Con elementos en el carrito
         resumen.style.display = 'block';
-
         contenedor.innerHTML = carrito.map((item, idx) => `
             <div class="cart-item">
                 <img src="${item.imagen}" alt="${item.nombre}" class="cart-item-image">
