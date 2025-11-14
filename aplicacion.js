@@ -567,7 +567,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 mostrarCarrito();
             }
             if (e.target.classList.contains('remove-item')) {
-                e.preventDefault();
                 const idx = parseInt(e.target.getAttribute('data-idx'));
                 if (idx >= 0 && idx < carrito.length) {
                     carrito.splice(idx, 1);
