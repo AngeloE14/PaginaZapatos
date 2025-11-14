@@ -346,6 +346,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function manejarRegistro(e) {
         e.preventDefault();
+        const usuario = (document.getElementById('reg-username').value || '').trim();
         const contraseña = (document.getElementById('reg-password').value || '');
         const nombre = (document.getElementById('reg-name').value || '').trim();
         const correo = (document.getElementById('reg-email').value || '').trim();
@@ -353,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const curpRfc = (document.getElementById('reg-curp-rfc').value || '').trim();
         const telefono = (document.getElementById('reg-phone').value || '').trim();
 
-        if (!contraseña || !nombre || !correo || !pais) {
+        if (!usuario || !contraseña || !nombre || !correo || !pais) {
             alert('Completa todos los campos obligatorios.');
             return;
         }
@@ -369,18 +370,28 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         let usuarios = obtenerUsuarios();
+        
+        if (usuarios.find(u => u.usuario === usuario)) {
+            alert('El usuario ya existe.');
+            return;
+        }
 
         if (usuarios.find(u => u.correo === correo)) {
             alert('El correo ya está registrado.');
             return;
         }
 
+<<<<<<< HEAD
     const btn = e.submitter || document.querySelector('#register-form button[type="submit"]');
     if (btn) btn.classList.add('loading');
     mostrarAuthLoader('Creando tu cuenta...');
         usuarios.push({ contraseña, nombre, correo, pais, curpRfc, telefono });
+=======
+        mostrarCargaGlobal('Creando tu cuenta...');
+        usuarios.push({ usuario, contraseña, nombre, correo, pais, curpRfc, telefono });
+>>>>>>> parent of 9f5e6f0 (Elimino el nombre de usuario ya que es innecesario)
         localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
-        establecerUsuario({ nombre, correo, pais, telefono });
+        establecerUsuario({ usuario, nombre, correo, pais, telefono });
         cerrarModalAutenticacion();
         actualizarUsuario();
         ocultarAuthLoader(500);
@@ -404,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const encontrado = usuarios.find(u => u.correo === correo && u.contraseña === contraseña);
 
         if (encontrado) {
-            establecerUsuario({ nombre: encontrado.nombre, correo: encontrado.correo, telefono: encontrado.telefono, pais: encontrado.pais });
+            establecerUsuario({ usuario: encontrado.usuario, nombre: encontrado.nombre, correo: encontrado.correo, telefono: encontrado.telefono });
             cerrarModalAutenticacion();
             actualizarUsuario();
             ocultarAuthLoader(400);
@@ -422,6 +433,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const usuario = obtenerUsuario();
 
         if (usuario) {
+<<<<<<< HEAD
             const displayName = (usuario.nombre || '').trim() || usuario.usuario || usuario.correo || 'Mi cuenta';
             if (boton) {
                 boton.innerHTML = '<i class="fas fa-user-circle"></i>';
@@ -432,6 +444,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 nameEl.textContent = displayName;
                 nameEl.style.display = 'block';
             }
+=======
+            boton.innerHTML = `<i class="fas fa-user-circle"></i> ${usuario.nombre || usuario.usuario}`;
+            boton.style.cursor = 'pointer';
+>>>>>>> parent of 9f5e6f0 (Elimino el nombre de usuario ya que es innecesario)
         } else {
             boton.innerHTML = '<i class="fas fa-user"></i>';
             boton.style.cursor = 'pointer';
@@ -528,11 +544,10 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const payload = JSON.parse(atob(respuesta.credential.split('.')[1]));
             const usuario = {
+                usuario: payload.email.split('@')[0],
                 nombre: payload.name,
                 correo: payload.email,
-                telefono: '',
-                pais: payload.locale || '',
-                contraseña: ''
+                telefono: ''
             };
 
             let usuarios = obtenerUsuarios();
@@ -541,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
             }
 
-            establecerUsuario({ nombre: usuario.nombre, correo: usuario.correo, telefono: usuario.telefono, pais: usuario.pais });
+            establecerUsuario(usuario);
             cerrarModalAutenticacion();
             actualizarUsuario();
             ocultarAuthLoader(300);
