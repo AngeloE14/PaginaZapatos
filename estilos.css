@@ -199,14 +199,16 @@ nav ul li a:hover::after {
 }
 
 .header-icons {
-    display: flex;
-    gap: 18px;
+    display: inline-flex;
+    gap: 16px;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .user-menu-container {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .menu-toggle {
@@ -233,6 +235,10 @@ nav ul li a:hover::after {
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
 }
 
 .header-icons a:hover {
@@ -1168,7 +1174,7 @@ footer {
     background-color: var(--color-primario);
     color: #fff;
     padding: 40px 0 15px;
-    margin-top: auto;
+    margin-top: 0;
 }
 
 .footer-content {
@@ -1261,37 +1267,40 @@ footer {
     }
 
     .header-container {
-        flex-direction: column;
-        gap: 15px;
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        grid-template-areas:
+            "logo icons toggle"
+            "nav nav nav";
+        gap: 12px 14px;
         padding: 12px 0;
-        align-items: stretch;
+        align-items: center;
     }
 
     .logo {
+        grid-area: logo;
         font-size: 24px;
         display: inline-block;
     }
 
     .menu-toggle {
+        grid-area: toggle;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        margin-left: auto;
+        justify-self: end;
+        margin-left: 0;
     }
 
-    .header-container nav,
-    .header-container .header-icons {
+    .header-container nav {
+        grid-area: nav;
         display: none;
         width: 100%;
     }
 
     .header-container.nav-open nav {
         display: block;
-    }
-
-    .header-container.nav-open .header-icons {
-        display: flex;
     }
 
     nav ul {
@@ -1302,15 +1311,15 @@ footer {
     }
 
     .header-icons {
+        grid-area: icons;
         width: 100%;
-        display: flex;
-        gap: 15px;
-        justify-content: space-between;
+        justify-content: flex-end;
+        gap: 12px;
     }
 
     .header-icons a {
         margin-left: 0;
-        flex: 1;
+        flex: 0 0 auto;
         text-align: center;
     }
 
@@ -1463,29 +1472,19 @@ footer {
     }
 
     .header-container {
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "logo toggle"
+            "icons icons"
+            "nav nav";
+        gap: 10px 12px;
+        align-items: center;
     }
 
     .logo {
         font-size: 20px;
         width: 100%;
-        text-align: center;
-    }
-
-    nav {
-        width: 100%;
-    }
-
-    nav ul {
-        flex-direction: column;
-        gap: 8px;
-        align-items: stretch;
-    }
-
-    nav ul li {
-        margin-left: 0;
+        text-align: left;
     }
 
     nav ul li a {
@@ -1495,7 +1494,7 @@ footer {
     .header-icons {
         width: 100%;
         justify-content: center;
-        gap: 20px;
+        gap: 16px;
     }
 
     .header-icons a {
