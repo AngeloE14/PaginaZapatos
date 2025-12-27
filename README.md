@@ -1,7 +1,6 @@
 # 🥾 Calzado del Pueblo
 
-Sitio web de **calzado urbano para jóvenes** con secciones interactivas de productos, reparaciones y carrito de compras.  
-Diseño moderno
+Sitio web de **calzado urbano para jóvenes** con secciones interactivas de productos, reparaciones y carrito de compras.
 
 ---
 
@@ -10,5 +9,4 @@ Diseño moderno
 - **CSS3**  
 - **JavaScript (ES6)**  
 - **Font Awesome 6.4.0**
-
 ---
