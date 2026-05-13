@@ -44,7 +44,14 @@ export default function Home() {
       })
       .then(data => {
         console.log('Productos cargados:', data);
-        setBestsellers(data.slice(0, 4));
+        if (data.error) {
+          console.error("API Error:", data.error);
+          setBestsellers([]);
+        } else if (Array.isArray(data)) {
+          setBestsellers(data.slice(0, 4));
+        } else {
+          setBestsellers([]);
+        }
         setLoadingProducts(false);
         setTimeout(() => {
           document.querySelectorAll('.scroll-animate').forEach((el) => observer.observe(el));
@@ -52,6 +59,7 @@ export default function Home() {
       })
       .catch(error => {
         console.error('Error cargando productos:', error);
+        setBestsellers([]);
         setLoadingProducts(false);
       });
 

@@ -12,11 +12,19 @@ export default function ProductosPage() {
     fetch('/api/products')
       .then(res => res.json())
       .then(data => {
-        setProducts(data);
+        if (data.error) {
+          console.error("API Error:", data.error);
+          setProducts([]);
+        } else if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          setProducts([]);
+        }
         setLoading(false);
       })
       .catch(err => {
         console.error(err);
+        setProducts([]);
         setLoading(false);
       });
   }, []);
