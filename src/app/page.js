@@ -197,7 +197,7 @@ export default function Home() {
             <li>Angelo Emmanuel Flores Montes</li>
             <li>Oscar Gomez Vazquez</li>
             <li>Esteban Santos Angulo</li>
-            <li>Arath Daniel Noriega Domíngue</li>
+            <li>Arath Daniel Noriega Domínguez</li>
             <li>Enrique Vega Mayer</li>
           </ul>
         </div>
