@@ -23,10 +23,6 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 });
     }
 
-    if (user.is_verified === 0) {
-      return NextResponse.json({ error: 'Por favor, verifica tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.' }, { status: 403 });
-    }
-
     // In a real app we would sign a JWT here. For now we just return user info.
     const { password: _, ...userInfo } = user;
     return NextResponse.json({ user: userInfo, message: 'Login successful' });
