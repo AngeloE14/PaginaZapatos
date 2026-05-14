@@ -37,7 +37,7 @@ export default function Home() {
 
     // Observe again after fetching bestsellers
     console.log('Iniciando fetch de productos...');
-    fetch('http://localhost:3000/api/products')
+    fetch('/api/products')
       .then(res => {
         console.log('Respuesta del fetch:', res.status, res.statusText);
         return res.json();

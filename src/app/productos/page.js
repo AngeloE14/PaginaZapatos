@@ -53,22 +53,28 @@ export default function ProductosPage() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '40px' }}>
-        {products.map((product, index) => (
-          <div 
-            key={product.id} 
-            className="glass-card product-card" 
-            style={{ padding: '24px', cursor: 'pointer', display: 'flex', flexDirection: 'column', animationDelay: `${index * 0.1}s` }} 
-            onClick={() => setSelectedProduct(product)}
-          >
-            <div className="image-container" style={{ height: '320px', borderRadius: '12px', overflow: 'hidden', marginBottom: '24px', position: 'relative' }}>
-              <div className="product-glow"></div>
-              <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', zIndex: 1, transition: 'transform 0.5s ease' }} className="product-img" />
-            </div>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '8px' }}>{product.name}</h3>
-            <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.3rem', marginBottom: '24px', marginTop: 'auto' }}>${product.price.toFixed(2)}</p>
-            <button className="btn-secondary" style={{ width: '100%', fontWeight: 600 }}>Ver Detalles</button>
+        {products.length === 0 ? (
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '24px', opacity: 0.75 }}>
+            No se pudieron cargar los productos.
           </div>
-        ))}
+        ) : (
+          products.map((product, index) => (
+            <div 
+              key={product.id} 
+              className="glass-card product-card" 
+              style={{ padding: '24px', cursor: 'pointer', display: 'flex', flexDirection: 'column', animationDelay: `${index * 0.1}s` }} 
+              onClick={() => setSelectedProduct(product)}
+            >
+              <div className="image-container" style={{ height: '320px', borderRadius: '12px', overflow: 'hidden', marginBottom: '24px', position: 'relative' }}>
+                <div className="product-glow"></div>
+                <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', zIndex: 1, transition: 'transform 0.5s ease' }} className="product-img" />
+              </div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '8px' }}>{product.name}</h3>
+              <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.3rem', marginBottom: '24px', marginTop: 'auto' }}>${product.price.toFixed(2)}</p>
+              <button className="btn-secondary" style={{ width: '100%', fontWeight: 600 }}>Ver Detalles</button>
+            </div>
+          ))
+        )}
       </div>
 
       <style jsx>{`

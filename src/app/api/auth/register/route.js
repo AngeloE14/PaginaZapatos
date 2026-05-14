@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
-import sql from '@/lib/db';
+import sql, { initDB } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
 export async function POST(request) {
   try {
+    await initDB();
     const { name, email, password } = await request.json();
 
     if (!name || !email || !password) {

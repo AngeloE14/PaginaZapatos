@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import sql from '@/lib/db';
+import sql, { initDB } from '@/lib/db';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -10,6 +10,7 @@ export async function GET(request) {
   }
 
   try {
+    await initDB();
     const users = await sql`SELECT * FROM users WHERE verification_token = ${token}`;
 
     if (users.length === 0) {

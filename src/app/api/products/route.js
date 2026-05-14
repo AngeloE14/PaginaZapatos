@@ -4,7 +4,7 @@ import sql, { initDB } from '@/lib/db';
 
 export async function GET() {
   try {
-    try { await initDB(); } catch (e) { console.warn("DB init skipped:", e.message); }
+    await initDB();
 
     const products = await sql`SELECT * FROM products`;
     
