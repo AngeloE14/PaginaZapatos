@@ -3,8 +3,10 @@
 import { useAppContext } from '@/context/AppContext';
 import { ShoppingCart, User, LogOut, Menu, X, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import icono from '@/icono.png';
 
 export default function Navbar() {
   const { cart, setIsCartOpen, user, logout, setIsAuthModalOpen } = useAppContext();
@@ -64,6 +66,34 @@ export default function Navbar() {
 
         {/* Icons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <a
+            href="https://github.com/AngeloE14/PaginaZapatos"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Ver repositorio del proyecto"
+            aria-label="Abrir repositorio del proyecto en GitHub"
+            className="hover-scale"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '42px',
+              height: '42px',
+              borderRadius: '50%',
+              background: isHomePage ? 'rgba(255,255,255,0.1)' : 'rgba(212, 175, 55, 0.1)',
+              border: isHomePage ? '1px solid rgba(255,255,255,0.22)' : '1px solid rgba(212,175,55,0.25)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <Image
+              src={icono}
+              alt="Repositorio de GitHub"
+              width={24}
+              height={24}
+              priority
+              style={{ objectFit: 'contain' }}
+            />
+          </a>
           
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }} className="hidden-mobile">

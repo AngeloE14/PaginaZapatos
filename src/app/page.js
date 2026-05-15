@@ -37,7 +37,7 @@ export default function Home() {
 
     // Observe again after fetching bestsellers
     console.log('Iniciando fetch de productos...');
-    fetch('http://localhost:3000/api/products')
+    fetch('/api/products')
       .then(res => {
         console.log('Respuesta del fetch:', res.status, res.statusText);
         return res.json();
@@ -228,7 +228,15 @@ export default function Home() {
                   <Link href="/productos" style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
                     <div style={{ background: 'var(--surface)', borderRadius: '16px', overflow: 'hidden', padding: '16px', border: '1px solid var(--surface-border)', transition: 'transform 0.3s, box-shadow 0.3s' }} className="hover-scale">
                       <div style={{ height: '240px', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px', position: 'relative' }}>
-                        <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = '/file.svg';
+                          }}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
                       </div>
                       <h3 style={{ fontSize: '1.3rem', fontWeight: 700 }}>{product.name}</h3>
                       <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.2rem', marginTop: '8px' }}>${product.price.toFixed(2)}</p>
