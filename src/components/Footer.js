@@ -24,7 +24,7 @@ export default function Footer() {
                 Facebook
               </a>
               <a href="#" style={{ color: 'var(--primary)', transition: 'all 0.2s' }} className="hover-scale">
-                X (Twitter)
+                X
               </a>
             </div>
           </div>
@@ -75,9 +75,7 @@ export default function Footer() {
             <Link href="#">Privacidad</Link>
             <Link href="#">Términos</Link>
             <div style={{ display: 'flex', gap: '8px', marginLeft: '16px', paddingLeft: '16px', borderLeft: '1px solid rgba(255,255,255,0.3)' }}>
-              <span>💳 Visa</span>
-              <span>• Mastercard</span>
-              <span>• Apple Pay</span>
+             
             </div>
           </div>
         </div>
