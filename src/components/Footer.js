@@ -5,9 +5,9 @@ import { MapPin, Phone, Mail } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer style={{ background: 'var(--foreground)', color: 'white', paddingTop: '80px', paddingBottom: '40px', marginTop: 'auto' }}>
+    <footer className="footer-root" style={{ background: 'var(--foreground)', color: 'white', paddingTop: '80px', paddingBottom: '40px', marginTop: 'auto' }}>
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '48px', marginBottom: '60px' }}>
+        <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '48px', marginBottom: '60px' }}>
           
           <div>
             <Link href="/" className="logo text-glow" style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.5px', display: 'inline-block', marginBottom: '24px' }}>
@@ -16,7 +16,7 @@ export default function Footer() {
             <p style={{ opacity: 0.7, lineHeight: 1.6, marginBottom: '24px' }}>
               Impulsando la artesanía mexicana hacia el mercado global. Diseño con identidad, precio justo y atención al detalle en cada par.
             </p>
-            <div style={{ display: 'flex', gap: '16px', fontWeight: 600 }}>
+            <div className="footer-social" style={{ display: 'flex', gap: '16px', fontWeight: 600 }}>
               <a href="#" style={{ color: 'var(--primary)', transition: 'all 0.2s' }} className="hover-scale">
                 Instagram
               </a>
@@ -69,9 +69,9 @@ export default function Footer() {
 
         </div>
 
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', opacity: 0.6, fontSize: '0.9rem' }}>
+        <div className="footer-legal" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', opacity: 0.6, fontSize: '0.9rem' }}>
           <p>&copy; {new Date().getFullYear()} Calzado del Pueblo. Todos los derechos reservados.</p>
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <div className="footer-legal-links" style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
             <Link href="#">Privacidad</Link>
             <Link href="#">Términos</Link>
             <div style={{ display: 'flex', gap: '8px', marginLeft: '16px', paddingLeft: '16px', borderLeft: '1px solid rgba(255,255,255,0.3)' }}>
@@ -93,6 +93,36 @@ export default function Footer() {
         }
         .hover-scale:hover {
           transform: scale(1.1);
+        }
+        @media (max-width: 900px) {
+          .footer-grid {
+            gap: 36px !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .footer-root {
+            padding-top: 56px !important;
+            padding-bottom: 28px !important;
+          }
+          .footer-grid {
+            grid-template-columns: 1fr !important;
+            gap: 28px !important;
+            margin-bottom: 36px !important;
+          }
+          .footer-social {
+            flex-wrap: wrap;
+            gap: 12px !important;
+          }
+          .footer-legal {
+            align-items: flex-start !important;
+            flex-direction: column;
+            gap: 10px !important;
+            font-size: 0.82rem !important;
+          }
+          .footer-legal-links {
+            flex-wrap: wrap;
+            gap: 10px !important;
+          }
         }
       `}</style>
     </footer>

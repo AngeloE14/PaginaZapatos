@@ -42,17 +42,17 @@ export default function ProductosPage() {
   }
 
   return (
-    <div className="container animate-fade-in-up" style={{ padding: '80px 24px', minHeight: '80vh' }}>
-      <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-        <h1 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '16px' }}>
+    <div className="productos-page container animate-fade-in-up" style={{ padding: '80px 24px', minHeight: '80vh' }}>
+      <div className="productos-hero" style={{ textAlign: 'center', marginBottom: '60px' }}>
+        <h1 className="productos-title" style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '16px' }}>
           Nuestra <span className="text-gradient">Colección</span>
         </h1>
-        <p style={{ fontSize: '1.2rem', opacity: 0.7, maxWidth: '600px', margin: '0 auto' }}>
+        <p className="productos-subtitle" style={{ fontSize: '1.2rem', opacity: 0.7, maxWidth: '600px', margin: '0 auto' }}>
           El mejor estilo urbano a tus pies. Diseños exclusivos y materiales premium.
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '40px' }}>
+      <div className="productos-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '40px' }}>
         {products.length === 0 ? (
           <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '24px', opacity: 0.75 }}>
             No se pudieron cargar los productos.
@@ -111,6 +111,30 @@ export default function ProductosPage() {
         .product-card:hover .product-glow {
           opacity: 1;
         }
+        @media (max-width: 768px) {
+          .productos-page {
+            padding: 64px 16px !important;
+          }
+          .productos-hero {
+            margin-bottom: 36px !important;
+          }
+          .productos-title {
+            font-size: 2.2rem !important;
+          }
+          .productos-subtitle {
+            font-size: 1rem !important;
+          }
+          .productos-grid {
+            gap: 22px !important;
+          }
+          .product-card {
+            padding: 16px !important;
+          }
+          .image-container {
+            height: 250px !important;
+            margin-bottom: 16px !important;
+          }
+        }
       `}</style>
     </div>
   );
@@ -136,17 +160,17 @@ function ProductDetail({ product, onBack }) {
   };
 
   return (
-    <div className="container animate-fade-in-up" style={{ padding: '60px 24px' }}>
+    <div className="product-detail-page container animate-fade-in-up" style={{ padding: '60px 24px' }}>
       <button onClick={onBack} className="back-btn" style={{ background: 'none', border: 'none', color: 'var(--foreground)', cursor: 'pointer', marginBottom: '40px', display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 600, fontSize: '1.1rem', padding: '8px 16px', borderRadius: '99px', transition: 'all 0.2s' }}>
         ← Volver a productos
       </button>
 
-      <div className="glass-card" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '60px', padding: '48px', overflow: 'hidden', position: 'relative' }}>
+      <div className="glass-card product-detail-card" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '60px', padding: '48px', overflow: 'hidden', position: 'relative' }}>
         
         {/* Background decorative glow */}
         <div style={{ position: 'absolute', top: '-10%', left: '-10%', width: '300px', height: '300px', background: 'rgba(212, 175, 55, 0.1)', filter: 'blur(80px)', borderRadius: '50%', zIndex: 0 }}></div>
         
-        <div style={{ borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, position: 'relative', overflow: 'hidden', minHeight: '400px' }}>
+        <div className="product-detail-image-wrap" style={{ borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, position: 'relative', overflow: 'hidden', minHeight: '400px' }}>
           <img
             src={product.image}
             alt={product.name}
@@ -158,12 +182,12 @@ function ProductDetail({ product, onBack }) {
           />
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', zIndex: 1 }}>
+        <div className="product-detail-content" style={{ display: 'flex', flexDirection: 'column', gap: '32px', zIndex: 1 }}>
           <div>
             <div style={{ display: 'inline-block', padding: '6px 16px', borderRadius: '99px', background: 'rgba(212,175,55,0.1)', color: 'var(--secondary)', fontWeight: 700, fontSize: '0.8rem', letterSpacing: '1px', marginBottom: '16px' }}>
               NUEVA TEMPORADA
             </div>
-            <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '12px', lineHeight: 1.1 }}>{product.name}</h1>
+            <h1 className="product-detail-title" style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '12px', lineHeight: 1.1 }}>{product.name}</h1>
             <p style={{ fontSize: '2.2rem', color: 'var(--primary)', fontWeight: 800 }}>${product.price.toFixed(2)}</p>
           </div>
           
@@ -193,7 +217,7 @@ function ProductDetail({ product, onBack }) {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px', padding: '24px', background: 'rgba(0,0,0,0.03)', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.05)' }}>
+          <div className="quantity-box" style={{ display: 'flex', alignItems: 'center', gap: '24px', padding: '24px', background: 'rgba(0,0,0,0.03)', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.05)' }}>
             <h3 style={{ fontWeight: 700, margin: 0 }}>Cantidad:</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: 'var(--surface)', padding: '8px', borderRadius: '12px', border: '1px solid var(--surface-border)' }}>
               <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(0,0,0,0.05)', border: 'none', color: 'var(--foreground)', cursor: 'pointer', fontSize: '1.2rem', fontWeight: 'bold' }}>-</button>
@@ -224,6 +248,52 @@ function ProductDetail({ product, onBack }) {
         .btn-animating {
           transform: scale(0.95);
           opacity: 0.8;
+        }
+        @media (max-width: 768px) {
+          .productos-page {
+            padding: 64px 16px !important;
+          }
+          .productos-hero {
+            margin-bottom: 36px !important;
+          }
+          .productos-title {
+            font-size: 2.2rem !important;
+          }
+          .productos-subtitle {
+            font-size: 1rem !important;
+          }
+          .productos-grid {
+            gap: 22px !important;
+          }
+          .product-card {
+            padding: 16px !important;
+          }
+          .image-container {
+            height: 250px !important;
+            margin-bottom: 16px !important;
+          }
+          .product-detail-page {
+            padding: 44px 16px !important;
+          }
+          .product-detail-card {
+            padding: 20px !important;
+            gap: 22px !important;
+          }
+          .product-detail-image-wrap {
+            min-height: 280px !important;
+            border-radius: 16px !important;
+          }
+          .product-detail-content {
+            gap: 20px !important;
+          }
+          .product-detail-title {
+            font-size: 2.1rem !important;
+          }
+          .quantity-box {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 12px !important;
+          }
         }
       `}</style>
     </div>

@@ -96,20 +96,20 @@ export default function ReparacionesPage() {
   }
 
   return (
-    <div className="container animate-fade-in-up" style={{ padding: '80px 24px', minHeight: '80vh' }}>
-      <div style={{ textAlign: 'center', marginBottom: '80px', maxWidth: '800px', margin: '0 auto 80px' }}>
+    <div className="reparaciones-page container animate-fade-in-up" style={{ padding: '80px 24px', minHeight: '80vh' }}>
+      <div className="reparaciones-hero" style={{ textAlign: 'center', marginBottom: '80px', maxWidth: '800px', margin: '0 auto 80px' }}>
         <div style={{ display: 'inline-block', padding: '6px 16px', borderRadius: '99px', background: 'rgba(212,175,55,0.1)', color: 'var(--secondary)', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '1px', marginBottom: '24px' }}>
           TALLER ARTESANAL
         </div>
-        <h1 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '24px', lineHeight: 1.1 }}>
+        <h1 className="reparaciones-title" style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '24px', lineHeight: 1.1 }}>
           Dale <span className="text-gradient">Vida Nueva</span> a tus Zapatos
         </h1>
-        <p style={{ fontSize: '1.2rem', opacity: 0.7, lineHeight: 1.6 }}>
+        <p className="reparaciones-subtitle" style={{ fontSize: '1.2rem', opacity: 0.7, lineHeight: 1.6 }}>
           Nuestros maestros zapateros restauran tu calzado favorito con técnicas artesanales y materiales de la más alta calidad. Selecciona los servicios que necesitas y obtén una cotización al instante.
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '60px' }}>
+      <div className="reparaciones-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '60px' }}>
         
         {/* Catálogo */}
         <div>
@@ -147,7 +147,7 @@ export default function ReparacionesPage() {
         </div>
 
         {/* Resumen */}
-        <div style={{ position: 'sticky', top: '100px', alignSelf: 'start' }}>
+        <div className="summary-column" style={{ position: 'sticky', top: '100px', alignSelf: 'start' }}>
           <div className="glass-card summary-card" style={{ padding: '40px', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, right: 0, width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%)', zIndex: 0 }}></div>
             
@@ -204,6 +204,33 @@ export default function ReparacionesPage() {
         }
         .summary-card {
           box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+        }
+        @media (max-width: 768px) {
+          .reparaciones-page {
+            padding: 64px 16px !important;
+          }
+          .reparaciones-hero {
+            margin: 0 auto 36px !important;
+          }
+          .reparaciones-title {
+            font-size: 2.2rem !important;
+          }
+          .reparaciones-subtitle {
+            font-size: 1rem !important;
+          }
+          .reparaciones-grid {
+            gap: 26px !important;
+          }
+          .service-card {
+            padding: 18px !important;
+          }
+          .summary-column {
+            position: static !important;
+            top: auto !important;
+          }
+          .summary-card {
+            padding: 22px !important;
+          }
         }
       `}</style>
     </div>

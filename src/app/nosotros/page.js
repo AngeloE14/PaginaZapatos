@@ -5,10 +5,10 @@ import { Users, GraduationCap, Target, ChevronRight, HandMetal, Globe } from 'lu
 
 export default function Nosotros() {
   return (
-    <div style={{ position: 'relative', overflowX: 'hidden', minHeight: '100vh', background: 'var(--foreground)', color: 'white' }}>
+    <div className="nosotros-page" style={{ position: 'relative', overflowX: 'hidden', minHeight: '100vh', background: 'var(--foreground)', color: 'white' }}>
       
       {/* Hero Section */}
-      <section style={{
+      <section className="nosotros-hero" style={{
         minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: '120px 24px 80px', textAlign: 'center', position: 'relative',
         overflow: 'hidden'
@@ -35,28 +35,28 @@ export default function Nosotros() {
             <Users size={14} /> Sobre Nosotros
           </div>
           
-          <h1 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 900, lineHeight: 1.1 }}>
+          <h1 className="nosotros-title" style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 900, lineHeight: 1.1 }}>
             Impulsando el talento <br/><span className="text-gradient">con Identidad</span>
           </h1>
           
-          <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.6 }}>
+          <p className="nosotros-subtitle" style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.6 }}>
             Somos estudiantes con la visión de llevar el calzado artesanal mexicano hacia nuevos horizontes, dándole el valor y reconocimiento que realmente merece.
           </p>
         </div>
       </section>
 
       {/* Main Content Section */}
-      <section style={{ padding: '80px 24px', background: 'var(--foreground)' }}>
-        <div className="container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+      <section className="nosotros-main" style={{ padding: '80px 0', background: 'var(--foreground)' }}>
+        <div className="nosotros-container container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
+          <div className="nosotros-content" style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
             {/* Quiénes somos */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px', alignItems: 'center' }}>
+            <div className="nosotros-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '40px', alignItems: 'center' }}>
               <div>
                 <div style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <GraduationCap size={20} /> Origen y Misión
                 </div>
-                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '24px' }}>Nuestra Historia</h2>
+                <h2 className="nosotros-heading" style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '24px' }}>Nuestra Historia</h2>
                 <p style={{ fontSize: '1.1rem', color: '#ccc', lineHeight: 1.8, marginBottom: '16px' }}>
                   Somos un equipo de <strong>alumnos del Tecnológico de Veracruz</strong>. A lo largo de nuestro desarrollo profesional, hemos observado con detenimiento un problema latente en nuestra cultura: mucho del increíble trabajo de los artesanos de calzado mexicano es mal aprovechado, mal pagado o carece de las plataformas adecuadas para destacar.
                 </p>
@@ -66,7 +66,7 @@ export default function Nosotros() {
               </div>
               <div style={{ position: 'relative' }}>
                 <div style={{ position: 'absolute', inset: '-20px', background: 'radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%)', zIndex: 0 }} />
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)', position: 'relative', zIndex: 1, backdropFilter: 'blur(10px)' }}>
+                <div className="team-card" style={{ background: 'rgba(255,255,255,0.03)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)', position: 'relative', zIndex: 1, backdropFilter: 'blur(10px)' }}>
                   <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '24px', color: 'var(--primary)', borderBottom: '1px solid rgba(212,175,55,0.2)', paddingBottom: '16px' }}>
                     Equipo de Desarrollo
                   </h3>
@@ -85,12 +85,12 @@ export default function Nosotros() {
             <div style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(212,175,55,0.3), transparent)' }} />
 
             {/* Qué buscamos impulsar */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px', alignItems: 'center' }}>
-              <div style={{ order: 2 }}>
+            <div className="nosotros-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '40px', alignItems: 'center' }}>
+              <div className="vision-copy" style={{ order: 2 }}>
                 <div style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Target size={20} /> Visión
                 </div>
-                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '24px' }}>¿Qué Buscamos Impulsar?</h2>
+                <h2 className="nosotros-heading" style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '24px' }}>¿Qué Buscamos Impulsar?</h2>
                 <p style={{ fontSize: '1.1rem', color: '#ccc', lineHeight: 1.8, marginBottom: '16px' }}>
                   Nuestro propósito es <strong>introducir la artesanía mexicana al mercado global</strong>. Queremos darle una identidad sólida y premium a estos productos para que no sean vistos simplemente como mercancía, sino como piezas de diseño que reflejan nuestras raíces.
                 </p>
@@ -111,7 +111,7 @@ export default function Nosotros() {
                   </div>
                 </div>
               </div>
-              <div style={{ order: 1 }}>
+              <div className="vision-image" style={{ order: 1 }}>
                  <img 
                   src="https://images.unsplash.com/photo-1595991209266-5e04278dc71f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
                   alt="Manos artesanas" 
@@ -122,13 +122,54 @@ export default function Nosotros() {
 
           </div>
           
-          <div style={{ textAlign: 'center', marginTop: '80px' }}>
+          <div className="nosotros-cta" style={{ textAlign: 'center', marginTop: '80px' }}>
             <Link href="/" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '16px 32px' }}>
               Volver al Inicio <ChevronRight size={18} />
             </Link>
           </div>
         </div>
       </section>
+
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .nosotros-hero {
+            padding: 100px 16px 56px !important;
+            min-height: 52vh !important;
+          }
+          .nosotros-title {
+            font-size: 2.2rem !important;
+          }
+          .nosotros-subtitle {
+            font-size: 1rem !important;
+          }
+          .nosotros-main {
+            padding: 56px 0 !important;
+          }
+          .nosotros-content {
+            gap: 40px !important;
+          }
+          .nosotros-grid {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
+          }
+          .nosotros-heading {
+            font-size: 2rem !important;
+          }
+          .team-card {
+            padding: 24px !important;
+            border-radius: 18px !important;
+          }
+          .vision-copy {
+            order: 1 !important;
+          }
+          .vision-image {
+            order: 2 !important;
+          }
+          .nosotros-cta {
+            margin-top: 52px !important;
+          }
+        }
+      `}</style>
 
     </div>
   );

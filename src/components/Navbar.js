@@ -39,7 +39,7 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <header className={`transition-all duration-300 ${scrolled ? 'shadow-md' : 'bg-transparent'}`} 
+    <header className={`site-header transition-all duration-300 ${scrolled ? 'shadow-md' : 'bg-transparent'}`} 
       style={{ 
         position: isHomePage ? 'fixed' : 'sticky', 
         top: 0, left: 0, right: 0, zIndex: 50,
@@ -52,7 +52,7 @@ export default function Navbar() {
       }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         
-        <Link href="/" className="logo text-glow" style={{ fontSize: '1.8rem', fontWeight: 800, letterSpacing: '-0.5px', color: textColor }}>
+        <Link href="/" className="logo text-glow nav-logo" style={{ fontSize: '1.8rem', fontWeight: 800, letterSpacing: '-0.5px', color: textColor }}>
           Calzado del <span className="text-gradient">Pueblo</span>
         </Link>
 
@@ -65,14 +65,14 @@ export default function Navbar() {
         </nav>
 
         {/* Icons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <a
             href="https://github.com/AngeloE14/PaginaZapatos"
             target="_blank"
             rel="noopener noreferrer"
             title="Ver repositorio del proyecto"
             aria-label="Abrir repositorio del proyecto en GitHub"
-            className="hover-scale"
+            className="hover-scale hidden-mobile"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -165,8 +165,22 @@ export default function Navbar() {
 
       <style jsx>{`
         @media (max-width: 768px) {
+          .site-header {
+            padding: 10px 0 !important;
+          }
           .hidden-mobile { display: none !important; }
           .show-mobile { display: block !important; }
+          .nav-logo {
+            font-size: 1.25rem !important;
+            letter-spacing: -0.2px !important;
+          }
+          .nav-actions {
+            gap: 10px !important;
+          }
+          .mobile-menu-overlay {
+            padding: 18px !important;
+            gap: 10px !important;
+          }
         }
         .nav-link:hover {
           color: var(--primary) !important;

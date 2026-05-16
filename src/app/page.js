@@ -70,7 +70,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ position: 'relative', overflowX: 'hidden', minHeight: '100vh', background: 'var(--foreground)' }}>
+    <div className="home-page" style={{ position: 'relative', overflowX: 'hidden', minHeight: '100vh', background: 'var(--foreground)' }}>
       
       {/* Curtain Reveal Overlay */}
       <div style={{
@@ -87,7 +87,7 @@ export default function Home() {
       </div>
 
       {/* Dynamic Mouse Glow */}
-      <div style={{
+      <div className="mouse-glow" style={{
         position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 0,
         width: '600px', height: '600px', borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 60%)',
@@ -96,7 +96,7 @@ export default function Home() {
       }} />
 
       {/* Hero Section */}
-      <section style={{
+      <section className="home-hero" style={{
         minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: '40px 24px', textAlign: 'center', position: 'relative',
         perspective: '1000px', overflow: 'hidden'
@@ -112,7 +112,7 @@ export default function Home() {
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 50%, rgba(10,10,10,1) 100%)' }} />
         </div>
 
-        <div style={{ 
+        <div className="home-hero-content" style={{ 
           maxWidth: '1000px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px', 
           position: 'relative', zIndex: 2,
           marginTop: '80px', /* Previene superposición con el navbar fijo */
@@ -120,7 +120,7 @@ export default function Home() {
           transform: isLoaded ? 'translateY(0) scale(1)' : 'translateY(50px) scale(0.95)',
           transition: 'all 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s'
         }}>
-          <div style={{
+          <div className="home-hero-badge" style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 28px', borderRadius: '99px',
             background: 'rgba(0, 0, 0, 0.4)', 
             color: 'var(--primary)', fontWeight: 700, fontSize: '0.9rem', 
@@ -131,7 +131,7 @@ export default function Home() {
             <Star size={14} fill="var(--primary)" color="var(--primary)" /> Orgullo de Nuestros Artesanos
           </div>
           
-          <h1 style={{ 
+          <h1 className="home-hero-title" style={{ 
             fontSize: 'clamp(3.5rem, 8vw, 8rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', color: 'white',
             textShadow: '0 10px 30px rgba(0,0,0,0.5)'
           }}>
@@ -139,7 +139,7 @@ export default function Home() {
             <span className="reveal-text text-gradient" style={{ animationDelay: '1s' }}>México al Mundo.</span>
           </h1>
           
-          <p style={{ 
+          <p className="home-hero-subtitle" style={{ 
             fontSize: 'clamp(1.1rem, 3vw, 1.5rem)', color: 'rgba(255,255,255,0.85)', maxWidth: '700px', lineHeight: 1.6, fontWeight: 400,
             opacity: isLoaded ? 1 : 0, transition: 'opacity 1s ease 1.5s',
             textShadow: '0 2px 10px rgba(0,0,0,0.5)'
@@ -147,7 +147,7 @@ export default function Home() {
             Impulsamos el talento de nuestros artesanos mexicanos al mercado global, dándole identidad a su trabajo con precios justos y competitivos.
           </p>
 
-          <div style={{ 
+          <div className="home-hero-actions" style={{ 
             display: 'flex', gap: '24px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '24px',
             opacity: isLoaded ? 1 : 0, transform: isLoaded ? 'translateY(0)' : 'translateY(20px)', transition: 'all 1s ease 1.8s'
           }}>
@@ -178,7 +178,7 @@ export default function Home() {
       </section>
 
       {/* Trust Badges */}
-      <section style={{ padding: '60px 24px', background: 'var(--surface)', borderBottom: '1px solid var(--surface-border)' }}>
+      <section className="home-trust" style={{ padding: '60px 0', background: 'var(--surface)', borderBottom: '1px solid var(--surface-border)' }}>
         <div className="container scroll-animate fade-in-up" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '40px', textAlign: 'center' }}>
           <div style={{ flex: '1 1 200px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
             <div style={{ background: 'rgba(212,175,55,0.1)', padding: '20px', borderRadius: '50%' }}><Truck size={32} color="var(--primary)" /></div>
@@ -206,14 +206,14 @@ export default function Home() {
 
 
       {/* Bestsellers Section */}
-      <section style={{ padding: '80px 24px', background: 'var(--background)' }}>
+      <section className="home-bestsellers" style={{ padding: '80px 0', background: 'var(--background)' }}>
         <div className="container">
           <div className="scroll-animate fade-in-up" style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <h2 style={{ fontSize: '3rem', fontWeight: 800 }}>Nuestra <span className="text-gradient">Colección</span></h2>
+            <h2 className="home-collection-title" style={{ fontSize: '3rem', fontWeight: 800 }}>Nuestra <span className="text-gradient">Colección</span></h2>
             <p style={{ opacity: 0.7, fontSize: '1.2rem', maxWidth: '600px', margin: '16px auto 0' }}>Los favoritos de nuestros clientes más exigentes.</p>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '32px' }}>
+          <div className="bestsellers-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '32px' }}>
             {loadingProducts ? (
               <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px' }}>
                 <div>Cargando productos...</div>
@@ -253,16 +253,16 @@ export default function Home() {
       </section>
 
       {/* Parallax Featured Section */}
-      <section style={{ padding: '120px 24px', position: 'relative', zIndex: 2 }}>
+      <section className="home-featured" style={{ padding: '120px 0', position: 'relative', zIndex: 2 }}>
         <div className="container">
-          <div className="scroll-animate fade-in-up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '60px', flexWrap: 'wrap', gap: '20px' }}>
-            <h2 style={{ fontSize: '3.5rem', fontWeight: 800, color: 'white', lineHeight: 1.1 }}>Artesanía de <br/><span className="text-gradient">Exportación</span></h2>
+          <div className="home-featured-header scroll-animate fade-in-up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '60px', flexWrap: 'wrap', gap: '20px' }}>
+            <h2 className="home-featured-title" style={{ fontSize: '3.5rem', fontWeight: 800, color: 'white', lineHeight: 1.1 }}>Artesanía de <br/><span className="text-gradient">Exportación</span></h2>
             <Link href="/productos" className="link-hover-effect" style={{ fontWeight: 700, fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
               Ver Catálogo Completo <ChevronRight size={20} />
             </Link>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '40px' }}>
+          <div className="home-featured-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '40px' }}>
             <div className="luxury-card group scroll-animate fade-in-up" style={{ animationDelay: '0.2s' }}>
               <div className="luxury-card-img" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1595991209266-5e04278dc71f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80)' }} />
               <div className="luxury-card-content">
@@ -287,12 +287,13 @@ export default function Home() {
       </section>
 
       {/* Craftsmanship Section with Video */}
-      <section style={{ padding: '160px 24px', background: 'var(--foreground)', color: 'white', marginTop: '80px', position: 'relative' }}>
-        <div className="container" style={{ display: 'flex', flexWrap: 'wrap', gap: '80px', alignItems: 'center' }}>
+      <section className="home-craft" style={{ padding: '160px 0', background: 'var(--foreground)', color: 'white', marginTop: '80px', position: 'relative' }}>
+        <div className="container home-craft-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '80px', alignItems: 'center' }}>
           <div style={{ flex: '1 1 400px', position: 'relative' }} className="video-container scroll-animate fade-in-up">
             <img 
               src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
               alt="Artesano de calzado trabajando"
+              className="craft-image"
               style={{ width: '100%', height: '700px', objectFit: 'cover', borderRadius: '32px', filter: 'brightness(0.7) contrast(1.2)', boxShadow: '0 30px 60px rgba(0,0,0,0.5)' }} 
             />
             <div className="glass-badge" style={{ position: 'absolute', bottom: '40px', left: '-40px' }}>
@@ -301,13 +302,13 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="scroll-animate fade-in-up" style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', gap: '32px', animationDelay: '0.3s' }}>
+          <div className="home-craft-copy scroll-animate fade-in-up" style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', gap: '32px', animationDelay: '0.3s' }}>
             <div style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '3px', textTransform: 'uppercase' }}>Raíces y Cultura</div>
-            <h2 style={{ fontSize: '4rem', fontWeight: 800, lineHeight: 1.1 }}>El Valor de lo <br/>Auténtico.</h2>
-            <p style={{ fontSize: '1.3rem', color: '#aaa', lineHeight: 1.8 }}>
+            <h2 className="craft-title" style={{ fontSize: '4rem', fontWeight: 800, lineHeight: 1.1 }}>El Valor de lo <br/>Auténtico.</h2>
+            <p className="craft-description" style={{ fontSize: '1.3rem', color: '#aaa', lineHeight: 1.8 }}>
               Nuestros artesanos mexicanos imprimen su alma en cada producto. Al eliminar intermediarios, garantizamos un pago justo por su arte y te ofrecemos calidad excepcional a un precio competitivo.
             </p>
-            <div style={{ display: 'flex', gap: '24px', marginTop: '16px' }}>
+            <div className="craft-feature-list" style={{ display: 'flex', gap: '24px', marginTop: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ background: 'rgba(212,175,55,0.1)', padding: '16px', borderRadius: '50%' }}><ShieldCheck size={24} color="var(--primary)" /></div>
                 <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>Cuidado y Reparación</span>
@@ -325,18 +326,18 @@ export default function Home() {
       </section>
 
       {/* Testimonials / Social Proof */}
-      <section style={{ padding: '100px 24px', background: 'var(--surface)', position: 'relative', overflow: 'hidden' }}>
+      <section className="home-testimonials" style={{ padding: '100px 0', background: 'var(--surface)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '400px', height: '400px', background: 'rgba(212, 175, 55, 0.05)', filter: 'blur(100px)', borderRadius: '50%' }} />
         <div className="container">
           <div className="scroll-animate fade-in-up" style={{ textAlign: 'center', marginBottom: '80px' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--primary)', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '16px' }}>
               <Star size={16} fill="var(--primary)" /> Voces de nuestros clientes
             </div>
-            <h2 style={{ fontSize: '3rem', fontWeight: 800 }}>El Sello de Aprobación.</h2>
+            <h2 className="home-testimonials-title" style={{ fontSize: '3rem', fontWeight: 800 }}>El Sello de Aprobación.</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
-            <div className="glass-card scroll-animate fade-in-up" style={{ padding: '40px', position: 'relative' }}>
+          <div className="testimonials-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '40px' }}>
+            <div className="testimonial-card glass-card scroll-animate fade-in-up" style={{ padding: '40px', position: 'relative' }}>
               <Quote size={40} color="var(--primary)" style={{ opacity: 0.2, position: 'absolute', top: '24px', right: '24px' }} />
               <div style={{ display: 'flex', gap: '4px', color: 'var(--primary)', marginBottom: '24px' }}>
                 <Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" />
@@ -353,7 +354,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="glass-card scroll-animate fade-in-up" style={{ padding: '40px', position: 'relative', animationDelay: '0.2s' }}>
+            <div className="testimonial-card glass-card scroll-animate fade-in-up" style={{ padding: '40px', position: 'relative', animationDelay: '0.2s' }}>
               <Quote size={40} color="var(--primary)" style={{ opacity: 0.2, position: 'absolute', top: '24px', right: '24px' }} />
               <div style={{ display: 'flex', gap: '4px', color: 'var(--primary)', marginBottom: '24px' }}>
                 <Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" />
@@ -370,7 +371,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="glass-card scroll-animate fade-in-up" style={{ padding: '40px', position: 'relative', animationDelay: '0.4s' }}>
+            <div className="testimonial-card glass-card scroll-animate fade-in-up" style={{ padding: '40px', position: 'relative', animationDelay: '0.4s' }}>
               <Quote size={40} color="var(--primary)" style={{ opacity: 0.2, position: 'absolute', top: '24px', right: '24px' }} />
               <div style={{ display: 'flex', gap: '4px', color: 'var(--primary)', marginBottom: '24px' }}>
                 <Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" /><Star size={20} fill="currentColor" />
@@ -391,17 +392,17 @@ export default function Home() {
       </section>
 
       {/* Immersive CTA */}
-      <section style={{ height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'url(https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80) center/cover fixed', filter: 'brightness(0.3) sepia(0.2) hue-rotate(5deg)' }} />
-        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', color: 'white', padding: '0 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px' }}>
+      <section className="home-cta" style={{ height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div className="home-cta-bg" style={{ position: 'absolute', inset: 0, background: 'url(https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80) center/cover fixed', filter: 'brightness(0.3) sepia(0.2) hue-rotate(5deg)' }} />
+        <div className="home-cta-content" style={{ position: 'relative', zIndex: 1, textAlign: 'center', color: 'white', padding: '0 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px' }}>
           <Star size={64} color="var(--primary)" fill="var(--primary)" style={{ animation: 'pulse 2s infinite' }} />
           <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 900, lineHeight: 1.1 }}>
             Únete a la <br/>Exclusividad.
           </h2>
-          <p style={{ fontSize: '1.3rem', maxWidth: '600px', opacity: 0.8 }}>Ingresa al club privado de Calzado del Pueblo y obtén acceso anticipado a nuestras piezas de colección limitadas.</p>
-          <div style={{ display: 'flex', width: '100%', maxWidth: '500px', gap: '12px', background: 'rgba(255,255,255,0.1)', padding: '8px', borderRadius: '99px', backdropFilter: 'blur(10px)' }}>
-            <input type="email" placeholder="Tu correo electrónico" style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: 'white', padding: '0 24px', fontSize: '1.1rem' }} />
-            <button className="btn-primary" style={{ borderRadius: '99px', padding: '16px 32px' }}>Suscribirse</button>
+          <p className="home-cta-text" style={{ fontSize: '1.3rem', maxWidth: '600px', opacity: 0.8 }}>Ingresa al club privado de Calzado del Pueblo y obtén acceso anticipado a nuestras piezas de colección limitadas.</p>
+          <div className="home-cta-form" style={{ display: 'flex', width: '100%', maxWidth: '500px', gap: '12px', background: 'rgba(255,255,255,0.1)', padding: '8px', borderRadius: '99px', backdropFilter: 'blur(10px)' }}>
+            <input className="home-cta-input" type="email" placeholder="Tu correo electrónico" style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: 'white', padding: '0 24px', fontSize: '1.1rem' }} />
+            <button className="home-cta-button btn-primary" style={{ borderRadius: '99px', padding: '16px 32px' }}>Suscribirse</button>
           </div>
         </div>
       </section>
@@ -551,6 +552,147 @@ export default function Home() {
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
+        }
+
+        @media (max-width: 900px) {
+          .home-featured-title {
+            font-size: 2.8rem !important;
+          }
+          .craft-title {
+            font-size: 3rem !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .mouse-glow {
+            display: none;
+          }
+          .home-hero {
+            min-height: 92vh !important;
+            padding: 120px 16px 56px !important;
+          }
+          .home-hero-content {
+            margin-top: 42px !important;
+            gap: 20px !important;
+          }
+          .home-hero-badge {
+            font-size: 0.72rem !important;
+            letter-spacing: 1.5px !important;
+            padding: 8px 16px !important;
+          }
+          .home-hero-title {
+            font-size: clamp(2.2rem, 12vw, 3.4rem) !important;
+          }
+          .home-hero-subtitle {
+            font-size: 1rem !important;
+          }
+          .home-hero-actions {
+            width: 100%;
+            gap: 12px !important;
+            margin-top: 12px !important;
+          }
+          .home-hero-actions a {
+            width: 100%;
+            justify-content: center;
+            padding: 16px 20px !important;
+            font-size: 1rem !important;
+          }
+          .home-trust {
+            padding: 48px 0 !important;
+          }
+          .home-bestsellers {
+            padding: 64px 0 !important;
+          }
+          .home-collection-title {
+            font-size: 2.1rem !important;
+          }
+          .bestsellers-grid {
+            gap: 20px !important;
+          }
+          .home-featured {
+            padding: 72px 0 !important;
+          }
+          .home-featured-header {
+            margin-bottom: 28px !important;
+          }
+          .home-featured-title {
+            font-size: 2.2rem !important;
+          }
+          .home-featured-grid {
+            gap: 24px !important;
+          }
+          .luxury-card {
+            height: 460px;
+          }
+          .luxury-card-content {
+            padding: 24px;
+          }
+          .home-craft {
+            padding: 88px 0 72px !important;
+            margin-top: 40px !important;
+          }
+          .home-craft-grid {
+            gap: 36px !important;
+          }
+          .craft-image {
+            height: 420px !important;
+            border-radius: 20px !important;
+          }
+          .glass-badge {
+            left: 12px !important;
+            bottom: 12px !important;
+            padding: 18px !important;
+          }
+          .craft-title {
+            font-size: 2.2rem !important;
+          }
+          .craft-description {
+            font-size: 1.02rem !important;
+          }
+          .craft-feature-list {
+            flex-direction: column;
+            gap: 14px !important;
+          }
+          .home-testimonials {
+            padding: 72px 0 !important;
+          }
+          .home-testimonials-title {
+            font-size: 2.1rem !important;
+          }
+          .testimonials-grid {
+            gap: 20px !important;
+          }
+          .testimonial-card {
+            padding: 24px !important;
+          }
+          .home-cta {
+            height: auto !important;
+            min-height: 70vh;
+            padding: 72px 16px;
+          }
+          .home-cta-bg {
+            background-attachment: scroll !important;
+          }
+          .home-cta-content {
+            gap: 20px !important;
+          }
+          .home-cta-text {
+            font-size: 1rem !important;
+          }
+          .home-cta-form {
+            flex-direction: column;
+            border-radius: 18px !important;
+            padding: 12px !important;
+          }
+          .home-cta-input {
+            width: 100%;
+            text-align: center;
+            padding: 12px 14px !important;
+          }
+          .home-cta-button {
+            width: 100%;
+            justify-content: center;
+          }
         }
       `}</style>
     </div>
