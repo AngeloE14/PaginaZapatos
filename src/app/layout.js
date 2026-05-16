@@ -2,7 +2,7 @@ import './globals.css';
 import { AppProvider } from '@/context/AppContext';
 import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
-import AuthModal from '@/components/AuthModal';
+import AuthModal from '@/components/AuthModal.js'; // Import explícito para evitar resolver versiones legacy
 import Footer from '@/components/Footer';
 
 export const metadata = {

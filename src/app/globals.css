@@ -188,3 +188,20 @@ button {
 .animate-fade-in-up {
   animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Fallback para modal legacy de autenticación */
+.auth-modal {
+  display: none;
+}
+
+.auth-modal.active {
+  display: flex;
+}
+
+.auth-modal .auth-forms form {
+  display: none;
+}
+
+.auth-modal .auth-forms form.active {
+  display: block;
+}
